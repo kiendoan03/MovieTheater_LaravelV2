@@ -20,6 +20,7 @@ return new class extends Migration
             $table->double('rating', 2, 1);
             $table->text('synopsis');
             $table->string('language', 255);
+            $table->string('country', 255);
             $table->integer('length');
             $table->date('release_date');
             $table->date('end_date');

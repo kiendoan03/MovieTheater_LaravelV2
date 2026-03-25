@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('address', 255);
             $table->string('username', 255);
             $table->string('password', 255);
-            $table->string('avatar', 255);
+            $table->text('avatar');
             $table->date('date_of_birth');
             $table->string('role', 255);
             $table->timestamps();
