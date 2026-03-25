@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Factories;
+use App\Models\RoomType;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -17,7 +18,9 @@ class RoomFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'room_name' => 'Room ' . $this->faker->unique()->numberBetween(1, 100),
+            'type_id' => RoomType::inRandomOrder()->first()->id,
+            'capacity' => $this->faker->randomElement([50, 75, 100, 150, 200]),
         ];
     }
 }

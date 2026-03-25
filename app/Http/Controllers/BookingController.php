@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ScheduleSeat;
+use App\Models\Booking;
 use Illuminate\Http\Request;
 
-class ScheduleSeatController extends Controller
+class BookingController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class ScheduleSeatController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ScheduleSeat $scheduleSeat)
+    public function show(Booking $booking)
     {
         //
     }
@@ -42,7 +42,7 @@ class ScheduleSeatController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ScheduleSeat $scheduleSeat)
+    public function edit(Booking $booking)
     {
         //
     }
@@ -50,7 +50,7 @@ class ScheduleSeatController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ScheduleSeat $scheduleSeat)
+    public function update(Request $request, Booking $booking)
     {
         //
     }
@@ -58,7 +58,7 @@ class ScheduleSeatController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ScheduleSeat $scheduleSeat)
+    public function destroy(Booking $booking)
     {
         //
     }

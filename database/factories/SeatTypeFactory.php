@@ -17,7 +17,8 @@ class SeatTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'type' => $this->faker->randomElement(['Standard', 'VIP', 'Premium']),
+            'price' => $this->faker->randomElement([50000, 75000, 100000, 150000]),
         ];
     }
 }

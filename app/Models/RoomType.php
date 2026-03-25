@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class RoomType extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'type',
+        'capacity',
+    ];
+
+    // Relationships
+    public function rooms()
+    {
+        return $this->hasMany(Room::class, 'type_id');
+    }
 }

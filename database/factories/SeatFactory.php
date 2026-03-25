@@ -1,6 +1,8 @@
 <?php
 
 namespace Database\Factories;
+use App\Models\Room;
+use App\Models\SeatType;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -17,7 +19,10 @@ class SeatFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'row' => $this->faker->numberBetween(1, 15),
+            'column' => $this->faker->numberBetween(1, 20),
+            'room_id' => Room::inRandomOrder()->first()->id,
+            'type_id' => SeatType::inRandomOrder()->first()->id,
         ];
     }
 }

@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('schedule_id');
             $table->unsignedBigInteger('seat_id');
-            $table->unsignedBigInteger('ticket_id');
+            $table->unsignedBigInteger('ticket_id')->nullable();
             $table->integer('status');
-            $table->unsignedBigInteger('customer_id');
-            $table->unsignedBigInteger('staff_id');
+            $table->unsignedBigInteger('customer_id')->nullable();
+            $table->unsignedBigInteger('staff_id')->nullable();
             $table->timestamps();
             $table->foreign('schedule_id')->references('id')->on('schedules')->onDelete('cascade');
             $table->foreign('seat_id')->references('id')->on('seats')->onDelete('cascade');

@@ -16,8 +16,11 @@ class RoomTypeFactory extends Factory
      */
     public function definition(): array
     {
+        $types = ['2D', '3D', 'IMAX', '4DX', 'Dolby Cinema'];
+        
         return [
-            //
+            'type' => $this->faker->randomElement($types),
+            'capacity' => $this->faker->randomElement([50, 75, 100, 150, 200]),
         ];
     }
 }

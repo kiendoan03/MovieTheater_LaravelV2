@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('code', 255);
             $table->decimal('final_price', 10, 2);
+            $table->unsignedBigInteger('customer_id')->nullable();
+            $table->unsignedBigInteger('staff_id')->nullable();
+            $table->foreign('customer_id')->references('id')->on('customer')->onDelete('cascade');
+            $table->foreign('staff_id')->references('id')->on('staff')->onDelete('cascade');
             $table->timestamps();
         });
     }

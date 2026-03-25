@@ -17,7 +17,10 @@ class TicketFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'code' => strtoupper($this->faker->bothify('TKT-####-????')),
+            'final_price' => $this->faker->randomElement([50000, 75000, 100000, 150000, 200000]),
+            'customer_id' => null,
+            'staff_id' => null,
         ];
     }
 }

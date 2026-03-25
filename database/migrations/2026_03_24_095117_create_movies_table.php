@@ -17,13 +17,13 @@ return new class extends Migration
             $table->text('logo');
             $table->text('poster');
             $table->text('thumbnail');
-            $table->double('rating', 2, 1);
+            $table->double('rating', 2, 1)->nullable();
             $table->text('synopsis');
             $table->string('language', 255);
             $table->string('country', 255);
             $table->integer('length');
-            $table->date('release_date');
-            $table->date('end_date');
+            $table->date('release_date')->nullable();
+            $table->date('end_date')->nullable();
             $table->integer('age_restricted');
             $table->text('trailer');
             $table->timestamps();

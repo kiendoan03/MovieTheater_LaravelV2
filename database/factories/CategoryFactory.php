@@ -16,8 +16,10 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
+        $categories = ['Action', 'Comedy', 'Drama', 'Horror', 'Romance', 'Sci-Fi', 'Thriller', 'Animation', 'Adventure', 'Fantasy'];
+        
         return [
-            //
+            'name' => $this->faker->randomElement($categories),
         ];
     }
 }
