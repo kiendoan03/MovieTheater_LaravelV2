@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Actor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 
 class ActorController extends Controller
 {
@@ -12,7 +14,13 @@ class ActorController extends Controller
      */
     public function index()
     {
-        //
+        $actors = Actor::all();
+//        $admin = Auth::guard('staff')->user();
+
+        return view('admin.actor.main',[
+            'actors' => $actors,
+//            'admin' => $admin,
+        ]);
     }
 
     /**
@@ -20,7 +28,11 @@ class ActorController extends Controller
      */
     public function create()
     {
-        //
+//        $admin = Auth::guard('staff')->user();
+
+        return view('admin.actor.create',[
+//            'admin' => $admin,
+        ]);
     }
 
     /**
@@ -28,7 +40,17 @@ class ActorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $actor_img = $request->file('image')-> getClientOriginalName();
+        if(!Storage::exists('public/img/actor/'.$actor_img)){
+            Storage::putFileAs('public/img/actor/', $request->file('image'), $actor_img);
+        }
+
+        $array = [];
+        $array = Arr::add($array, 'name', $request->name);
+        $array = Arr::add($array, 'image', $actor_img);
+
+        Actor::create($array);
+        return redirect()->route('admin.actors.index')->with('success', 'Add actor successfully!');
     }
 
     /**
@@ -44,7 +66,12 @@ class ActorController extends Controller
      */
     public function edit(Actor $actor)
     {
-        //
+//        $admin = Auth::guard('staff')->user();
+
+        return view('admin.actor.edit',[
+            'actor' => $actor,
+//            'admin' => $admin,
+        ]);
     }
 
     /**
@@ -52,7 +79,22 @@ class ActorController extends Controller
      */
     public function update(Request $request, Actor $actor)
     {
-        //
+        if($request->hasFile('image')){
+            $actor_img = $request->file('image')-> getClientOriginalName();
+
+            if(!Storage::exists('public/img/actor/'.$actor_img)){
+                Storage::putFileAs('public/img/actor/', $request->file('image'), $actor_img);
+            }
+        }else{
+            $actor_img = $actor->image;
+        }
+        $array = [];
+        $array = Arr::add($array, 'name', $request->name);
+        $array = Arr::add($array, 'image', $actor_img);
+
+        $actor->update($array);
+
+        return redirect()->route('admin.actors.index')->with('success', 'Edit actor successfully!');
     }
 
     /**
@@ -60,6 +102,8 @@ class ActorController extends Controller
      */
     public function destroy(Actor $actor)
     {
-        //
+        $actor->delete();
+
+        return redirect()->route('admin.actors.index')->with('success', 'Delete actor successfully!');
     }
 }
