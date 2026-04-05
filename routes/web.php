@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -39,4 +38,13 @@ Route::prefix('Admin/Director')->name('admin.')->group(function () {
     Route::get('/{director}/edit', [\App\Http\Controllers\DirectorController::class, 'edit'])->name('directors.edit');
     Route::put('/{director}/edit', [\App\Http\Controllers\DirectorController::class, 'update'])->name('directors.update');
     Route::delete('/{director}/delete', [\App\Http\Controllers\DirectorController::class, 'destroy'])->name('directors.destroy');
+});
+
+Route::prefix('Admin/RoomType')->name('admin.')->group(function () {
+    Route::get('/', [App\Http\Controllers\RoomTypeController::class, 'index'])->name('room_types.index');
+    Route::get('/create', [App\Http\Controllers\RoomTypeController::class, 'create'])->name('room_types.create');
+    Route::post('/create', [App\Http\Controllers\RoomTypeController::class, 'store'])->name('room_types.store');
+    Route::get('/{roomType}/edit', [App\Http\Controllers\RoomTypeController::class, 'edit'])->name('room_types.edit');
+    Route::put('/{roomType}/edit', [App\Http\Controllers\RoomTypeController::class, 'update'])->name('room_types.update');
+    Route::delete('/{roomType}/delete', [App\Http\Controllers\RoomTypeController::class, 'destroy'])->name('room_types.destroy');
 });
