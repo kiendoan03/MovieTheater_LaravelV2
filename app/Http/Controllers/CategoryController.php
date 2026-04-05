@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -12,7 +14,15 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::all();
+//        $admin = Auth::guard('staff')->user();
+
+
+        return view('admin.category.main',[
+                'categories' => $categories,
+//                'admin' => $admin,
+            ]
+        );
     }
 
     /**
@@ -20,7 +30,11 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+//        $admin = Auth::guard('staff')->user();
+
+        return view('admin.category.create',[
+//            'admin' => $admin,
+        ]);
     }
 
     /**
@@ -28,7 +42,12 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $array = [];
+        $array = Arr::add($array, 'name', $request->name);
+
+        Category::create($array);
+
+        return redirect()->route('admin.categories.index')->with('success', 'Add category successfully!');
     }
 
     /**
@@ -44,7 +63,12 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+//        $admin = Auth::guard('staff')->user();
+
+        return view('admin.category.edit',[
+            'category' => $category,
+//            'admin' => $admin,
+        ]);
     }
 
     /**
@@ -52,7 +76,8 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $category->update($request->all());
+        return redirect()->route('admin.categories.index')->with('success', 'Update category successfully!');
     }
 
     /**
@@ -60,6 +85,9 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+//        CategoryMovieController::where('category_id', $category->id)->delete();
+
+        $category->delete();
+        return redirect()->route('admin.categories.index')->with('success', 'Delete category successfully!');
     }
 }
