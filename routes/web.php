@@ -32,3 +32,11 @@ Route::prefix('Admin/Actor')->name('admin.')->group(function () {
     Route::put('/{actor}/edit', [\App\Http\Controllers\ActorController::class, 'update'])->name('actors.update');
     Route::delete('/{actor}/delete', [\App\Http\Controllers\ActorController::class, 'destroy'])->name('actors.destroy');
 });
+Route::prefix('Admin/Director')->name('admin.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\DirectorController::class, 'index'])->name('directors.index');
+    Route::get('/create', [\App\Http\Controllers\DirectorController::class, 'create'])->name('directors.create');
+    Route::post('/create', [\App\Http\Controllers\DirectorController::class, 'store'])->name('directors.store');
+    Route::get('/{director}/edit', [\App\Http\Controllers\DirectorController::class, 'edit'])->name('directors.edit');
+    Route::put('/{director}/edit', [\App\Http\Controllers\DirectorController::class, 'update'])->name('directors.update');
+    Route::delete('/{director}/delete', [\App\Http\Controllers\DirectorController::class, 'destroy'])->name('directors.destroy');
+});

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Director;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 
 class DirectorController extends Controller
 {
@@ -12,7 +14,14 @@ class DirectorController extends Controller
      */
     public function index()
     {
-        //
+        $directors = Director::all();
+//        $admin = Auth::guard('staff')->user();
+
+        return view('admin.director.main',[
+            'directors' => $directors,
+//            'admin' => $admin,
+
+        ]);
     }
 
     /**
@@ -20,7 +29,11 @@ class DirectorController extends Controller
      */
     public function create()
     {
-        //
+//        $admin = Auth::guard('staff')->user();
+
+        return view('admin.director.create',[
+//            'admin' => $admin,
+        ]);
     }
 
     /**
@@ -28,7 +41,19 @@ class DirectorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $director_img = $request->file('image')-> getClientOriginalName();
+
+        if(!Storage::exists('public/img/director/'.$director_img)){
+            Storage::putFileAs('public/img/director/', $request->file('image'), $director_img);
+        }
+
+        $array = [];
+        $array = Arr::add($array, 'name', $request->name);
+        $array = Arr::add($array, 'image', $director_img);
+
+        Director::create($array);
+
+        return redirect()->route('admin.directors.index')->with('success', 'Add director successfully!');
     }
 
     /**
@@ -44,7 +69,12 @@ class DirectorController extends Controller
      */
     public function edit(Director $director)
     {
-        //
+//        $admin = Auth::guard('staff')->user();
+
+        return view('admin.director.edit',[
+            'director' => $director,
+//            'admin' => $admin,
+        ]);
     }
 
     /**
@@ -52,7 +82,25 @@ class DirectorController extends Controller
      */
     public function update(Request $request, Director $director)
     {
-        //
+
+        if($request->hasFile('image')){
+            $director_img = $request->file('image')-> getClientOriginalName();
+
+            if(!Storage::exists('public/img/director/'.$director_img)){
+                Storage::putFileAs('public/img/director/', $request->file('image'), $director_img);
+            }
+
+        }else{
+            $director_img = $director->image;
+        }
+
+        $array = [];
+        $array = Arr::add($array, 'name', $request->name);
+        $array = Arr::add($array, 'image', $director_img);
+
+        $director->update($array);
+
+        return redirect()->route('admin.directors.index')->with('success', 'Edit director successfully!');
     }
 
     /**
@@ -60,6 +108,8 @@ class DirectorController extends Controller
      */
     public function destroy(Director $director)
     {
-        //
+        $director->delete();
+
+        return redirect()->route('admin.directors.index')->with('success', 'Delete director successfully!');
     }
 }
