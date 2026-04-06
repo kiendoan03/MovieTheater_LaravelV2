@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RoomType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class RoomTypeController extends Controller
 {
@@ -12,7 +13,11 @@ class RoomTypeController extends Controller
      */
     public function index()
     {
-        //
+        $roomTypes = RoomType::all();
+
+        return view('admin.RoomType.main', [
+            'roomTypes' => $roomTypes,
+        ]);
     }
 
     /**
@@ -20,7 +25,7 @@ class RoomTypeController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.RoomType.create');
     }
 
     /**
@@ -28,7 +33,18 @@ class RoomTypeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'type' => 'required|string|max:255',
+            'capacity' => 'required|integer|min:1',
+        ]);
+
+        $array = [];
+        $array = Arr::add($array, 'type', $request->type);
+        $array = Arr::add($array, 'capacity', $request->capacity);
+
+        RoomType::create($array);
+
+        return redirect()->route('admin.room_types.index')->with('success', 'Room type added successfully!');
     }
 
     /**
@@ -44,7 +60,9 @@ class RoomTypeController extends Controller
      */
     public function edit(RoomType $roomType)
     {
-        //
+        return view('admin.RoomType.edit', [
+            'roomType' => $roomType,
+        ]);
     }
 
     /**
@@ -52,7 +70,18 @@ class RoomTypeController extends Controller
      */
     public function update(Request $request, RoomType $roomType)
     {
-        //
+        $request->validate([
+            'type' => 'required|string|max:255',
+            'capacity' => 'required|integer|min:1',
+        ]);
+
+        $array = [];
+        $array = Arr::add($array, 'type', $request->type);
+        $array = Arr::add($array, 'capacity', $request->capacity);
+
+        $roomType->update($array);
+
+        return redirect()->route('admin.room_types.index')->with('success', 'Room type updated successfully!');
     }
 
     /**
@@ -60,6 +89,8 @@ class RoomTypeController extends Controller
      */
     public function destroy(RoomType $roomType)
     {
-        //
+        $roomType->delete();
+
+        return redirect()->route('admin.room_types.index')->with('success', 'Room type deleted successfully!');
     }
 }
