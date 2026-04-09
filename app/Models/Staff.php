@@ -14,15 +14,9 @@ class Staff extends Model
         'email',
         'phonenumber',
         'address',
-        'username',
-        'password',
         'avatar',
         'date_of_birth',
-        'role',
-    ];
-
-    protected $hidden = [
-        'password',
+        'account_id',
     ];
 
     // Relationships
@@ -34,5 +28,10 @@ class Staff extends Model
     public function bookings()
     {
         return $this->hasMany(Booking::class);
+    }
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class, 'account_id', 'id');
     }
 }

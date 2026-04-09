@@ -31,10 +31,13 @@ class DatabaseSeeder extends Seeder
 
             ScheduleSeeder::class,
 
-            CustomerSeeder::class,
-            StaffSeeder::class,
+            AccountSeeder::class,   // admin cố định
+            CustomerSeeder::class,  // tự tạo account customer qua factory
+            StaffSeeder::class,     // tự tạo account staff qua factory
 
             BookingSeeder::class,
+
+            RefreshTokenSeeder::class, // sau cùng, khi đã có đủ accounts
         ]);
     }
 }
