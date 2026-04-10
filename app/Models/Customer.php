@@ -16,10 +16,9 @@ class Customer extends Model
         'email',
         'phonenumber',
         'address',
-        'username',
-        'password',
         'avatar',
         'date_of_birth',
+        'account_id',
     ];
 
     protected $hidden = [
@@ -35,5 +34,10 @@ class Customer extends Model
     public function bookings()
     {
         return $this->hasMany(Booking::class);
+    }
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class, 'account_id', 'id');
     }
 }
