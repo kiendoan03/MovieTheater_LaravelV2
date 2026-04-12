@@ -40,6 +40,16 @@ Route::prefix('Admin/Director')->name('admin.')->group(function () {
     Route::delete('/{director}/delete', [\App\Http\Controllers\DirectorController::class, 'destroy'])->name('directors.destroy');
 });
 
+Route::prefix('Admin/Room')->name('admin.')->group(function () {
+    Route::get('/', [App\Http\Controllers\RoomController::class, 'index'])->name('rooms.index');
+    Route::get('/create', [App\Http\Controllers\RoomController::class, 'create'])->name('rooms.create');
+    Route::post('/create', [App\Http\Controllers\RoomController::class, 'store'])->name('rooms.store');
+    Route::get('/{room}', [App\Http\Controllers\RoomController::class, 'show'])->name('rooms.show');
+    Route::get('/{room}/edit', [App\Http\Controllers\RoomController::class, 'edit'])->name('rooms.edit');
+    Route::put('/{room}/edit', [App\Http\Controllers\RoomController::class, 'update'])->name('rooms.update');
+    Route::delete('/{room}/delete', [App\Http\Controllers\RoomController::class, 'destroy'])->name('rooms.destroy');
+});
+
 Route::prefix('Admin/RoomType')->name('admin.')->group(function () {
     Route::get('/', [App\Http\Controllers\RoomTypeController::class, 'index'])->name('room_types.index');
     Route::get('/create', [App\Http\Controllers\RoomTypeController::class, 'create'])->name('room_types.create');
