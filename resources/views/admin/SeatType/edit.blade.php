@@ -1,40 +1,69 @@
 @extends('layouts.header')
 @section('content')
-<!-- Title -->
-<div class="row">
-    <div class="col">
-        <h2 class="text-light mb-4">Edit Seat Type</h2>
-    </div>
-</div>
 
-<!-- Main -->
-<div class="row">
-    <div class="col-10">
-        <form role="form" method="post" action="{{ route('admin.seat_types.update', $seatType) }}">
+<link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+
+<div class="cw">
+    <div class="container-fluid px-3 px-md-5">
+
+        <!-- Header -->
+        <div class="cw-head pt-2">
+            <div>
+                <h2>Chỉnh sửa loại ghế</h2>
+                <div class="cw-crumb">Quản lý loại ghế</div>
+            </div>
+            <a href="{{ route('admin.seat_types.index') }}" class="btn-cancel">Quay lại</a>
+        </div>
+
+        <!-- Form -->
+        <form method="POST" action="{{ route('admin.seat_types.update', $seatType) }}">
             @csrf
             @method('PUT')
 
-            <div class="mb-3">
-                <label for="type" class="form-label text-light">Seat Type</label>
-                <input type="text" class="form-control bg-dark text-light border-0 shadow-none"
-                    id="type" name="type"
-                    value="{{ $seatType->type }}" required>
+            <div class="cw-card">
+                <div class="row g-4">
+
+                    <!-- Type -->
+                    <div class="col-md-6 pt-2">
+                        <label class="cw-label ms-2" for="type">Loại ghế</label>
+                        <input type="text"
+                            id="type"
+                            name="type"
+                            class="cw-input"
+                            value="{{ old('type', $seatType->type) }}"
+                            required>
+                        @error('type')
+                        <span class="cw-error">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- Price -->
+                    <div class="col-md-6 pt-2">
+                        <label class="cw-label ms-2 " for="price">Giá</label>
+                        <input type="number"
+                            step="0.01"
+                            id="price"
+                            name="price"
+                            class="cw-input"
+                            min="0"
+                            value="{{ old('price', $seatType->price) }}"
+                            required>
+                        @error('price')
+                        <span class="cw-error">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label for="price" class="form-label text-light">Price</label>
-                <input type="number" step="0.01" class="form-control bg-dark text-light border-0 shadow-none"
-                    id="price" name="price"
-                    value="{{ $seatType->price }}" min="0" required>
+            <!-- Footer -->
+            <div class="cw-footer">
+                <a href="{{ route('admin.seat_types.index') }}" class="btn-cancel">Hủy</a>
+                <button type="submit" class="btn-submit">Lưu thay đổi</button>
             </div>
-
-            <input type="submit" class="btn btn-danger my-3 col-2" value="Edit" name="submit_btn">
 
         </form>
     </div>
 </div>
-@endsection
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
+@endsection
