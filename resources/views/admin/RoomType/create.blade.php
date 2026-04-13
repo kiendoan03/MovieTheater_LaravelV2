@@ -44,9 +44,10 @@
                             id="capacity"
                             name="capacity"
                             class="cw-input"
-                            min="1"
+                            min="2"
+                            step="2"
                             value="{{ old('capacity') }}"
-                            placeholder="Nhập sức chứa"
+                            placeholder="Nhập sức chứa (số chẵn)"
                             required>
                         @error('capacity')
                         <span class="cw-error">{{ $message }}</span>
@@ -65,5 +66,6 @@
         </form>
     </div>
 </div>
+
 
 @endsection

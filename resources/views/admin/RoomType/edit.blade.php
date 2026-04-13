@@ -44,7 +44,8 @@
                             id="capacity"
                             name="capacity"
                             class="cw-input"
-                            min="1"
+                            min="2"
+                            step="2"
                             value="{{ old('capacity', $roomType->capacity) }}"
                             required>
                         @error('capacity')
