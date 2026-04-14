@@ -4,26 +4,45 @@ namespace App\Models;
 
 use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Account extends Model
+class Account extends Authenticatable implements JWTSubject
 {
     use HasFactory;
 
     protected $fillable = [
-        'username',
+        'email',
         'password',
         'role',
+        'is_active',
     ];
 
     protected $casts = [
-        'role'     => UserRole::class,
-        'password' => 'hashed',        // tự động hash khi gán, không cần Hash::make() thủ công
+        'role' => UserRole::class,
+        'password' => 'hashed',
+        // có trò tự động hash khi gán, không cần Hash::make() thủ công ngon vl ae :)))
     ];
 
     protected $hidden = [
         'password',
     ];
+
+    // JWT
+
+    // Trả về identifier dùng làm subject (sub) trong JWT payload.
+    public function getJWTIdentifier(): mixed
+    {
+        return $this->getKey();
+    }
+
+    // Trả về các custom claims muốn đưa vào JWT (nhúng cái role vào tí còn claim)
+    public function getJWTCustomClaims(): array
+    {
+        return [
+            'role' => $this->role,
+        ];
+    }
 
     // Relationships
     public function customer()
