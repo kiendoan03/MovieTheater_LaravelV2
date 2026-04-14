@@ -1,23 +1,30 @@
 @extends('layouts.header')
 @section('content')
-    <!-- Title -->
-    <div class="row">
-        <div class="col">
-            <h2 class="text-light mb-4">Add category</h2>
-        </div>
+<link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+
+<div class="cw">
+  <div class="container-fluid px-3 px-md-5">
+    <div class="cw-head">
+      <div>
+        <h2>Thêm danh mục</h2>
+        <div class="cw-crumb">Quản lý danh mục</div>
+      </div>
+      <a href="{{ route('admin.categories.index') }}" class="btn-cancel">Quay lại</a>
     </div>
 
-    <!-- Main -->
-    <div class="row">
-        <div class="col-10">
-            <form role="form" method="post" action="{{route('admin.categories.store')}}">
-                @csrf
-                <div class="mb-3">
-                    <label for="category_name" class="form-label text-light">Category name</label>
-                    <input type="text" class="form-control bg-dark text-light border-0 shadow-none" id="category_name" name="name" required>
-                </div>
-                <input type="submit" class="btn btn-danger my-3 col-2" value="Add" name="submit_btn">
-            </form>
-        </div>
-    </div>
+    <form method="POST" action="{{ route('admin.categories.store') }}">
+      @csrf
+      <div class="cw-card">
+        <label class="cw-label" for="name">Tên danh mục</label>
+        <input type="text" id="name" name="name" class="cw-input" value="{{ old('name') }}" placeholder="Nhập tên danh mục" required>
+        @error('name')<span class="cw-error">{{ $message }}</span>@enderror
+      </div>
+
+      <div class="cw-footer">
+        <a href="{{ route('admin.categories.index') }}" class="btn-cancel">Hủy</a>
+        <button type="submit" class="btn-submit">Lưu danh mục</button>
+      </div>
+    </form>
+  </div>
+</div>
 @endsection
