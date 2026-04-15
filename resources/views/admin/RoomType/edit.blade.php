@@ -1,40 +1,69 @@
 @extends('layouts.header')
 @section('content')
-<!-- Title -->
-<div class="row">
-    <div class="col">
-        <h2 class="text-light mb-4">Edit Room Type</h2>
-    </div>
-</div>
 
-<!-- Main -->
-<div class="row">
-    <div class="col-10">
-        <form role="form" method="post" action="{{ route('admin.room_types.update', $roomType) }}">
+<link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+
+<div class="cw">
+    <div class="container-fluid px-3 px-md-5">
+
+        <!-- Header -->
+        <div class="cw-head">
+            <div>
+                <h2>Chỉnh sửa loại phòng</h2>
+                <div class="cw-crumb">Quản lý loại phòng</div>
+            </div>
+            <a href="{{ route('admin.room_types.index') }}" class="btn-cancel">Quay lại</a>
+        </div>
+
+        <!-- Form -->
+        <form method="POST" action="{{ route('admin.room_types.update', $roomType) }}">
             @csrf
             @method('PUT')
 
-            <div class="mb-3">
-                <label for="type" class="form-label text-light">Room Type</label>
-                <input type="text" class="form-control bg-dark text-light border-0 shadow-none"
-                    id="type" name="type"
-                    value="{{ $roomType->type }}" required>
+            <div class="cw-card">
+                <div class="row g-4">
+
+                    <!-- Type -->
+                    <div class="col-md-6 pt-2">
+                        <label class="cw-label ms-2" for="type">Loại phòng</label>
+                        <input type="text"
+                            id="type"
+                            name="type"
+                            class="cw-input"
+                            value="{{ old('type', $roomType->type) }}"
+                            required>
+                        @error('type')
+                        <span class="cw-error">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- Capacity -->
+                    <div class="col-md-6 pt-2">
+                        <label class="cw-label ms-2" for="capacity">Sức chứa</label>
+                        <input type="number"
+                            id="capacity"
+                            name="capacity"
+                            class="cw-input"
+                            min="2"
+                            step="2"
+                            value="{{ old('capacity', $roomType->capacity) }}"
+                            required>
+                        @error('capacity')
+                        <span class="cw-error">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label for="capacity" class="form-label text-light">Capacity</label>
-                <input type="number" class="form-control bg-dark text-light border-0 shadow-none"
-                    id="capacity" name="capacity"
-                    value="{{ $roomType->capacity }}" min="1" required>
+            <!-- Footer -->
+            <div class="cw-footer">
+                <a href="{{ route('admin.room_types.index') }}" class="btn-cancel">Hủy</a>
+                <button type="submit" class="btn-submit">Lưu thay đổi</button>
             </div>
-
-            <input type="submit" class="btn btn-danger my-3 col-2" value="Edit" name="submit_btn">
 
         </form>
     </div>
 </div>
-@endsection
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
+@endsection

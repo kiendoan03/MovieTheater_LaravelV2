@@ -72,7 +72,9 @@ class RoomTypeController extends Controller
     {
         $request->validate([
             'type' => 'required|string|max:255',
-            'capacity' => 'required|integer|min:1',
+            'capacity' => 'required|integer|min:2|multiple_of:2',
+        ], [
+            'capacity.multiple_of' => 'Capacity phải là số chẵn!',
         ]);
 
         $array = [];

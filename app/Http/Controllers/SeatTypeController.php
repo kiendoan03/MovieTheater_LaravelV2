@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SeatType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class SeatTypeController extends Controller
 {
@@ -12,7 +13,11 @@ class SeatTypeController extends Controller
      */
     public function index()
     {
-        //
+        $seatTypes = SeatType::all();
+
+        return view('admin.SeatType.main', [
+            'seatTypes' => $seatTypes,
+        ]);
     }
 
     /**
@@ -20,7 +25,7 @@ class SeatTypeController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.SeatType.create');
     }
 
     /**
@@ -28,7 +33,19 @@ class SeatTypeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'type' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        $array = [];
+        $array = Arr::add($array, 'type', $request->type);
+        $array = Arr::add($array, 'price', $request->price);
+
+        SeatType::create($array);
+
+        return redirect()->route('admin.seat_types.index')
+            ->with('success', 'Seat type added successfully!');
     }
 
     /**
@@ -44,7 +61,9 @@ class SeatTypeController extends Controller
      */
     public function edit(SeatType $seatType)
     {
-        //
+        return view('admin.SeatType.edit', [
+            'seatType' => $seatType,
+        ]);
     }
 
     /**
@@ -52,7 +71,19 @@ class SeatTypeController extends Controller
      */
     public function update(Request $request, SeatType $seatType)
     {
-        //
+        $request->validate([
+            'type' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        $array = [];
+        $array = Arr::add($array, 'type', $request->type);
+        $array = Arr::add($array, 'price', $request->price);
+
+        $seatType->update($array);
+
+        return redirect()->route('admin.seat_types.index')
+            ->with('success', 'Seat type updated successfully!');
     }
 
     /**
@@ -60,6 +91,9 @@ class SeatTypeController extends Controller
      */
     public function destroy(SeatType $seatType)
     {
-        //
+        $seatType->delete();
+
+        return redirect()->route('admin.seat_types.index')
+            ->with('success', 'Seat type deleted successfully!');
     }
 }
