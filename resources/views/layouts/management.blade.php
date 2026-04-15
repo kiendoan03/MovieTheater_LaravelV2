@@ -170,15 +170,13 @@
                     <a href="{{ route('admin.categories.index') }}" class="nav-link" data-id="genre"><i class="fa-solid fa-tags"></i> Film Genre</a>
                     <a href="#" class="nav-link" data-id="movies"><i class="fa-solid fa-film"></i> Movies</a>
                     <a href="{{ route('admin.rooms.index') }}" class="nav-link" data-id="rooms"><i class="fa-solid fa-door-open"></i> Rooms</a>
-                    <a href="#" class="nav-link" data-id="schedules"><i class="fa-solid fa-calendar-days"></i> Schedules</a>
+                    <a href="{{ route('admin.schedules.index') }}" class="nav-link" data-id="schedules"><i class="fa-solid fa-calendar-days"></i> Schedules</a>
                     
-                    <div class="nav-label">People</div>
-                    <a href="{{ route('admin.actors.index') }}" class="nav-link" data-id="actors"><i class="fa-solid fa-masks-theater"></i> Actors</a>
-                    <a href="{{ route('admin.directors.index') }}" class="nav-link" data-id="directors"><i class="fa-solid fa-clapperboard"></i> Directors</a>
-
                     <div class="nav-label">Data</div>
                     <a href="{{ route('admin.room_types.index') }}" class="nav-link" data-id="room-types"><i class="fa-solid fa-door-closed"></i> Room Types</a>
                     <a href="{{ route('admin.seat_types.index') }}" class="nav-link" data-id="seat-types"><i class="fa-solid fa-chair"></i> Seat Types</a>
+                    <a href="{{ route('admin.actors.index') }}" class="nav-link" data-id="actors"><i class="fa-solid fa-masks-theater"></i> Actors</a>
+                    <a href="{{ route('admin.directors.index') }}" class="nav-link" data-id="directors"><i class="fa-solid fa-clapperboard"></i> Directors</a>
                 </div>
             </div>
 
