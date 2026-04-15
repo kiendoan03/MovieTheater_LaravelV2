@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ScheduleController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -65,4 +66,14 @@ Route::prefix('Admin/SeatType')->name('admin.')->group(function () {
     Route::get('/{seatType}/edit', [App\Http\Controllers\SeatTypeController::class, 'edit'])->name('seat_types.edit');
     Route::put('/{seatType}/edit', [App\Http\Controllers\SeatTypeController::class, 'update'])->name('seat_types.update');
     Route::delete('/{seatType}/delete', [App\Http\Controllers\SeatTypeController::class, 'destroy'])->name('seat_types.destroy');
+});
+
+Route::prefix('Admin/Schedule')->name('admin.')->group(function () {
+    Route::get('/', [App\Http\Controllers\ScheduleController::class, 'index'])->name('schedules.index');
+    Route::get('/create', [App\Http\Controllers\ScheduleController::class, 'create'])->name('schedules.create');
+    Route::post('/create', [App\Http\Controllers\ScheduleController::class, 'store'])->name('schedules.store');
+    Route::get('/{schedule}/edit', [App\Http\Controllers\ScheduleController::class, 'edit'])->name('schedules.edit');
+    Route::put('/{schedule}/edit', [App\Http\Controllers\ScheduleController::class, 'update'])->name('schedules.update');
+    Route::delete('/{schedule}/delete', [App\Http\Controllers\ScheduleController::class, 'destroy'])->name('schedules.destroy');
+    Route::get('/by-room', [ScheduleController::class, 'byRoom'])->name('schedules.by-room');
 });
