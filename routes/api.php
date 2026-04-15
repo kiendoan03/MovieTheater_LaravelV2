@@ -34,6 +34,8 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class,  'login']);
     Route::post('/refresh', [TokenController::class, 'refresh']);
     Route::post('/logout', [TokenController::class, 'logout']); // không cần auth:api — logout phải hoạt động kể cả khi access token hết hạn
+    Route::post('/send-otp', [\App\Http\Controllers\OTPController::class, 'sendOTP']);
+    Route::post('/verify-otp', [\App\Http\Controllers\OTPController::class, 'verifyOTP']);
 });
 
 // accounts (removed custom register)
