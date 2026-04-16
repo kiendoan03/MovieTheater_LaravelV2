@@ -18,9 +18,10 @@ class AccountFactory extends Factory
     public function definition(): array
     {
         return [
-            'username' => $this->faker->unique()->userName(),
+            'email' => $this->faker->unique()->safeEmail(),
             'password' => 'password123',
             'role'     => UserRole::Customer,
+            'is_active'=> true,
         ];
     }
 

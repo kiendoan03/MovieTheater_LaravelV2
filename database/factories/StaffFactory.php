@@ -19,7 +19,6 @@ class StaffFactory extends Factory
     {
         return [
             'name'          => $this->faker->name(),
-            'email'         => $this->faker->unique()->safeEmail(),
             'phonenumber'   => $this->faker->numerify('09########'),
             'address'       => $this->faker->address(),
             'avatar'        => $this->faker->imageUrl(200, 200, 'people'),

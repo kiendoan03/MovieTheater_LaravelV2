@@ -16,11 +16,11 @@ return new class extends Migration
             $table->string('name', 255);
             $table->string('email', 255);
             $table->string('phonenumber', 10);
-            $table->string('address', 255);
+            $table->string('address', 255)->nullable();
             $table->string('username', 255);
             $table->string('password', 255);
-            $table->text('avatar');
-            $table->date('date_of_birth');
+            $table->text('avatar')->nullable();
+            $table->date('date_of_birth')->nullable();
             $table->timestamps();
         });
     }

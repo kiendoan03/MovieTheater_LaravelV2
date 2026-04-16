@@ -14,9 +14,10 @@ return new class extends Migration
         // 1. Tạo bảng accounts
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
-            $table->string('username', 255)->unique();
+            $table->string('email', 255)->unique();
             $table->string('password', 255);
             $table->tinyInteger('role')->default(2); // 0=Admin, 1=Staff, 2=Customer
+            $table->boolean('is_active')->default(true); // Để khoá tài khoản
             $table->timestamps();
         });
 
@@ -36,14 +37,14 @@ return new class extends Migration
 
         // 3. Alter bảng staff: bỏ username/password/role, thêm account_id
         Schema::table('staff', function (Blueprint $table) {
-            $table->dropColumn(['username', 'password', 'role']);
+            $table->dropColumn(['username', 'password', 'role', 'email']);
             $table->unsignedBigInteger('account_id')->nullable()->after('id');
             $table->foreign('account_id')->references('id')->on('accounts')->onDelete('set null');
         });
 
         // 4. Alter bảng customer: bỏ username/password, thêm account_id
         Schema::table('customer', function (Blueprint $table) {
-            $table->dropColumn(['username', 'password']);
+            $table->dropColumn(['username', 'password', 'email']);
             $table->unsignedBigInteger('account_id')->nullable()->after('id');
             $table->foreign('account_id')->references('id')->on('accounts')->onDelete('set null');
         });
@@ -63,6 +64,7 @@ return new class extends Migration
             $table->dropColumn('account_id');
             $table->string('username', 255)->nullable();
             $table->string('password', 255)->nullable();
+            $table->string('email', 255)->nullable();
         });
 
         // 3. Rollback staff
@@ -72,6 +74,7 @@ return new class extends Migration
             $table->string('username', 255)->nullable();
             $table->string('password', 255)->nullable();
             $table->string('role', 255)->nullable();
+            $table->string('email', 255)->nullable();
         });
 
         // 2. Xóa refresh_tokens
