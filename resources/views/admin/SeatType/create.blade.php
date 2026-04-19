@@ -14,8 +14,8 @@
 
     .cw-head {
         display: flex;
-        align-items: center;
         justify-content: space-between;
+        align-items: center;
         margin-bottom: 2rem;
     }
 
@@ -25,24 +25,11 @@
         margin: 0;
     }
 
-    .cw-crumb {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 11px;
-        color: var(--muted);
-        background: var(--card);
-        border: 1px solid var(--border);
-        padding: 3px 10px;
-        border-radius: 20px;
-        margin-top: 6px;
-        display: inline-block;
-    }
-
     .cw-card {
         background: var(--card);
         border: 1px solid var(--border);
         border-radius: 14px;
         padding: 1.5rem;
-        margin-bottom: 1.25rem;
     }
 
     .cw-section-title {
@@ -65,9 +52,6 @@
     }
 
     .cw-label-line {
-        display: flex;
-        align-items: center;
-        gap: 10px;
         margin-bottom: 6px;
     }
 
@@ -77,45 +61,52 @@
         color: var(--muted);
     }
 
-    .cw-label-line::after {
-        content: "";
-        flex: 1;
-        height: 1px;
-        background: var(--border);
-    }
-
     .cw-input {
         width: 100%;
-        background: var(--surface);
+        background: var(--surface) !important;
         border: 1px solid var(--border);
         border-radius: 8px;
-        padding: 9px 12px;
+        padding: 10px 12px;
         font-size: 13px;
-        font-family: 'Sora', sans-serif;
-        color: var(--text);
+        color: var(--text) !important;
         outline: none;
         transition: all .2s;
     }
 
     .cw-input:focus {
         border-color: var(--accent);
-        box-shadow: 0 0 0 1px rgba(232, 201, 106, 0.2);
+        box-shadow: 0 0 0 1px rgba(232, 201, 106, 0.25);
     }
 
     .cw-input::placeholder {
         color: var(--muted);
     }
 
-    input,
-    select,
-    textarea {
-        background-color: var(--surface) !important;
-        color: var(--text) !important;
-    }
-
-    input:-webkit-autofill {
+    .cw-input:-webkit-autofill,
+    .cw-input:-webkit-autofill:hover,
+    .cw-input:-webkit-autofill:focus {
         -webkit-text-fill-color: var(--text);
         -webkit-box-shadow: 0 0 0px 1000px var(--surface) inset;
+    }
+
+    input[type="color"] {
+        width: 100%;
+        height: 42px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 4px;
+        background: var(--surface);
+        cursor: pointer;
+    }
+
+    input[type="color"]::-webkit-color-swatch {
+        border: none;
+        border-radius: 6px;
+    }
+
+    input[type="color"]::-moz-color-swatch {
+        border: none;
+        border-radius: 6px;
     }
 
     .btn-cancel {
@@ -128,23 +119,14 @@
         text-decoration: none;
     }
 
-    .btn-cancel:hover {
-        border-color: var(--border-h);
-        color: var(--text);
-    }
-
     .btn-submit {
         background: var(--accent);
         color: #0d0f14;
         border: none;
         border-radius: 8px;
-        padding: 10px 24px;
+        padding: 10px 22px;
         font-size: 13px;
         font-weight: 600;
-    }
-
-    .btn-submit:hover {
-        background: #f0d47a;
     }
 
     .cw-footer {
@@ -160,37 +142,10 @@
         margin-top: 4px;
         display: block;
     }
-
-    input,
-    select,
-    textarea {
-        background-color: var(--surface) !important;
-        color: var(--text) !important;
-    }
-
-    select:focus,
-    select:active {
-        background-color: var(--surface) !important;
-        color: var(--text) !important;
-    }
-
-    select option {
-        background: #0b1220;
-        color: #fff;
-    }
-
-    input:-webkit-autofill,
-    input:-webkit-autofill:hover,
-    input:-webkit-autofill:focus,
-    select:-webkit-autofill {
-        -webkit-text-fill-color: var(--text);
-        -webkit-box-shadow: 0 0 0px 1000px var(--surface) inset;
-        transition: background-color 9999s ease-in-out 0s;
-    }
 </style>
 
 <div class="cw">
-    <div class="container-fluid px-3 px-md-4">
+    <div class="container-fluid px-3 px-md-5">
 
         <!-- Header -->
         <div class="cw-head">
@@ -199,7 +154,7 @@
             </div>
         </div>
 
-        <!-- Form -->
+        <!-- FORM -->
         <form method="POST" action="{{ route('admin.seat_types.store') }}">
             @csrf
 
@@ -211,8 +166,8 @@
 
                 <div class="row g-3">
 
-                    <!-- Type -->
-                    <div class="col-md-6">
+                    <!-- TYPE -->
+                    <div class="col-md-4">
                         <div class="cw-label-line">
                             <span>Loại ghế</span>
                         </div>
@@ -229,8 +184,8 @@
                         @enderror
                     </div>
 
-                    <!-- Price -->
-                    <div class="col-md-6">
+                    <!-- PRICE -->
+                    <div class="col-md-4">
                         <div class="cw-label-line">
                             <span>Giá</span>
                         </div>
@@ -249,10 +204,25 @@
                         @enderror
                     </div>
 
+                    <!-- COLOR -->
+                    <div class="col-md-4">
+                        <div class="cw-label-line">
+                            <span>Màu ghế</span>
+                        </div>
+
+                        <input type="color"
+                            name="color"
+                            value="{{ old('color', '#13161e') }}">
+
+                        @error('color')
+                        <span class="cw-error">{{ $message }}</span>
+                        @enderror
+                    </div>
+
                 </div>
             </div>
 
-            <!-- Footer -->
+            <!-- FOOTER -->
             <div class="cw-footer">
                 <a href="{{ route('admin.seat_types.index') }}" class="btn-cancel">Hủy</a>
                 <button type="submit" class="btn-submit">Lưu loại ghế</button>

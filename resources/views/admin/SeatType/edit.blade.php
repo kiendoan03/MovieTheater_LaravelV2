@@ -25,18 +25,6 @@
         margin: 0;
     }
 
-    .cw-crumb {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 11px;
-        color: var(--muted);
-        background: var(--card);
-        border: 1px solid var(--border);
-        padding: 3px 10px;
-        border-radius: 20px;
-        margin-top: 4px;
-        display: inline-block;
-    }
-
     .cw-card {
         background: var(--card);
         border: 1px solid var(--border);
@@ -64,9 +52,6 @@
     }
 
     .cw-label-line {
-        display: flex;
-        align-items: center;
-        gap: 10px;
         margin-bottom: 6px;
     }
 
@@ -74,13 +59,6 @@
         font-family: 'JetBrains Mono', monospace;
         font-size: 11px;
         color: var(--muted);
-    }
-
-    .cw-label-line::after {
-        content: "";
-        flex: 1;
-        height: 1px;
-        background: var(--border);
     }
 
     .cw-input {
@@ -104,7 +82,6 @@
         color: var(--muted);
     }
 
-    /* FIX trắng Chrome */
     .cw-input:-webkit-autofill,
     .cw-input:-webkit-autofill:hover,
     .cw-input:-webkit-autofill:focus {
@@ -116,6 +93,26 @@
     textarea {
         background-color: var(--surface) !important;
         color: var(--text) !important;
+    }
+
+    input[type="color"] {
+        width: 100%;
+        height: 42px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 4px;
+        background: var(--surface);
+        cursor: pointer;
+    }
+
+    input[type="color"]::-webkit-color-swatch {
+        border: none;
+        border-radius: 6px;
+    }
+
+    input[type="color"]::-moz-color-swatch {
+        border: none;
+        border-radius: 6px;
     }
 
     .btn-cancel {
@@ -186,7 +183,7 @@
                 <div class="row g-3">
 
                     <!-- TYPE -->
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="cw-label-line">
                             <span>Loại ghế</span>
                         </div>
@@ -204,7 +201,7 @@
                     </div>
 
                     <!-- PRICE -->
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="cw-label-line">
                             <span>Giá</span>
                         </div>
@@ -219,6 +216,21 @@
                             required>
 
                         @error('price')
+                        <span class="cw-error">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- COLOR -->
+                    <div class="col-md-4">
+                        <div class="cw-label-line">
+                            <span>Màu ghế</span>
+                        </div>
+
+                        <input type="color"
+                            name="color"
+                            value="{{ old('color', $seatType->color ?? '#6366f1') }}">
+
+                        @error('color')
                         <span class="cw-error">{{ $message }}</span>
                         @enderror
                     </div>

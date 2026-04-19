@@ -13,6 +13,7 @@
     .table-custom td {
         padding: 18px 16px;
         vertical-align: middle;
+        text-align: left;
     }
 
     .table-custom tbody tr {
@@ -23,22 +24,48 @@
         border-bottom: none;
     }
 
+    /* ===== FIX CHÍNH LỆCH DÒNG ===== */
+    .table-custom td {
+        line-height: 1.4;
+    }
+
+    /* FIX layout loại ghế + màu */
+    .seat-type-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        height: 100%;
+        /* 🔥 đảm bảo cùng chiều cao */
+    }
+
+    .seat-color {
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+        border: 1px solid var(--border);
+        flex-shrink: 0;
+    }
+
     .room-main {
         font-weight: 600;
         color: var(--text);
-        display: block;
-        /* FIX lệch */
+        display: inline-flex;
+        /* 🔥 fix lệch chuẩn */
+        align-items: center;
     }
 
     /* ID */
     .mono-id {
         font-family: 'JetBrains Mono', monospace;
         color: var(--muted);
+        white-space: nowrap;
     }
 
+    /* ACTION */
     .btn-group-actions {
         display: flex;
         justify-content: center;
+        align-items: center;
         gap: 10px;
     }
 </style>
@@ -84,11 +111,21 @@
                             #{{ str_pad($seatType->id, 3, '0', STR_PAD_LEFT) }}
                         </td>
 
-                        <!-- TYPE -->
+                        <!-- TYPE + COLOR -->
                         <td>
-                            <span class="room-main">
-                                {{ $seatType->type }}
-                            </span>
+                            <div class="seat-type-wrap">
+
+                                <!-- màu -->
+                                <span class="seat-color"
+                                    style="background: {{ $seatType->color ?? '#ccc' }}">
+                                </span>
+
+                                <!-- tên -->
+                                <span class="room-main">
+                                    {{ $seatType->type }}
+                                </span>
+
+                            </div>
                         </td>
 
                         <!-- PRICE -->
@@ -97,13 +134,15 @@
                         </td>
 
                         <!-- ACTION -->
-                        <td>
+                        <td class="text-center">
                             <div class="btn-group-actions">
                                 <a href="{{ route('admin.seat_types.edit', $seatType) }}" class="btn-circle">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
 
-                                <form action="{{ route('admin.seat_types.destroy', $seatType) }}" method="POST" onsubmit="return confirm('Xóa loại ghế?')">
+                                <form action="{{ route('admin.seat_types.destroy', $seatType) }}"
+                                    method="POST"
+                                    onsubmit="return confirm('Xóa loại ghế?')">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn-circle btn-del">
