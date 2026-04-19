@@ -4,7 +4,6 @@
 <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
 
 <style>
-    /* ===== FIX TABLE ===== */
     .table-custom {
         width: 100%;
         border-collapse: collapse;
@@ -16,7 +15,6 @@
         vertical-align: middle;
     }
 
-    /* LINE FULL NGANG */
     .table-custom tbody tr {
         border-bottom: 1px solid var(--border);
     }
@@ -25,7 +23,6 @@
         border-bottom: none;
     }
 
-    /* TEXT */
     .room-main {
         font-weight: 600;
         color: var(--text);
@@ -39,7 +36,6 @@
         color: var(--muted);
     }
 
-    /* ACTION */
     .btn-group-actions {
         display: flex;
         justify-content: center;

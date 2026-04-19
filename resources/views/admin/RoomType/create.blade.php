@@ -1,6 +1,8 @@
 @extends('layouts.management')
 @section('content')
 
+<link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+
 <style>
     body {
         background: var(--bg);
@@ -12,7 +14,6 @@
         padding: 2rem 0 5rem;
     }
 
-    /* ===== HEADER ===== */
     .cw-head {
         display: flex;
         justify-content: space-between;
@@ -26,7 +27,6 @@
         margin: 0;
     }
 
-    /* ===== CARD ===== */
     .cw-card {
         background: var(--card);
         border: 1px solid var(--border);
@@ -34,7 +34,6 @@
         padding: 1.5rem;
     }
 
-    /* ===== SECTION TITLE (có line) ===== */
     .cw-section-title {
         font-family: 'JetBrains Mono', monospace;
         font-size: 10px;
@@ -54,7 +53,6 @@
         background: var(--border);
     }
 
-    /* ===== LABEL (không line) ===== */
     .cw-label-line {
         margin-bottom: 6px;
     }
@@ -65,7 +63,6 @@
         color: var(--muted);
     }
 
-    /* ===== INPUT ===== */
     .cw-input {
         width: 100%;
         background: var(--surface) !important;
@@ -89,10 +86,15 @@
         color: var(--muted);
     }
 
-    /* ===== FIX TRẮNG ===== */
     input,
     select,
     textarea {
+        background-color: var(--surface) !important;
+        color: var(--text) !important;
+    }
+
+    select:focus,
+    select:active {
         background-color: var(--surface) !important;
         color: var(--text) !important;
     }
@@ -102,12 +104,13 @@
         color: #fff;
     }
 
-    input:-webkit-autofill {
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
         -webkit-text-fill-color: var(--text);
         -webkit-box-shadow: 0 0 0px 1000px var(--surface) inset;
     }
 
-    /* ===== BUTTON ===== */
     .btn-cancel {
         background: transparent;
         border: 1px solid var(--border);
@@ -126,6 +129,10 @@
         padding: 10px 22px;
         font-size: 13px;
         font-weight: 600;
+    }
+
+    .btn-submit:hover {
+        background: #f0d47a;
     }
 
     .cw-footer {
@@ -148,15 +155,18 @@
 
         <!-- Header -->
         <div class="cw-head">
-            <h2>Thêm loại phòng</h2>
+            <div>
+                <h2>Thêm loại phòng</h2>
+            </div>
         </div>
 
-        <!-- FORM -->
+        <!-- Form -->
         <form method="POST" action="{{ route('admin.room_types.store') }}">
             @csrf
 
             <div class="cw-card">
 
+                <!-- TITLE có line -->
                 <div class="cw-section-title">
                     Thông tin loại phòng
                 </div>
@@ -204,7 +214,7 @@
                 </div>
             </div>
 
-            <!-- FOOTER -->
+            <!-- Footer -->
             <div class="cw-footer">
                 <a href="{{ route('admin.room_types.index') }}" class="btn-cancel">Hủy</a>
                 <button type="submit" class="btn-submit">Lưu loại phòng</button>

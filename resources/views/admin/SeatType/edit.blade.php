@@ -12,7 +12,6 @@
         padding: 2rem 0 5rem;
     }
 
-    /* ===== HEADER ===== */
     .cw-head {
         display: flex;
         justify-content: space-between;
@@ -26,7 +25,18 @@
         margin: 0;
     }
 
-    /* ===== CARD ===== */
+    .cw-crumb {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        color: var(--muted);
+        background: var(--card);
+        border: 1px solid var(--border);
+        padding: 3px 10px;
+        border-radius: 20px;
+        margin-top: 4px;
+        display: inline-block;
+    }
+
     .cw-card {
         background: var(--card);
         border: 1px solid var(--border);
@@ -34,7 +44,6 @@
         padding: 1.5rem;
     }
 
-    /* ===== SECTION TITLE (GIỮ LINE) ===== */
     .cw-section-title {
         font-family: 'JetBrains Mono', monospace;
         font-size: 10px;
@@ -54,8 +63,10 @@
         background: var(--border);
     }
 
-    /* ===== LABEL (❌ BỎ LINE) ===== */
     .cw-label-line {
+        display: flex;
+        align-items: center;
+        gap: 10px;
         margin-bottom: 6px;
     }
 
@@ -65,7 +76,13 @@
         color: var(--muted);
     }
 
-    /* ===== INPUT ===== */
+    .cw-label-line::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+    }
+
     .cw-input {
         width: 100%;
         background: var(--surface) !important;
@@ -76,8 +93,6 @@
         color: var(--text) !important;
         outline: none;
         transition: all .2s;
-        appearance: auto;
-        -webkit-appearance: auto;
     }
 
     .cw-input:focus {
@@ -89,36 +104,20 @@
         color: var(--muted);
     }
 
-    /* ===== FIX TRẮNG INPUT + SELECT ===== */
+    /* FIX trắng Chrome */
+    .cw-input:-webkit-autofill,
+    .cw-input:-webkit-autofill:hover,
+    .cw-input:-webkit-autofill:focus {
+        -webkit-text-fill-color: var(--text);
+        -webkit-box-shadow: 0 0 0px 1000px var(--surface) inset;
+    }
+
     input,
-    select,
     textarea {
         background-color: var(--surface) !important;
         color: var(--text) !important;
     }
 
-    select:focus,
-    select:active {
-        background-color: var(--surface) !important;
-        color: var(--text) !important;
-    }
-
-    select option {
-        background: #0b1220;
-        color: #fff;
-    }
-
-    /* FIX autofill */
-    input:-webkit-autofill,
-    input:-webkit-autofill:hover,
-    input:-webkit-autofill:focus,
-    select:-webkit-autofill {
-        -webkit-text-fill-color: var(--text);
-        -webkit-box-shadow: 0 0 0px 1000px var(--surface) inset;
-        transition: background-color 9999s ease-in-out 0s;
-    }
-
-    /* ===== BUTTON ===== */
     .btn-cancel {
         background: transparent;
         border: 1px solid var(--border);
@@ -168,10 +167,12 @@
 
         <!-- Header -->
         <div class="cw-head">
-            <h2>Chỉnh sửa loại ghế</h2>
+            <div>
+                <h2>Chỉnh sửa loại ghế</h2>
+            </div>
         </div>
 
-        <!-- FORM -->
+        <!-- FORM EDIT -->
         <form method="POST" action="{{ route('admin.seat_types.update', $seatType) }}">
             @csrf
             @method('PUT')

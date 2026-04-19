@@ -77,11 +77,6 @@
         color: var(--muted);
     }
 
-    /* ===== CHỈ ẨN LINE Ở LABEL CẦN ===== */
-    .no-line::after {
-        display: none;
-    }
-
     .cw-label-line::after {
         content: "";
         flex: 1;
@@ -111,7 +106,61 @@
         color: var(--muted);
     }
 
-    /* FIX trắng */
+    input,
+    select,
+    textarea {
+        background-color: var(--surface) !important;
+        color: var(--text) !important;
+    }
+
+    input:-webkit-autofill {
+        -webkit-text-fill-color: var(--text);
+        -webkit-box-shadow: 0 0 0px 1000px var(--surface) inset;
+    }
+
+    .btn-cancel {
+        background: transparent;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 9px 18px;
+        font-size: 13px;
+        color: var(--muted);
+        text-decoration: none;
+    }
+
+    .btn-cancel:hover {
+        border-color: var(--border-h);
+        color: var(--text);
+    }
+
+    .btn-submit {
+        background: var(--accent);
+        color: #0d0f14;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 24px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .btn-submit:hover {
+        background: #f0d47a;
+    }
+
+    .cw-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 1.5rem;
+    }
+
+    .cw-error {
+        color: var(--danger);
+        font-size: 11px;
+        margin-top: 4px;
+        display: block;
+    }
+
     input,
     select,
     textarea {
@@ -138,52 +187,19 @@
         -webkit-box-shadow: 0 0 0px 1000px var(--surface) inset;
         transition: background-color 9999s ease-in-out 0s;
     }
-
-    /* BUTTON */
-    .btn-cancel {
-        background: transparent;
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 9px 18px;
-        font-size: 13px;
-        color: var(--muted);
-        text-decoration: none;
-    }
-
-    .btn-submit {
-        background: var(--accent);
-        color: #0d0f14;
-        border: none;
-        border-radius: 8px;
-        padding: 10px 24px;
-        font-size: 13px;
-        font-weight: 600;
-    }
-
-    .cw-footer {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        margin-top: 1.5rem;
-    }
-
-    .cw-error {
-        color: var(--danger);
-        font-size: 11px;
-        margin-top: 4px;
-        display: block;
-    }
 </style>
 
 <div class="cw">
     <div class="container-fluid px-3 px-md-4">
 
+        <!-- Header -->
         <div class="cw-head">
             <div>
                 <h2>Thêm loại ghế</h2>
             </div>
         </div>
 
+        <!-- Form -->
         <form method="POST" action="{{ route('admin.seat_types.store') }}">
             @csrf
 
@@ -197,7 +213,7 @@
 
                     <!-- Type -->
                     <div class="col-md-6">
-                        <div class="cw-label-line no-line">
+                        <div class="cw-label-line">
                             <span>Loại ghế</span>
                         </div>
 
@@ -215,7 +231,7 @@
 
                     <!-- Price -->
                     <div class="col-md-6">
-                        <div class="cw-label-line no-line">
+                        <div class="cw-label-line">
                             <span>Giá</span>
                         </div>
 
@@ -236,6 +252,7 @@
                 </div>
             </div>
 
+            <!-- Footer -->
             <div class="cw-footer">
                 <a href="{{ route('admin.seat_types.index') }}" class="btn-cancel">Hủy</a>
                 <button type="submit" class="btn-submit">Lưu loại ghế</button>

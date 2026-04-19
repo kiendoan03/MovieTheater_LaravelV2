@@ -12,7 +12,6 @@
         padding: 2rem 0 5rem;
     }
 
-    /* ===== HEADER ===== */
     .cw-head {
         display: flex;
         justify-content: space-between;
@@ -38,7 +37,6 @@
         display: inline-block;
     }
 
-    /* ===== CARD ===== */
     .cw-card {
         background: var(--card);
         border: 1px solid var(--border);
@@ -46,7 +44,6 @@
         padding: 1.5rem;
     }
 
-    /* ===== SECTION TITLE (có line) ===== */
     .cw-section-title {
         font-family: 'JetBrains Mono', monospace;
         font-size: 10px;
@@ -66,7 +63,6 @@
         background: var(--border);
     }
 
-    /* ===== LABEL (KHÔNG line) ===== */
     .cw-label-line {
         margin-bottom: 6px;
     }
@@ -77,7 +73,6 @@
         color: var(--muted);
     }
 
-    /* ===== INPUT ===== */
     .cw-input {
         width: 100%;
         background: var(--surface) !important;
@@ -101,7 +96,6 @@
         color: var(--muted);
     }
 
-    /* ===== FIX TRẮNG INPUT ===== */
     input,
     select,
     textarea {
@@ -120,7 +114,6 @@
         color: #fff;
     }
 
-    /* autofill */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus {
@@ -128,7 +121,6 @@
         -webkit-box-shadow: 0 0 0px 1000px var(--surface) inset;
     }
 
-    /* ===== BUTTON ===== */
     .btn-cancel {
         background: transparent;
         border: 1px solid var(--border);

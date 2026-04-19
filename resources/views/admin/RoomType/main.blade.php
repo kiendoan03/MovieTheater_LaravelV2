@@ -3,13 +3,11 @@
 <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
 
 <style>
-    /* ===== FIX TABLE LỆCH ===== */
     .table-custom {
         width: 100%;
         border-collapse: collapse;
     }
 
-    /* HEADER */
     .table-custom thead th {
         text-align: left;
         font-size: 12px;
@@ -19,7 +17,6 @@
         border-bottom: 1px solid var(--border);
     }
 
-    /* ROW */
     .table-custom tbody tr {
         height: 72px;
         border-bottom: 1px solid var(--border);
@@ -31,13 +28,11 @@
         background: rgba(255, 255, 255, 0.02);
     }
 
-    /* CELL */
     .table-custom td {
         padding: 16px;
         vertical-align: middle;
     }
 
-    /* ===== FIX CỘT LOẠI PHÒNG ===== */
     .room-main {
         display: block;
         font-weight: 500;
@@ -52,13 +47,11 @@
         margin-top: 4px;
     }
 
-    /* ID */
     .mono-id {
         font-family: 'JetBrains Mono', monospace;
         color: var(--muted);
     }
 
-    /* ===== ACTION BUTTON ===== */
     .btn-group-actions {
         display: flex;
         justify-content: center;
@@ -88,7 +81,6 @@
         color: #ef4444;
     }
 
-    /* EMPTY */
     .empty-state {
         text-align: center;
         padding: 40px 0;
