@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
 use App\Models\Account;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -13,6 +15,16 @@ class AuthController extends Controller
     public function __construct(
         private readonly TokenController $token,
     ) {}
+
+    public function showLoginForm()
+    {
+        return view('admin.Auth.login');
+    }
+
+    public function showRegisterForm()
+    {
+        return view('admin.Auth.register');
+    }
 
     public function login(Request $request)
     {
@@ -25,17 +37,26 @@ class AuthController extends Controller
 
         if (! $account || ! Hash::check($credentials['password'], $account->password)) {
             return response()->json([
-                'message' => 'Email hoặc mật khẩu không đúng.',
+                'message' => 'Email hoặc mật khẩu không đúng',
             ], 401);
         }
+
+        if (! $account->is_active) {
+            return response()->json([
+                'message' => 'Bay acc',
+            ], 403);
+        }
+
+        $relation = $account->role === UserRole::Customer ? 'customer' : 'staff';
+        $account->load($relation);
 
         $accessToken = JWTAuth::fromUser($account);
         $rawRefreshToken = $this->token->issueRefreshToken($account);
 
-        return $this->token->buildTokenResponse($account, $accessToken, $rawRefreshToken);
+        return $this->token->buildTokenResponse($account, $accessToken, $rawRefreshToken, $account->{$relation});
     }
 
-    public function register(Request $request, AccountController $accountController, CustomerController $customerController)
+    public function register(Request $request) // Xóa bỏ AccountController và CustomerController ở đây
     {
         $data = $request->validate([
             'email' => 'required|email|unique:accounts,email',
@@ -44,26 +65,32 @@ class AuthController extends Controller
             'phonenumber' => 'required|string|max:20',
             'address' => 'nullable|string|max:500',
             'date_of_birth' => 'required|date',
-            'isVerify' => 'required|boolean',
         ]);
 
-        if (! $data['isVerify']) {
-            return response()->json(['message' => 'Vui lòng xác thực email trước khi đăng ký.'], 400);
+        // Kiểm tra email đã xác thực OTP chưa (set bởi /verify-otp)
+        if (! Cache::get('email_verified_'.$data['email'])) {
+            return response()->json(['message' => 'Vui lòng xác thực email bằng OTP trước khi đăng ký'], 400);
         }
 
-        // Double check ở backend: Xác thực xem trong Cache cái email này lúc gửi / check OTP đã thực sự hợp lệ chưa
-        $isVerified = \Illuminate\Support\Facades\Cache::get('email_verified_'.$data['email']);
+        Cache::forget('email_verified_'.$data['email']);
 
-        if (! $isVerified) {
-            return response()->json(['message' => 'Email chưa được xác thực OTP hoặc quá thời gian. Bạn là bot hay bị cúc?'], 400);
-        }
+        // Gộp logic tạo dữ liệu vào đây bằng Eloquent Relationship
+        $account = DB::transaction(function () use ($data) {
+            // 1. Tạo Account trước
+            $acc = Account::create([
+                'email' => $data['email'],
+                'password' => $data['password'], // Trong Model đã có casts hashed nên cứ tự tin ném raw password vào
+                'role' => UserRole::Admin,    // Đăng ký ngoài form mặc định là Customer
+                'is_active' => true,             // Mặc định cho phép hoạt động luôn
+            ]);
 
-        // Đã xác nhận ok, xóa bỏ status đã verify cho email này khỏi cache luôn
-        \Illuminate\Support\Facades\Cache::forget('email_verified_'.$data['email']);
-
-        $account = DB::transaction(function () use ($data, $accountController, $customerController) {
-            $acc = $accountController->createAccount($data);
-            $customerController->createCustomer($acc, $data);
+            // 2. Tạo Customer ăn theo Account_id siêu gọn nhẹ
+            $acc->customer()->create([
+                'name' => $data['name'],
+                'phonenumber' => $data['phonenumber'],
+                'address' => $data['address'],
+                'date_of_birth' => $data['date_of_birth'],
+            ]);
 
             return $acc;
         });
@@ -71,19 +98,25 @@ class AuthController extends Controller
         // Đã gộp thành công, sinh token
         $accessToken = JWTAuth::fromUser($account);
         $rawRefreshToken = $this->token->issueRefreshToken($account);
-        $ttlMinutes = config('jwt.ttl', 60);
 
-        // Trả kết quả bóc tách thủ công từ $data tại chính hàm register này, không làm bẩn TokenResponse
-        return response()->json([
-            'message' => 'Đăng ký tài khoản thành công.',
-            'access_token' => $accessToken,
-            'customer' => [
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'phonenumber' => $data['phonenumber'],
-            ],
-        ])
-            ->cookie('access_token', $accessToken, $ttlMinutes, '/', null, false, true, false, 'Strict')
-            ->cookie('refresh_token', $rawRefreshToken, 30 * 24 * 60, '/', null, false, true, false, 'Strict');
+        // Bóc tách data để trả về cho Frontend (như bạn đã làm)
+        $customerProfile = [
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'phonenumber' => $data['phonenumber'],
+        ];
+
+        // Tái sử dụng hàm buildTokenResponse, truyền thẳng profile vào!
+        return $this->token->buildTokenResponse($account, $accessToken, $rawRefreshToken, $customerProfile);
+    }
+
+    public function logout(Request $request)
+    {
+        $this->token->revoke($request);
+
+        return response()
+            ->json(['message' => 'Đăng xuất thành công.'])
+            ->withoutCookie(TokenController::REFRESH_COOKIE)
+            ->withoutCookie('access_token');
     }
 }

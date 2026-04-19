@@ -10,9 +10,9 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class TokenController extends Controller
 {
-    private const REFRESH_COOKIE = 'refresh_token';
+    public const REFRESH_COOKIE = 'refresh_token';
 
-    private const ACCESS_COOKIE = 'access_token';
+    public const ACCESS_COOKIE = 'access_token';
 
     private const REFRESH_TTL_DAYS = 30;
 
@@ -25,7 +25,7 @@ class TokenController extends Controller
 
         RefreshToken::create([
             'account_id' => $account->id,
-            'token' => hash('sha256', $raw),
+            'token' => $raw,
             'expires_at' => now()->addDays(self::REFRESH_TTL_DAYS),
             'is_revoked' => false,
         ]);
@@ -37,20 +37,23 @@ class TokenController extends Controller
      * Build response JSON + 2 cookie (access & refresh).
      * Dùng chung cho login và refresh.
      */
-    public function buildTokenResponse(Account $account, string $accessToken, string $rawRefreshToken)
+    public function buildTokenResponse(Account $account, string $accessToken, string $rawRefreshToken, $profile = null)
     {
         $ttlMinutes = config('jwt.ttl', 60);
+
+        // Trích thông tin cá nhân từ profile, bỏ các id nội bộ
+        $profileData = null;
+        if ($profile) {
+            $profileArr = is_array($profile) ? $profile : $profile->toArray();
+            $profileData = collect($profileArr)->except(['id', 'account_id', 'created_at', 'updated_at'])->toArray();
+        }
 
         return response()->json([
             'message' => 'Thành công.',
             'token_type' => 'Bearer',
             'expires_in' => $ttlMinutes * 60,
             'access_token' => $accessToken,
-            'account' => [
-                'id' => $account->id,
-                'email' => $account->email,
-                'role' => $account->role,
-            ],
+            'profile' => $profileData,
         ])
             ->cookie(self::ACCESS_COOKIE, $accessToken, $ttlMinutes, '/', null, false, true, false, 'Strict')
             ->cookie(self::REFRESH_COOKIE, $rawRefreshToken, self::REFRESH_TTL_DAYS * 24 * 60, '/', null, false, true, false, 'Strict');
@@ -67,7 +70,7 @@ class TokenController extends Controller
             return response()->json(['message' => 'Refresh token không tồn tại.'], 401);
         }
 
-        $record = RefreshToken::where('token', hash('sha256', $raw))
+        $record = RefreshToken::whereToken($raw)
             ->where('is_revoked', false)
             ->where('expires_at', '>', now())
             ->first();
@@ -90,10 +93,7 @@ class TokenController extends Controller
         return $this->buildTokenResponse($account, $newAccessToken, $newRefreshToken);
     }
 
-    /**
-     * POST /api/auth/logout
-     */
-    public function logout(Request $request)
+    public function revoke(Request $request)
     {
         $raw = $request->cookie(self::REFRESH_COOKIE);
 
@@ -108,14 +108,8 @@ class TokenController extends Controller
 
         try {
             JWTAuth::parseToken()->invalidate();
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             // Token đã hết hạn hoặc không có – bỏ qua
-            Log::error('Error invalidating token: '.$e->getMessage());
         }
-
-        return response()
-            ->json(['message' => 'Đăng xuất thành công.'])
-            ->withoutCookie(self::REFRESH_COOKIE)
-            ->withoutCookie('access_token');
     }
 }

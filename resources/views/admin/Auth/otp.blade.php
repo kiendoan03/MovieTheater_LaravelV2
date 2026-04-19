@@ -159,8 +159,7 @@
         <div class="email-footer">
             <p>Hệ thống gửi tự động từ <strong>NETFNIX Cinema Vietnam</strong></p>
             <h3>Kết nối với chúng tôi</h3>
-            <p>Hỗ trợ: <a
-                    href="mailto: \MailAddress::SYSTEM_SUPPORT }}">{{ \App\Const\MailAddress::SYSTEM_SUPPORT }}</a> |
+            <p>Hỗ trợ: <a href="mailto:{{ \App\Const\MailAddress::MAIL }}">{{ \App\Const\MailAddress::MAIL }}</a> |
                 Hotline: 1900 xxxx</p>
             <p style="margin-top: 15px;">© {{ date('Y') }} NETFNIX Cinema. All rights reserved.</p>
         </div>
