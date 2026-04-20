@@ -33,7 +33,35 @@
 
 .cw-card {
   background:var(--card); border:1px solid var(--border);
-  border-radius:16px; overflow: hidden;
+  border-radius:20px; overflow: hidden;
+  padding:1.75rem;
+  box-shadow:0 24px 80px rgba(0,0,0,0.18);
+}
+
+.cw-image-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(232,201,106,0.35);
+  border-radius: 24px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+}
+
+.cw-img-preview {
+  display:block; width:180px; height:180px; object-fit:cover;
+  border-radius:24px; border: 2px solid rgba(232,201,106,0.65);
+  background: rgba(255,255,255,0.04);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+  margin-top:0;
+}
+
+.cw-input.cw-file {
+  margin-top: 0.75rem;
+  padding: 12px 14px;
+  border-radius: 14px;
 }
 
 .table-custom { width: 100%; border-collapse: collapse; }
@@ -53,7 +81,6 @@
 
 .text-right { text-align: right; }
 .text-center { text-align: center; }
-.action-cell { padding-left: 40px; padding-right: 0; }
 .mono-id { font-family:'JetBrains Mono',monospace; color: var(--muted); width: 90px; }
 .btn-group-actions-right { justify-content: flex-end; }
 .empty-state { text-align: center; padding: 4rem; color: var(--muted); }
@@ -100,7 +127,7 @@
 
 .rounded-image { width: 92px; height: 92px; object-fit: cover; border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); }
 
-.cw-label { display:block; font-size:11px; color:var(--muted); margin-bottom:.5rem; letter-spacing:.04em; }
+.cw-label { font-size:11px; padding:4px 0 12px 4px; letter-spacing:.04em; }
 .cw-input {
   width:100%; background:var(--surface); border:1px solid var(--border);
   border-radius:10px; color:var(--text); font-family:'Sora',sans-serif;
