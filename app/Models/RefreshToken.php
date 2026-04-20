@@ -29,4 +29,18 @@ class RefreshToken extends Model
     {
         return $this->belongsTo(Account::class, 'account_id', 'id');
     }
+
+    // Tự động hash khi lưu
+    protected function token(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => hash('sha256', $value),
+        );
+    }
+
+    // hash khi tìm kiếm
+    public function scopeWhereToken(Builder $query, string $plainTextToken): Builder
+    {
+        return $query->where('token', hash('sha256', $plainTextToken));
+    }
 }

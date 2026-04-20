@@ -1,7 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ScheduleController;
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,9 +14,18 @@ use App\Http\Controllers\ScheduleController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+// ==========================================
+// Auth Routes - dùng chung cho mọi người
+// ==========================================
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 
-
-
+// ==========================================
+// Admin Web Routes
+// ==========================================
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
+});
 
 Route::prefix('Admin/Category')->name('admin.')->group(function () {
     Route::get('/', [\App\Http\Controllers\CategoryController::class, 'index'])->name('categories.index');
