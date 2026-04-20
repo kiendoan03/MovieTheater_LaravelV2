@@ -24,8 +24,10 @@
           </div>
           <div class="col-md-4">
             <label class="cw-label" for="image">Ảnh diễn viên</label>
+            <div class="cw-image-card">
+              <img id="preview" class="cw-img-preview" src="https://static.vecteezy.com/system/resources/thumbnails/060/605/418/small/default-avatar-profile-icon-social-media-user-free-vector.jpg" alt="Ảnh diễn viên">
+            </div>
             <input type="file" id="image" name="image" class="cw-input cw-file" accept="image/png, image/jpg, image/jpeg" onchange="show_img()" required>
-            <img id="preview" class="cw-img-preview hidden" src="" alt="Ảnh xem trước">
             @error('image')<span class="cw-error">{{ $message }}</span>@enderror
           </div>
         </div>
@@ -40,15 +42,18 @@
 </div>
 
 <script>
+  const defaultPreview = 'https://static.vecteezy.com/system/resources/thumbnails/060/605/418/small/default-avatar-profile-icon-social-media-user-free-vector.jpg';
   function show_img() {
     const input = document.getElementById('image');
     const preview = document.getElementById('preview');
     const file = input.files[0];
-    if (!file) return;
+    if (!file) {
+      preview.src = defaultPreview;
+      return;
+    }
     const reader = new FileReader();
     reader.onload = function (e) {
       preview.src = e.target.result;
-      preview.style.display = 'block';
     };
     reader.readAsDataURL(file);
   }

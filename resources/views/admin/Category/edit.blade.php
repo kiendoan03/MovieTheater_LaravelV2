@@ -17,9 +17,13 @@
       @csrf
       @method('PUT')
       <div class="cw-card">
-        <label class="cw-label" for="name">Tên danh mục</label>
-        <input type="text" id="name" name="name" class="cw-input" value="{{ old('name', $category->name) }}" placeholder="Nhập tên danh mục" required>
-        @error('name')<span class="cw-error">{{ $message }}</span>@enderror
+        <div class="row g-4">
+          <div class="col-md-6">
+            <label class="cw-label" for="name">Tên danh mục</label>
+            <input type="text" id="name" name="name" class="cw-input" value="{{ old('name', $category->name) }}" placeholder="Nhập tên danh mục" required>
+            @error('name')<span class="cw-error">{{ $message }}</span>@enderror
+          </div>
+        </div>
       </div>
 
       <div class="cw-footer">
