@@ -20,7 +20,6 @@
     .table-custom tbody tr {
         height: 72px;
         border-bottom: 1px solid var(--border);
-        /* CHỈ LINE Ở ĐÂY */
         transition: 0.2s;
     }
 
@@ -37,7 +36,6 @@
         display: block;
         font-weight: 500;
         border: none !important;
-        /* QUAN TRỌNG: bỏ line trong cell */
     }
 
     .room-sub {

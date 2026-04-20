@@ -33,7 +33,6 @@
         align-items: center;
         gap: 10px;
         height: 100%;
-        /* 🔥 đảm bảo cùng chiều cao */
     }
 
     .seat-color {
