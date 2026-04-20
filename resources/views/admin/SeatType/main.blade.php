@@ -1,14 +1,80 @@
 @extends('layouts.management')
 @section('content')
+
 <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+
+<style>
+    .table-custom {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table-custom th,
+    .table-custom td {
+        padding: 18px 16px;
+        vertical-align: middle;
+        text-align: left;
+    }
+
+    .table-custom tbody tr {
+        border-bottom: 1px solid var(--border);
+    }
+
+    .table-custom tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .table-custom td {
+        line-height: 1.4;
+    }
+
+    .seat-type-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        height: 100%;
+    }
+
+    .seat-color {
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+        border: 1px solid var(--border);
+        flex-shrink: 0;
+    }
+
+    .room-main {
+        font-weight: 600;
+        color: var(--text);
+        display: inline-flex;
+        /* 🔥 fix lệch chuẩn */
+        align-items: center;
+    }
+
+    .mono-id {
+        font-family: 'JetBrains Mono', monospace;
+        color: var(--muted);
+        white-space: nowrap;
+    }
+
+    .btn-group-actions {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+</style>
 
 <div class="cw">
     <div class="container-fluid px-3 px-md-5">
 
+        <!-- HEADER -->
         <div class="cw-head">
             <div>
                 <h2>Quản lý loại ghế</h2>
-                <div class="cw-count">Tổng số: {{ $seatTypes->count() }} loại ghế</div>
+                <div class="cw-count">
+                    Tổng số: {{ $seatTypes->count() }} loại ghế
+                </div>
             </div>
 
             <a href="{{ route('admin.seat_types.create') }}" class="btn-new">
@@ -19,34 +85,59 @@
             </a>
         </div>
 
+        <!-- TABLE -->
         <div class="cw-card">
             <table class="table-custom">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th width="80">ID</th>
                         <th>Loại ghế</th>
-                        <th>Giá</th>
-                        <th class="text-center">Thao tác</th>
+                        <th width="160">Giá</th>
+                        <th class="text-center" width="140">Thao tác</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     @foreach($seatTypes as $seatType)
                     <tr>
+
+                        <!-- ID -->
                         <td class="mono-id">
                             #{{ str_pad($seatType->id, 3, '0', STR_PAD_LEFT) }}
                         </td>
-                        <td class="room-main">
-                            {{ $seatType->type }}
+
+                        <!-- TYPE + COLOR -->
+                        <td>
+                            <div class="seat-type-wrap">
+
+                                <!-- màu -->
+                                <span class="seat-color"
+                                    style="background: {{ $seatType->color ?? '#ccc' }}">
+                                </span>
+
+                                <!-- tên -->
+                                <span class="room-main">
+                                    {{ $seatType->type }}
+                                </span>
+
+                            </div>
                         </td>
+
+                        <!-- PRICE -->
                         <td>
                             {{ number_format($seatType->price, 0) }} đ
                         </td>
+
+                        <!-- ACTION -->
                         <td class="text-center">
-                            <div class="btn-group-actions btn-group-actions-right">
+                            <div class="btn-group-actions">
                                 <a href="{{ route('admin.seat_types.edit', $seatType) }}" class="btn-circle">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
-                                <form action="{{ route('admin.seat_types.destroy', $seatType) }}" method="POST" onsubmit="return confirm('Xóa loại ghế?')">
+
+                                <form action="{{ route('admin.seat_types.destroy', $seatType) }}"
+                                    method="POST"
+                                    onsubmit="return confirm('Xóa loại ghế?')">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn-circle btn-del">
@@ -55,6 +146,7 @@
                                 </form>
                             </div>
                         </td>
+
                     </tr>
                     @endforeach
                 </tbody>
@@ -66,6 +158,7 @@
                 <p>Chưa có loại ghế nào.</p>
             </div>
             @endif
+
         </div>
 
     </div>

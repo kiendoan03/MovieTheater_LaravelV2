@@ -36,11 +36,13 @@ class SeatTypeController extends Controller
         $request->validate([
             'type' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
+            'color' => 'required|string',
         ]);
 
         $array = [];
         $array = Arr::add($array, 'type', $request->type);
         $array = Arr::add($array, 'price', $request->price);
+        $array = Arr::add($array, 'color', $request->color);
 
         SeatType::create($array);
 
@@ -74,11 +76,13 @@ class SeatTypeController extends Controller
         $request->validate([
             'type' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
+            'color' => 'required|string',
         ]);
 
         $array = [];
         $array = Arr::add($array, 'type', $request->type);
         $array = Arr::add($array, 'price', $request->price);
+        $array = Arr::add($array, 'color', $request->color);
 
         $seatType->update($array);
 
