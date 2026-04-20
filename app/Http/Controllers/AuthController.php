@@ -43,7 +43,7 @@ class AuthController extends Controller
 
         if (! $account->is_active) {
             return response()->json([
-                'message' => 'Bay acc',
+                'message' => 'Tài khoản không hoạt động',
             ], 403);
         }
 
