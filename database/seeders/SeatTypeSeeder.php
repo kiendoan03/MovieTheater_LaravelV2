@@ -13,6 +13,6 @@ class SeatTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        SeatType::factory(2)->create();
+        SeatType::factory(3)->create();
     }
 }
