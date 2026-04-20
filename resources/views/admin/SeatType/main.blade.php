@@ -24,12 +24,10 @@
         border-bottom: none;
     }
 
-    /* ===== FIX CHÍNH LỆCH DÒNG ===== */
     .table-custom td {
         line-height: 1.4;
     }
 
-    /* FIX layout loại ghế + màu */
     .seat-type-wrap {
         display: flex;
         align-items: center;
@@ -54,14 +52,12 @@
         align-items: center;
     }
 
-    /* ID */
     .mono-id {
         font-family: 'JetBrains Mono', monospace;
         color: var(--muted);
         white-space: nowrap;
     }
 
-    /* ACTION */
     .btn-group-actions {
         display: flex;
         justify-content: center;
