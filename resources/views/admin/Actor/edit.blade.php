@@ -27,8 +27,8 @@
             <label class="cw-label" for="image">Ảnh diễn viên</label>
             <div class="cw-image-card">
               <img id="preview" class="cw-img-preview" src="{{ $actor->image ? asset(\Illuminate\Support\Facades\Storage::url('img/actor/').$actor->image) : 'https://static.vecteezy.com/system/resources/thumbnails/060/605/418/small/default-avatar-profile-icon-social-media-user-free-vector.jpg' }}" alt="Ảnh diễn viên">
+              <input type="file" id="image" name="image" class="cw-input cw-file" accept="image/png, image/jpg, image/jpeg" onchange="show_img()">
             </div>
-            <input type="file" id="image" name="image" class="cw-input cw-file" accept="image/png, image/jpg, image/jpeg" onchange="show_img()">
             @error('image')<span class="cw-error">{{ $message }}</span>@enderror
           </div>
         </div>
