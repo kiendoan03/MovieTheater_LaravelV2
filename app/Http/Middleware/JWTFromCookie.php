@@ -19,7 +19,7 @@ class JWTFromCookie
         $token = $request->cookie('access_token');
 
         if ($token && ! $request->hasHeader('Authorization')) {
-            $request->headers->set('Authorization', 'Bearer ' . $token);
+            $request->headers->set('Authorization', 'Bearer '.$token);
         }
 
         return $next($request);

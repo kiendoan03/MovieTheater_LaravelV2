@@ -14,8 +14,8 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SeatController;
 use App\Http\Controllers\SeatTypeController;
 use App\Http\Controllers\StaffController;
-use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TicketBookingController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TokenController;
 use Illuminate\Support\Facades\Route;
 
@@ -60,7 +60,7 @@ Route::apiResource('seats', SeatController::class)->only(['index', 'show']);
 // ==========================================
 // CỤM 2: PROTECTED ROUTES (Bắt buộc phải Đăng Nhập)
 // ==========================================
-Route::middleware('auth:api')->group(function () {
+Route::middleware(['jwt.cookie', 'auth:api'])->group(function () {
 
     // --- ZONE A: Dành cho TẤT CẢ User (Customer, Staff, Admin đều làm được) ---
     // Đặt vé, xem vé của mình...
@@ -89,7 +89,7 @@ Route::middleware('auth:api')->group(function () {
 
         // Ticket Booking API Routes (Đặt vé tại quầy)
         // Support both JWT and session auth
-        Route::prefix('ticket-booking')->middleware('auth:api,staff')->group(function () {
+        Route::prefix('ticket-booking')->group(function () {
             Route::get('/schedule-seats/{scheduleId}', [TicketBookingController::class, 'getScheduleSeats']);
             Route::post('/update-seat-status', [TicketBookingController::class, 'updateSeatStatus']);
             Route::post('/calculate-total', [TicketBookingController::class, 'calculateTotal']);
