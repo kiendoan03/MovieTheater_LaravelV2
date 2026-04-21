@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Const\Regex;
 use App\Enums\UserRole;
 use App\Models\Account;
 use Illuminate\Http\Request;
@@ -72,7 +73,7 @@ class AuthController extends Controller
             'email' => 'required|email|unique:accounts,email',
             'password' => 'required|string|min:6|confirmed',
             'name' => 'required|string|max:255',
-            'phonenumber' => 'required|string|max:20',
+            'phonenumber' => ['required', 'string', 'max:20', 'regex:'.Regex::PHONE_NUMBER],
             'address' => 'nullable|string|max:500',
             'date_of_birth' => 'required|date',
         ]);
@@ -146,7 +147,7 @@ class AuthController extends Controller
             'email' => 'required|email|unique:accounts,email',
             'password' => 'required|string|min:6|confirmed',
             'name' => 'required|string|max:255',
-            'phonenumber' => 'required|string|max:20',
+            'phonenumber' => ['required', 'string', 'max:20', 'regex:'.Regex::PHONE_NUMBER],
             'address' => 'nullable|string|max:500',
             'date_of_birth' => 'required|date',
         ]);
