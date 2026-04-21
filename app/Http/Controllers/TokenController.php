@@ -45,7 +45,7 @@ class TokenController extends Controller
         $profileData = null;
         if ($profile) {
             $profileArr = is_array($profile) ? $profile : $profile->toArray();
-            $profileData = collect($profileArr)->except(['id', 'account_id', 'created_at', 'updated_at'])->toArray();
+            $profileData = collect($profileArr)->except(['account_id', 'created_at', 'updated_at'])->toArray();
         }
 
         return response()->json([

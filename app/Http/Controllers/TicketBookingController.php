@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BookingStatus;
 use App\Models\Booking;
 use App\Models\Movie;
 use App\Models\Schedule;
 use App\Models\Seat;
 use App\Models\Ticket;
-use App\Enums\BookingStatus;
 use App\Services\PayOsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -20,19 +20,20 @@ class TicketBookingController extends Controller
     {
         $this->payOsService = $payOsService;
     }
+
     /**
      * Hiển thị danh sách phim đang chiếu
      */
     public function index()
     {
         $now = Carbon::now();
-        
+
         // Lấy phim có lịch chiếu hiện tại hoặc tương lai
         $movies = Movie::whereHas('schedules', function ($query) use ($now) {
             $query->where('start_time', '>=', $now);
         })
-        ->orderBy('movie_name')
-        ->get();
+            ->orderBy('movie_name')
+            ->get();
 
         return view('admin.TicketBooking.movies-list', compact('movies'));
     }
@@ -43,11 +44,11 @@ class TicketBookingController extends Controller
     public function schedules($movieId)
     {
         $now = Carbon::now();
-        
+
         $movie = Movie::with(['schedules' => function ($query) use ($now) {
             $query->where('start_time', '>=', $now)
-                  ->with('room')
-                  ->orderBy('start_time');
+                ->with('room')
+                ->orderBy('start_time');
         }])->findOrFail($movieId);
 
         if ($movie->schedules->isEmpty()) {
@@ -118,6 +119,7 @@ class TicketBookingController extends Controller
 
         $seats = $schedule->room->seats->map(function ($seat) use ($bookings) {
             $booking = $bookings->get($seat->id);
+
             return [
                 'id' => $seat->id,
                 'row' => $seat->row,
@@ -151,8 +153,10 @@ class TicketBookingController extends Controller
             'status' => 'required|integer|in:0,1,2',
         ]);
 
-        $staffId = auth('staff')->user()?->id;
-        if (!$staffId) {
+        $user = auth('api')->user();
+        $staffId = $user?->staff?->id ?? $user?->id;
+
+        if (! $staffId) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
@@ -197,13 +201,13 @@ class TicketBookingController extends Controller
             'seat_ids.*' => 'exists:seats,id',
         ]);
 
-        $total = Seat::whereIn('id', $request->seat_ids)
+        $total = Seat::whereIn('seats.id', $request->seat_ids)
             ->join('seat_types', 'seats.type_id', '=', 'seat_types.id')
             ->sum('seat_types.price');
 
         return response()->json([
             'total' => number_format($total, 0, ',', '.'),
-            'amount' => (int)$total,
+            'amount' => (int) $total,
         ]);
     }
 
@@ -212,25 +216,29 @@ class TicketBookingController extends Controller
      */
     public function createTicketCash(Request $request)
     {
+        // dd([
+        //     'request_data' => $request->all(),
+        //     'staff_id' => $this->resolveStaffId(),
+        //     'user_api' => auth('api')->user()?->id,
+        // ]);
         $request->validate([
             'schedule_id' => 'required|exists:schedules,id',
             'seat_ids' => 'required|array',
             'seat_ids.*' => 'exists:seats,id',
         ]);
 
-        $staffId = auth('staff')->user()?->id;
-        if (!$staffId) {
+        $staffId = $this->resolveStaffId();
+        if (! $staffId) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
         // Tính tổng tiền
-        $total = Seat::whereIn('id', $request->seat_ids)
+        $total = Seat::whereIn('seats.id', $request->seat_ids)
             ->join('seat_types', 'seats.type_id', '=', 'seat_types.id')
             ->sum('seat_types.price');
-
         // Tạo ticket
         $ticket = Ticket::create([
-            'code' => 'TK' . time() . random_int(1000, 9999),
+            'code' => 'TK'.time().random_int(1000, 9999),
             'final_price' => $total,
             'staff_id' => $staffId,
             'customer_id' => null, // Không có customer (đặt tại quầy)
@@ -263,19 +271,19 @@ class TicketBookingController extends Controller
         ]);
 
         // Support both staff guard (session) and api guard (JWT)
-        $staffId = auth('staff')->user()?->id ?? auth('api')->user()?->staff?->id;
-        if (!$staffId) {
+        $staffId = $this->resolveStaffId();
+        if (! $staffId) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
         // Tính tổng tiền
-        $total = Seat::whereIn('id', $request->seat_ids)
+        $total = Seat::whereIn('seats.id', $request->seat_ids)
             ->join('seat_types', 'seats.type_id', '=', 'seat_types.id')
             ->sum('seat_types.price');
 
         // Tạo ticket (chưa thanh toán)
         $ticket = Ticket::create([
-            'code' => 'TK' . time() . random_int(1000, 9999),
+            'code' => 'TK'.time().random_int(1000, 9999),
             'final_price' => $total,
             'staff_id' => $staffId,
         ]);
@@ -295,14 +303,15 @@ class TicketBookingController extends Controller
 
         $qrResponse = $this->payOsService->createQRCode(
             $ticket->code,  // Code từ ticket
-            (int)$total,
+            (int) $total,
             "Mua vé xem phim - {$ticket->code}",
             $returnUrl
         );
 
-        if (!isset($qrResponse['success']) || !$qrResponse['success']) {
+        if (! isset($qrResponse['success']) || ! $qrResponse['success']) {
             // Xóa ticket nếu tạo QR thất bại
             $ticket->delete();
+
             return response()->json([
                 'message' => 'Lỗi khi tạo mã QR',
                 'error' => $qrResponse['message'] ?? 'Unknown error',
@@ -312,7 +321,7 @@ class TicketBookingController extends Controller
         return response()->json([
             'ticket_code' => $ticket->code,
             'ticket_id' => $ticket->id,
-            'amount' => (int)$total,
+            'amount' => (int) $total,
             'qr_data' => $qrResponse['data'] ?? null,
             'checkout_url' => $qrResponse['data']['checkoutUrl'] ?? null,
             'message' => 'QR code tạo thành công',
@@ -345,7 +354,7 @@ class TicketBookingController extends Controller
         $bookingsReserved = Booking::where('ticket_id', $ticket->id)
             ->where('status', BookingStatus::Reserved->value)
             ->count();
-        
+
         $totalBookings = Booking::where('ticket_id', $ticket->id)->count();
 
         if ($bookingsReserved === $totalBookings && $totalBookings > 0) {
@@ -369,7 +378,7 @@ class TicketBookingController extends Controller
                 Booking::where('ticket_id', $ticket->id)->update([
                     'status' => BookingStatus::Reserved->value,
                 ]);
-                
+
                 // Broadcast event để notify realtime
                 broadcast(new \App\Events\PaymentCompleted($ticket))->toOthers();
 
@@ -398,6 +407,19 @@ class TicketBookingController extends Controller
     public function paymentStatus($ticketCode)
     {
         $ticket = Ticket::where('code', $ticketCode)->firstOrFail();
+
         return view('admin.TicketBooking.payment-status', compact('ticket'));
+    }
+
+    private function resolveStaffId(): ?int
+    {
+        // JWT API guard
+        $user = auth('api')->user();
+        if ($user) {
+            return $user->staff?->id ?? $user->id;
+        }
+
+        // Session guard (web blade)
+        return auth('staff')->user()?->id;
     }
 }
