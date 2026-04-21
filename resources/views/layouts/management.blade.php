@@ -218,50 +218,52 @@
                             class="fa-solid fa-door-closed"></i> Room Types</a>
                     <a href="{{ route('admin.seat_types.index') }}" class="nav-link" data-id="seat-types"><i
                             class="fa-solid fa-chair"></i> Seat Types</a>
-                    <a href="{{ route('admin.actors.index') }}" " data-id="actors"><i class="fa-solid fa-masks-theater"></i> Actors</a>
-                    <a href="{{ route('admin.directors.index') }}" class="nav-link" data-id="directors"><i class="fa-solid fa-clapperboard"></i> Directors</a>
-                </div>class="nav-link
+                    <a href="{{ route('admin.actors.index') }}" class="nav-link" data-id="actors"><i
+                            class="fa-solid fa-masks-theater"></i> Actors</a>
+                    <a href="{{ route('admin.directors.index') }}" class="nav-link" data-id="directors"><i
+                            class="fa-solid fa-clapperboard"></i> Directors</a>
+                </div>
             </div>
 
             <div class="col-lg-9">
-                        @yield('content')
-                </div>
+                @yield('content')
             </div>
         </div>
+    </div>
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
-        <script>
-            $(document).ready(function() {
-                // Khởi tạo DataTable với style dark
-                if ($('#myTable').length) {
-                    $('#myTable').DataTable({
-                        language: {
-                            search: "_INPUT_",
-                            searchPlaceholder: "Search records..."
-                        }
-                    });
-                }
-
-                // Xử lý Active Menu
-                const links = document.querySelectorAll('#sidebar .nav-link');
-                const activeId = localStorage.getItem('activeMenu');
-
-                links.forEach(link => {
-                    // Set active khi click
-                    link.addEventListener('click', function() {
-                        localStorage.setItem('activeMenu', this.dataset.id);
-                    });
-
-                    // Restore active state
-                    if (link.dataset.id === activeId) {
-                        link.classList.add('active');
+    <script>
+        $(document).ready(function() {
+            // Khởi tạo DataTable với style dark
+            if ($('#myTable').length) {
+                $('#myTable').DataTable({
+                    language: {
+                        search: "_INPUT_",
+                        searchPlaceholder: "Search records..."
                     }
                 });
+            }
+
+            // Xử lý Active Menu
+            const links = document.querySelectorAll('#sidebar .nav-link');
+            const activeId = localStorage.getItem('activeMenu');
+
+            links.forEach(link => {
+                // Set active khi click
+                link.addEventListener('click', function() {
+                    localStorage.setItem('activeMenu', this.dataset.id);
+                });
+
+                // Restore active state
+                if (link.dataset.id === activeId) {
+                    link.classList.add('active');
+                }
             });
-        </script>
+        });
+    </script>
 </body>
 
 </html>
