@@ -22,10 +22,17 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/logout', [AuthController::class, 'logout']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/logout', [AuthController::class, 'logout']);
 
 // ==========================================
 // Admin Web Routes — Yêu cầu đăng nhập + role admin
+// Admin Web Routes — Yêu cầu đăng nhập + role admin
 // ==========================================
+Route::middleware(['jwt.cookie', 'role:admin'])->group(function () {
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
+    });
 Route::middleware(['jwt.cookie', 'role:admin'])->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
@@ -65,6 +72,15 @@ Route::middleware(['jwt.cookie', 'role:admin'])->group(function () {
         Route::put('/{room}/edit', [App\Http\Controllers\RoomController::class, 'update'])->name('rooms.update');
         Route::delete('/{room}/delete', [App\Http\Controllers\RoomController::class, 'destroy'])->name('rooms.destroy');
     });
+    Route::prefix('Admin/Room')->name('admin.')->group(function () {
+        Route::get('/', [App\Http\Controllers\RoomController::class, 'index'])->name('rooms.index');
+        Route::get('/create', [App\Http\Controllers\RoomController::class, 'create'])->name('rooms.create');
+        Route::post('/create', [App\Http\Controllers\RoomController::class, 'store'])->name('rooms.store');
+        Route::get('/{room}', [App\Http\Controllers\RoomController::class, 'show'])->name('rooms.show');
+        Route::get('/{room}/edit', [App\Http\Controllers\RoomController::class, 'edit'])->name('rooms.edit');
+        Route::put('/{room}/edit', [App\Http\Controllers\RoomController::class, 'update'])->name('rooms.update');
+        Route::delete('/{room}/delete', [App\Http\Controllers\RoomController::class, 'destroy'])->name('rooms.destroy');
+    });
 
     Route::prefix('Admin/RoomType')->name('admin.')->group(function () {
         Route::get('/', [App\Http\Controllers\RoomTypeController::class, 'index'])->name('room_types.index');
@@ -83,6 +99,34 @@ Route::middleware(['jwt.cookie', 'role:admin'])->group(function () {
         Route::delete('/{seatType}/delete', [App\Http\Controllers\SeatTypeController::class, 'destroy'])->name('seat_types.destroy');
     });
 
+    Route::prefix('Admin/Schedule')->name('admin.')->group(function () {
+        Route::get('/', [App\Http\Controllers\ScheduleController::class, 'index'])->name('schedules.index');
+        Route::get('/create', [App\Http\Controllers\ScheduleController::class, 'create'])->name('schedules.create');
+        Route::post('/create', [App\Http\Controllers\ScheduleController::class, 'store'])->name('schedules.store');
+        Route::get('/{schedule}/edit', [App\Http\Controllers\ScheduleController::class, 'edit'])->name('schedules.edit');
+        Route::put('/{schedule}/edit', [App\Http\Controllers\ScheduleController::class, 'update'])->name('schedules.update');
+        Route::delete('/{schedule}/delete', [App\Http\Controllers\ScheduleController::class, 'destroy'])->name('schedules.destroy');
+        Route::get('/by-room', [ScheduleController::class, 'byRoom'])->name('schedules.by-room');
+    });
+
+}); // end admin middleware group
+
+// ==========================================
+// Ticket Booking Routes (Đặt vé tại quầy - Staff & Admin)
+// ==========================================
+Route::middleware(['jwt.cookie', 'role:staff,admin'])->group(function () {
+    Route::prefix('Admin/TicketBooking')->name('admin.ticket-booking.')->group(function () {
+        Route::get('/', [TicketBookingController::class, 'index'])->name('index');
+        Route::get('/schedules/{movieId}', [TicketBookingController::class, 'schedules'])->name('schedules');
+        Route::get('/seat-layout/{scheduleId}', [TicketBookingController::class, 'seatLayout'])->name('seat-layout');
+        Route::get('/payment-status/{ticketCode}', [TicketBookingController::class, 'paymentStatus'])->name('payment-status');
+    });
+});
+
+// ==========================================
+// PayOs Webhook (Public)
+// ==========================================
+Route::post('/webhook/payos', [App\Http\Controllers\PayOsWebhookController::class, 'handle']);
     Route::prefix('Admin/Schedule')->name('admin.')->group(function () {
         Route::get('/', [App\Http\Controllers\ScheduleController::class, 'index'])->name('schedules.index');
         Route::get('/create', [App\Http\Controllers\ScheduleController::class, 'create'])->name('schedules.create');
