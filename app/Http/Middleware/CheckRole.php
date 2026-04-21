@@ -20,16 +20,26 @@ class CheckRole
         $user = Auth::guard('api')->user();
 
         if (! $user) {
+            // Nếu là web request thì redirect về trang login, API thì trả JSON
+            if (! $request->expectsJson()) {
+                return redirect()->route('login');
+            }
+
             return response()->json(['message' => 'Bạn chưa đăng nhập.'], 401);
         }
 
-        // Vì role của sếp đang dùng Enum (trong $casts), phải lấy value của nó ra để so sánh
-        $userRole = $user->role->value ?? $user->role;
+        // Vì role là int-backed Enum (Admin=0, Staff=1, Customer=2)
+        // Route truyền tên role dạng string ('admin', 'staff'), nên phải so sánh bằng tên enum (lowercase)
+        $userRole = strtolower($user->role->name ?? $user->role);
 
         // Kiểm tra xem role của user có nằm trong mảng roles được cấp phép không
         if (! in_array($userRole, $roles)) {
+            if (! $request->expectsJson()) {
+                abort(403, 'Không có quyền truy cập.');
+            }
+
             return response()->json([
-                'message' => 'Ai cho mà vào đây',
+                'message' => 'Không hợp lệ',
             ], 403);
         }
 

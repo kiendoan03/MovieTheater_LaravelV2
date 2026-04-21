@@ -43,7 +43,7 @@ class AuthController extends Controller
 
         if (! $account->is_active) {
             return response()->json([
-                'message' => 'Bay acc',
+                'message' => 'Tài khoản không hoạt động',
             ], 403);
         }
 
@@ -80,7 +80,7 @@ class AuthController extends Controller
             $acc = Account::create([
                 'email' => $data['email'],
                 'password' => $data['password'], // Trong Model đã có casts hashed nên cứ tự tin ném raw password vào
-                'role' => UserRole::Admin,    // Đăng ký ngoài form mặc định là Customer
+                'role' => UserRole::Customer,    // Đăng ký ngoài form mặc định là Customer
                 'is_active' => true,             // Mặc định cho phép hoạt động luôn
             ]);
 
@@ -106,16 +106,26 @@ class AuthController extends Controller
             'phonenumber' => $data['phonenumber'],
         ];
 
-        // Tái sử dụng hàm buildTokenResponse, truyền thẳng profile vào!
-        return $this->token->buildTokenResponse($account, $accessToken, $rawRefreshToken, $customerProfile);
+        if ($request->expectsJson()) {
+            // Tái sử dụng hàm buildTokenResponse, truyền thẳng profile vào!
+            return $this->token->buildTokenResponse($account, $accessToken, $rawRefreshToken, $customerProfile);
+        }
+
+        return redirect()->route('login')->with('success', 'Đăng ký thành công! Vui lòng đăng nhập.');
     }
 
     public function logout(Request $request)
     {
         $this->token->revoke($request);
 
-        return response()
-            ->json(['message' => 'Đăng xuất thành công.'])
+        if ($request->expectsJson()) {
+            return response()
+                ->json(['message' => 'Đăng xuất thành công.'])
+                ->withoutCookie(TokenController::REFRESH_COOKIE)
+                ->withoutCookie('access_token');
+        }
+
+        return redirect()->route('login')
             ->withoutCookie(TokenController::REFRESH_COOKIE)
             ->withoutCookie('access_token');
     }

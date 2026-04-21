@@ -15,6 +15,7 @@ use App\Http\Controllers\SeatController;
 use App\Http\Controllers\SeatTypeController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\TicketBookingController;
 use App\Http\Controllers\TokenController;
 use Illuminate\Support\Facades\Route;
 
@@ -85,6 +86,18 @@ Route::middleware('auth:api')->group(function () {
         Route::apiResource('rooms', RoomController::class)->except(['index', 'show']);
         Route::apiResource('seat-types', SeatTypeController::class)->except(['index', 'show']);
         Route::apiResource('seats', SeatController::class)->except(['index', 'show']);
+
+        // Ticket Booking API Routes (Đặt vé tại quầy)
+        // Support both JWT and session auth
+        Route::prefix('ticket-booking')->middleware('auth:api,staff')->group(function () {
+            Route::get('/schedule-seats/{scheduleId}', [TicketBookingController::class, 'getScheduleSeats']);
+            Route::post('/update-seat-status', [TicketBookingController::class, 'updateSeatStatus']);
+            Route::post('/calculate-total', [TicketBookingController::class, 'calculateTotal']);
+            Route::post('/create-ticket-cash', [TicketBookingController::class, 'createTicketCash']);
+            Route::post('/init-payment-payos', [TicketBookingController::class, 'initPaymentPayOs']);
+            Route::get('/ticket/{ticketCode}', [TicketBookingController::class, 'getTicket']);
+            Route::get('/check-payment-status/{ticketCode}', [TicketBookingController::class, 'checkPaymentStatus']);
+        });
     });
 });
 
