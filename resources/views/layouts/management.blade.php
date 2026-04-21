@@ -7,8 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Site')</title>
     <link rel="icon" href="/favicon.ico">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
@@ -34,10 +36,22 @@
         }
 
         /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--card); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--border-h); }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--card);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-h);
+        }
 
         /* Header */
         .navbar {
@@ -92,24 +106,35 @@
             border: 1px solid rgba(232, 201, 106, 0.2);
         }
 
-        #sidebar .nav-link i { font-size: 16px; width: 20px; text-align: center; }
+        #sidebar .nav-link i {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
 
         /* DataTables Custom */
-        .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, 
-        .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, 
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter,
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_processing,
         .dataTables_wrapper .dataTables_paginate {
             color: var(--muted) !important;
             font-size: 13px;
             margin-top: 1rem;
         }
-        
-        table.dataTable { border-color: var(--border) !important; }
-        table.dataTable thead th { border-bottom: 1px solid var(--border) !important; }
-        
+
+        table.dataTable {
+            border-color: var(--border) !important;
+        }
+
+        table.dataTable thead th {
+            border-bottom: 1px solid var(--border) !important;
+        }
+
         .dropdown-menu {
             background: var(--card);
             border: 1px solid var(--border);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
             border-radius: 12px;
             padding: 8px;
         }
@@ -122,19 +147,23 @@
         }
 
         .dropdown-item:hover {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             color: var(--accent);
         }
 
         .user-avatar {
-            border-radius: 50%; 
-            height: 38px; width: 38px;
+            border-radius: 50%;
+            height: 38px;
+            width: 38px;
             border: 2px solid var(--border);
             object-fit: cover;
             cursor: pointer;
             transition: border-color 0.2s;
         }
-        .user-avatar:hover { border-color: var(--accent); }
+
+        .user-avatar:hover {
+            border-color: var(--accent);
+        }
     </style>
 </head>
 
@@ -145,13 +174,17 @@
             <a class="navbar-brand" href="#">
                 <img src="/img/logo/logo.png" height="40">
             </a>
-            
+
             <div class="dropdown">
-                <img class="user-avatar" src="https://ui-avatars.com/api/?name=Admin&background=1a1e28&color=e8c96a" data-bs-toggle="dropdown">
+                <img class="user-avatar" src="https://ui-avatars.com/api/?name=Admin&background=1a1e28&color=e8c96a"
+                    data-bs-toggle="dropdown">
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="#"><i class="fa-regular fa-user me-2"></i> Profile</a></li>
-                    <li><hr class="dropdown-divider border-secondary"></li>
-                    <li><a class="dropdown-item text-danger" href="#"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Logout</a></li>
+                    <li>
+                        <hr class="dropdown-divider border-secondary">
+                    </li>
+                    <li><a class="dropdown-item text-danger" href="/logout"><i
+                                class="fa-solid fa-arrow-right-from-bracket me-2"></i> Logout</a></li>
                 </ul>
             </div>
         </div>
@@ -162,63 +195,73 @@
             <div class="col-lg-3 d-none d-lg-block">
                 <div id="sidebar">
                     <div class="nav-label">Core</div>
-                    <a href="#" class="nav-link" data-id="dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
-                    <a href="{{ route('admin.ticket-booking.index') }}" class="nav-link" data-id="ticket-booking"><i class="fa-solid fa-ticket"></i> Ticket Booking</a>
-                    
+                    <a href="#" class="nav-link" data-id="dashboard"><i class="fa-solid fa-chart-pie"></i>
+                        Dashboard</a>
+                    <a href="{{ route('admin.ticket-booking.index') }}" class="nav-link" data-id="ticket-booking"><i
+                            class="fa-solid fa-ticket"></i> Ticket Booking</a>
+
                     <div class="nav-label">Management</div>
-                    <a href="#" class="nav-link" data-id="staffs"><i class="fa-solid fa-user-shield"></i> Staffs</a>
-                    <a href="#" class="nav-link" data-id="customers"><i class="fa-solid fa-users"></i> Customers</a>
-                    <a href="{{ route('admin.categories.index') }}" class="nav-link" data-id="genre"><i class="fa-solid fa-tags"></i> Film Genre</a>
+                    <a href="#" class="nav-link" data-id="staffs"><i class="fa-solid fa-user-shield"></i>
+                        Staffs</a>
+                    <a href="#" class="nav-link" data-id="customers"><i class="fa-solid fa-users"></i>
+                        Customers</a>
+                    <a href="{{ route('admin.categories.index') }}" class="nav-link" data-id="genre"><i
+                            class="fa-solid fa-tags"></i> Film Genre</a>
                     <a href="#" class="nav-link" data-id="movies"><i class="fa-solid fa-film"></i> Movies</a>
-                    <a href="{{ route('admin.rooms.index') }}" class="nav-link" data-id="rooms"><i class="fa-solid fa-door-open"></i> Rooms</a>
-                    <a href="{{ route('admin.schedules.index') }}" class="nav-link" data-id="schedules"><i class="fa-solid fa-calendar-days"></i> Schedules</a>
-                    
+                    <a href="{{ route('admin.rooms.index') }}" class="nav-link" data-id="rooms"><i
+                            class="fa-solid fa-door-open"></i> Rooms</a>
+                    <a href="{{ route('admin.schedules.index') }}" class="nav-link" data-id="schedules"><i
+                            class="fa-solid fa-calendar-days"></i> Schedules</a>
+
                     <div class="nav-label">Data</div>
-                    <a href="{{ route('admin.room_types.index') }}" class="nav-link" data-id="room-types"><i class="fa-solid fa-door-closed"></i> Room Types</a>
-                    <a href="{{ route('admin.seat_types.index') }}" class="nav-link" data-id="seat-types"><i class="fa-solid fa-chair"></i> Seat Types</a>
-                    <a href="{{ route('admin.actors.index') }}" class="nav-link" data-id="actors"><i class="fa-solid fa-masks-theater"></i> Actors</a>
+                    <a href="{{ route('admin.room_types.index') }}" class="nav-link" data-id="room-types"><i
+                            class="fa-solid fa-door-closed"></i> Room Types</a>
+                    <a href="{{ route('admin.seat_types.index') }}" class="nav-link" data-id="seat-types"><i
+                            class="fa-solid fa-chair"></i> Seat Types</a>
+                    <a href="{{ route('admin.actors.index') }}" " data-id="actors"><i class="fa-solid fa-masks-theater"></i> Actors</a>
                     <a href="{{ route('admin.directors.index') }}" class="nav-link" data-id="directors"><i class="fa-solid fa-clapperboard"></i> Directors</a>
-                </div>
+                </div>class="nav-link
             </div>
 
             <div class="col-lg-9">
-                @yield('content')
+                        @yield('content')
+                </div>
             </div>
         </div>
-    </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        $(document).ready(function () {
-            // Khởi tạo DataTable với style dark
-            if ($('#myTable').length) {
-                $('#myTable').DataTable({
-                    language: {
-                        search: "_INPUT_",
-                        searchPlaceholder: "Search records..."
+        <script>
+            $(document).ready(function() {
+                // Khởi tạo DataTable với style dark
+                if ($('#myTable').length) {
+                    $('#myTable').DataTable({
+                        language: {
+                            search: "_INPUT_",
+                            searchPlaceholder: "Search records..."
+                        }
+                    });
+                }
+
+                // Xử lý Active Menu
+                const links = document.querySelectorAll('#sidebar .nav-link');
+                const activeId = localStorage.getItem('activeMenu');
+
+                links.forEach(link => {
+                    // Set active khi click
+                    link.addEventListener('click', function() {
+                        localStorage.setItem('activeMenu', this.dataset.id);
+                    });
+
+                    // Restore active state
+                    if (link.dataset.id === activeId) {
+                        link.classList.add('active');
                     }
                 });
-            }
-
-            // Xử lý Active Menu
-            const links = document.querySelectorAll('#sidebar .nav-link');
-            const activeId = localStorage.getItem('activeMenu');
-
-            links.forEach(link => {
-                // Set active khi click
-                link.addEventListener('click', function () {
-                    localStorage.setItem('activeMenu', this.dataset.id);
-                });
-
-                // Restore active state
-                if (link.dataset.id === activeId) {
-                    link.classList.add('active');
-                }
             });
-        });
-    </script>
+        </script>
 </body>
+
 </html>
