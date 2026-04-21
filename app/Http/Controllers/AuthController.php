@@ -114,8 +114,14 @@ class AuthController extends Controller
     {
         $this->token->revoke($request);
 
-        return response()
-            ->json(['message' => 'Đăng xuất thành công.'])
+        if ($request->expectsJson()) {
+            return response()
+                ->json(['message' => 'Đăng xuất thành công.'])
+                ->withoutCookie(TokenController::REFRESH_COOKIE)
+                ->withoutCookie('access_token');
+        }
+
+        return redirect()->route('login')
             ->withoutCookie(TokenController::REFRESH_COOKIE)
             ->withoutCookie('access_token');
     }
