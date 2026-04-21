@@ -409,21 +409,13 @@
 <div class="toast" id="toast"></div>
 
 @php
-function seatColorMapEdit(string $type): string {
-    return match(strtolower(trim($type))) {
-        'standard', 'thường', 'thuong', 'tiêu chuẩn' => '#3b82f6',
-        'vip'                                          => '#a855f7',
-        'premium'                                      => '#f59e0b',
-        'couple', 'đôi', 'doi'                        => '#ec4899',
-        default                                        => '#6b7280',
-    };
-}
+// No longer needed - color comes from database
 @endphp
 
 <script type="application/json" id="seatTypesData">
 [
   @foreach($seatTypes as $st)
-  { "id": {{ $st->id }}, "name": @json($st->type), "price": {{ (int) $st->price }}, "color": @json(seatColorMapEdit($st->type)) }{{ !$loop->last ? ',' : '' }}
+  { "id": {{ $st->id }}, "name": @json($st->type), "price": {{ (int) $st->price }}, "color": @json($st->color ?? '#6b7280') }{{ !$loop->last ? ',' : '' }}
   @endforeach
 ]
 </script>

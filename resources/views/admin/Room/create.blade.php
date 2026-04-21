@@ -424,23 +424,11 @@
 
 <div class="toast" id="toast"></div>
 
-@php
-function seatColorMap(string $type): string {
-    return match(strtolower(trim($type))) {
-        'standard', 'thường', 'thuong', 'tiêu chuẩn' => '#3b82f6',
-        'vip'                                          => '#a855f7',
-        'premium'                                      => '#f59e0b',
-        'couple', 'đôi', 'doi'                        => '#ec4899',
-        default                                        => '#6b7280',
-    };
-}
-@endphp
-
 {{-- Data Blade → JS qua JSON script tag, tránh lỗi giả của VS Code --}}
 <script type="application/json" id="seatTypesData">
 [
   @foreach($seatTypes as $st)
-  { "id": {{ $st->id }}, "name": @json($st->type), "price": {{ (int) $st->price }}, "color": @json(seatColorMap($st->type)) }{{ !$loop->last ? ',' : '' }}
+  { "id": {{ $st->id }}, "name": @json($st->type), "price": {{ (int) $st->price }}, "color": @json($st->color ?? '#6b7280') }{{ !$loop->last ? ',' : '' }}
   @endforeach
 ]
 </script>

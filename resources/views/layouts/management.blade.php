@@ -163,6 +163,7 @@
                 <div id="sidebar">
                     <div class="nav-label">Core</div>
                     <a href="#" class="nav-link" data-id="dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+                    <a href="{{ route('admin.ticket-booking.index') }}" class="nav-link" data-id="ticket-booking"><i class="fa-solid fa-ticket"></i> Ticket Booking</a>
                     
                     <div class="nav-label">Management</div>
                     <a href="#" class="nav-link" data-id="staffs"><i class="fa-solid fa-user-shield"></i> Staffs</a>

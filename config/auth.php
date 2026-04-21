@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'staff',
         'passwords' => 'users',
     ],
 
@@ -45,6 +45,11 @@ return [
             'driver' => 'jwt',
             'provider' => 'accounts',
         ],
+
+        'staff' => [
+            'driver' => 'session',
+            'provider' => 'staff',
+        ],
     ],
 
     /*
@@ -65,14 +70,14 @@ return [
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\User::class,
-        ],
-
         'accounts' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Account::class,
+            'model' => \App\Models\Account::class,
+        ],
+
+        'staff' => [
+            'driver' => 'eloquent',
+            'model' => \App\Models\Staff::class,
         ],
     ],
 
