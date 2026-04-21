@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\TicketBookingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,7 +27,6 @@ Route::get('/logout', [AuthController::class, 'logout']);
 // Admin Web Routes — Yêu cầu đăng nhập + role admin
 // ==========================================
 Route::middleware(['jwt.cookie', 'role:admin'])->group(function () {
-
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
     });
@@ -94,3 +94,20 @@ Route::middleware(['jwt.cookie', 'role:admin'])->group(function () {
     });
 
 }); // end admin middleware group
+
+// ==========================================
+// Ticket Booking Routes (Đặt vé tại quầy - Staff & Admin)
+// ==========================================
+Route::middleware(['jwt.cookie', 'role:staff,admin'])->group(function () {
+    Route::prefix('Admin/TicketBooking')->name('admin.ticket-booking.')->group(function () {
+        Route::get('/', [TicketBookingController::class, 'index'])->name('index');
+        Route::get('/schedules/{movieId}', [TicketBookingController::class, 'schedules'])->name('schedules');
+        Route::get('/seat-layout/{scheduleId}', [TicketBookingController::class, 'seatLayout'])->name('seat-layout');
+        Route::get('/payment-status/{ticketCode}', [TicketBookingController::class, 'paymentStatus'])->name('payment-status');
+    });
+});
+
+// ==========================================
+// PayOs Webhook (Public)
+// ==========================================
+Route::post('/webhook/payos', [App\Http\Controllers\PayOsWebhookController::class, 'handle']);

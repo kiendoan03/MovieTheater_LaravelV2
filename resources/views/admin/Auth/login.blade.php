@@ -283,6 +283,20 @@
             animation: fadeIn 0.25s ease;
         }
 
+        .alert-success {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            border-radius: 12px;
+            color: #6ee7b7;
+            font-size: 13.5px;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.25rem;
+            animation: fadeIn 0.25s ease;
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -336,6 +350,19 @@
             <span id="alertMsg">Đã có lỗi xảy ra.</span>
         </div>
 
+        {{-- Success alert --}}
+        @if (session('success'))
+            <div class="alert-success">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>{{ session('success') }}</span>
+            </div>
+        @endif
+
+        <div class="alert-success" id="alertRegistered" style="display: none;">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Đăng ký thành công! Vui lòng đăng nhập.</span>
+        </div>
+
         {{-- Form --}}
         <form id="loginForm" novalidate>
             <div class="mb-3">
@@ -371,6 +398,11 @@
 
     <script>
         const API_BASE = '/api/auth';
+
+        // Check for registered query param
+        if (new URLSearchParams(window.location.search).has('registered')) {
+            document.getElementById('alertRegistered').style.display = 'flex';
+        }
 
         // Toggle password visibility
         document.getElementById('togglePw').addEventListener('click', function() {

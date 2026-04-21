@@ -844,8 +844,8 @@
             // Lưu profile, cookie set bởi backend
             localStorage.setItem('profile', JSON.stringify(data.profile));
 
-            // Customer mới đăng ký → redirect về trang chủ
-            window.location.href = '/';
+            // Customer mới đăng ký → redirect về login
+            window.location.href = '{{ route('login') }}?registered=1';
         });
     </script>
 </body>
