@@ -13,7 +13,13 @@ class AccountSeeder extends Seeder
         Account::create([
             'email' => 'admin@gmail.com',
             'password' => 'password123',   // model tự hash qua 'hashed' cast
-            'role'     => UserRole::Admin,
+            'role' => UserRole::Admin,
+        ]);
+
+        Account::create([
+            'email' => 'staff@gmail.com',
+            'password' => 'password123',
+            'role' => UserRole::Staff,
         ]);
     }
 }

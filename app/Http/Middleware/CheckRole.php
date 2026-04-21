@@ -30,7 +30,23 @@ class CheckRole
 
         // Vì role là int-backed Enum (Admin=0, Staff=1, Customer=2)
         // Route truyền tên role dạng string ('admin', 'staff'), nên phải so sánh bằng tên enum (lowercase)
-        $userRole = strtolower($user->role->name ?? $user->role);
+        // $userRole = strtolower($user->role->name ?? $user->role);
+        $role = $user->role;
+
+        // Handle cả enum lẫn raw int
+        if ($role instanceof \App\Enums\UserRole) {
+            $userRole = strtolower($role->name);
+        } else {
+            $userRole = strtolower(\App\Enums\UserRole::from((int) $role)->name);
+        }
+        // dd([
+        //     'user' => $user,
+        //     'role_raw' => $user?->role,
+        //     'role_name' => $user?->role?->name ?? 'KHÔNG CÓ NAME',
+        //     'userRole' => strtolower($user?->role?->name ?? $user?->role),
+        //     'roles_required' => $roles,
+        //     'match' => in_array(strtolower($user?->role?->name ?? $user?->role), $roles),
+        // ]);
 
         // Kiểm tra xem role của user có nằm trong mảng roles được cấp phép không
         if (! in_array($userRole, $roles)) {

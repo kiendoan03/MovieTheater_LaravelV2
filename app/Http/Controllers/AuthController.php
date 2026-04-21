@@ -52,13 +52,15 @@ class AuthController extends Controller
         $profile = null;
         if ($account->role === UserRole::Customer) {
             $account->load('customer');
-            $profile = $account->customer;
+            $profile = $account->customer
+                ?? ['id' => null, 'email' => $account->email, 'name' => null];
         } elseif ($account->role === UserRole::Staff) {
             $account->load('staff');
-            $profile = $account->staff;
+            $profile = $account->staff
+                ?? ['id' => null, 'email' => $account->email, 'name' => null];
         } else {
-            // Admin — có thể không có bản ghi staff/customer, trả về thông tin cơ bản
-            $profile = ['email' => $account->email, 'role' => 'admin'];
+            // Admin — không có bảng riêng
+            $profile = ['id' => $account->id, 'email' => $account->email, 'role' => 'admin'];
         }
 
         $accessToken = JWTAuth::fromUser($account);
@@ -112,6 +114,7 @@ class AuthController extends Controller
 
         // Bóc tách data để trả về cho Frontend (như bạn đã làm)
         $customerProfile = [
+            'id' => $account->customer->id,
             'name' => $data['name'],
             'email' => $data['email'],
             'phonenumber' => $data['phonenumber'],
