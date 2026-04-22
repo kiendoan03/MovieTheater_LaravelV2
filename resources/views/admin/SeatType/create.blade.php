@@ -109,6 +109,27 @@
         border-radius: 6px;
     }
 
+    .cw-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        height: 42px;
+    }
+
+    .cw-checkbox input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--accent);
+        cursor: pointer;
+    }
+
+    .cw-checkbox label {
+        margin: 0;
+        font-size: 13px;
+        color: var(--text);
+        cursor: pointer;
+    }
+
     .btn-cancel {
         background: transparent;
         border: 1px solid var(--border);
@@ -167,7 +188,7 @@
                 <div class="row g-3">
 
                     <!-- TYPE -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="cw-label-line">
                             <span>Loại ghế</span>
                         </div>
@@ -185,7 +206,7 @@
                     </div>
 
                     <!-- PRICE -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="cw-label-line">
                             <span>Giá</span>
                         </div>
@@ -205,7 +226,7 @@
                     </div>
 
                     <!-- COLOR -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="cw-label-line">
                             <span>Màu ghế</span>
                         </div>
@@ -217,6 +238,31 @@
                         @error('color')
                         <span class="cw-error">{{ $message }}</span>
                         @enderror
+                    </div>
+
+                    <!-- IS COUPLE -->
+                    <div class="col-md-3">
+
+                        <div class="cw-label-line">
+                            <span>Dạng ghế</span>
+                        </div>
+
+                        <div class="cw-checkbox">
+                            <input type="checkbox"
+                                id="is_couple"
+                                name="is_couple"
+                                value="1"
+                                {{ old('is_couple') ? 'checked' : '' }}>
+
+                            <label for="is_couple">
+                                ghế đôi
+                            </label>
+                        </div>
+
+                        @error('is_couple')
+                        <span class="cw-error">{{ $message }}</span>
+                        @enderror
+
                     </div>
 
                 </div>

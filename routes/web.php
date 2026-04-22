@@ -24,7 +24,7 @@ Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('regi
 // Admin Web Routes
 // ==========================================
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
+    Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
 });
 
 Route::prefix('Admin/Category')->name('admin.')->group(function () {
@@ -87,4 +87,13 @@ Route::prefix('Admin/Schedule')->name('admin.')->group(function () {
     Route::put('/{schedule}/edit', [App\Http\Controllers\ScheduleController::class, 'update'])->name('schedules.update');
     Route::delete('/{schedule}/delete', [App\Http\Controllers\ScheduleController::class, 'destroy'])->name('schedules.destroy');
     Route::get('/by-room', [ScheduleController::class, 'byRoom'])->name('schedules.by-room');
+});
+Route::prefix('Admin/Movie')->name('admin.')->group(function () {
+    Route::get('/', [App\Http\Controllers\MovieController::class, 'index'])->name('movies.index');
+    Route::get('/create', [App\Http\Controllers\MovieController::class, 'create'])->name('movies.create');
+    Route::post('/create', [App\Http\Controllers\MovieController::class, 'store'])->name('movies.store');
+    Route::get('/{movie}', [App\Http\Controllers\MovieController::class, 'show'])->name('movies.show');
+    Route::get('/{movie}/edit', [App\Http\Controllers\MovieController::class, 'edit'])->name('movies.edit');
+    Route::put('/{movie}/edit', [App\Http\Controllers\MovieController::class, 'update'])->name('movies.update');
+    Route::delete('/{movie}/delete', [App\Http\Controllers\MovieController::class, 'destroy'])->name('movies.destroy');
 });
