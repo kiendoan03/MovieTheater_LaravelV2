@@ -25,7 +25,8 @@ class SeatTypeFactory extends Factory
                 'VIP' => '#f59e0b',
                 'Premium' => '#8b5cf6',
                 default => '#ffffff'
-            }
+            },
+            'is_couple' => $type === 'Couple',
         ];
     }
 }

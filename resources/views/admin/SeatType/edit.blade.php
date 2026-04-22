@@ -89,12 +89,6 @@
         -webkit-box-shadow: 0 0 0px 1000px var(--surface) inset;
     }
 
-    input,
-    textarea {
-        background-color: var(--surface) !important;
-        color: var(--text) !important;
-    }
-
     input[type="color"] {
         width: 100%;
         height: 42px;
@@ -115,6 +109,27 @@
         border-radius: 6px;
     }
 
+    .cw-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        height: 42px;
+    }
+
+    .cw-checkbox input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--accent);
+        cursor: pointer;
+    }
+
+    .cw-checkbox label {
+        margin: 0;
+        font-size: 13px;
+        color: var(--text);
+        cursor: pointer;
+    }
+
     .btn-cancel {
         background: transparent;
         border: 1px solid var(--border);
@@ -125,11 +140,6 @@
         text-decoration: none;
     }
 
-    .btn-cancel:hover {
-        border-color: var(--border-h);
-        color: var(--text);
-    }
-
     .btn-submit {
         background: var(--accent);
         color: #0d0f14;
@@ -138,10 +148,6 @@
         padding: 10px 22px;
         font-size: 13px;
         font-weight: 600;
-    }
-
-    .btn-submit:hover {
-        background: #f0d47a;
     }
 
     .cw-footer {
@@ -183,7 +189,7 @@
                 <div class="row g-3">
 
                     <!-- TYPE -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="cw-label-line">
                             <span>Loại ghế</span>
                         </div>
@@ -201,7 +207,7 @@
                     </div>
 
                     <!-- PRICE -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="cw-label-line">
                             <span>Giá</span>
                         </div>
@@ -221,18 +227,43 @@
                     </div>
 
                     <!-- COLOR -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="cw-label-line">
                             <span>Màu ghế</span>
                         </div>
 
                         <input type="color"
                             name="color"
-                            value="{{ old('color', $seatType->color ?? '#6366f1') }}">
+                            value="{{ old('color', $seatType->color ?? '#13161e') }}">
 
                         @error('color')
                         <span class="cw-error">{{ $message }}</span>
                         @enderror
+                    </div>
+
+                    <!-- IS COUPLE -->
+                    <div class="col-md-3">
+
+                        <div class="cw-label-line">
+                            <span>Dạng ghế</span>
+                        </div>
+
+                        <div class="cw-checkbox">
+                            <input type="checkbox"
+                                id="is_couple"
+                                name="is_couple"
+                                value="1"
+                                {{ old('is_couple', $seatType->is_couple) ? 'checked' : '' }}>
+
+                            <label for="is_couple">
+                                ghế đôi
+                            </label>
+                        </div>
+
+                        @error('is_couple')
+                        <span class="cw-error">{{ $message }}</span>
+                        @enderror
+
                     </div>
 
                 </div>
@@ -248,4 +279,4 @@
     </div>
 </div>
 
-@endsection
+@endsections
