@@ -3,7 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ScheduleController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\PayOSController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,10 +23,15 @@ Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('regi
 // ==========================================
 // Admin Web Routes
 // ==========================================
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
-});
 
+// Route::get('/payos', [PayOSController::class, 'index'])->name('payos.index');
+// Route::post('/payos/login', [PayOSController::class, 'login'])->name('payos.login');
+// Route::get('/payos/statistics', [PayOSController::class, 'statistics'])->name('payos.statistics');
+
+Route::prefix('/Admin/Dashboard')->name('admin.')->group(function () {
+    Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+});
+// Route::get('/Admin/Dashboard',[App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 Route::prefix('Admin/Category')->name('admin.')->group(function () {
     Route::get('/', [\App\Http\Controllers\CategoryController::class, 'index'])->name('categories.index');
     Route::get('/create', [\App\Http\Controllers\CategoryController::class, 'create'])->name('categories.create');

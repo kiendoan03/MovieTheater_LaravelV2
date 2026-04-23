@@ -162,7 +162,7 @@
             <div class="col-lg-3 d-none d-lg-block">
                 <div id="sidebar">
                     <div class="nav-label">Core</div>
-                    <a href="#" class="nav-link" data-id="dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+                    <a href="{{ route('admin.dashboard') }}" class="nav-link" data-id="dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
                     
                     <div class="nav-label">Management</div>
                     <a href="#" class="nav-link" data-id="staffs"><i class="fa-solid fa-user-shield"></i> Staffs</a>
