@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
 use App\Models\Account;
 use App\Models\RefreshToken;
 use Illuminate\Http\Request;
@@ -41,6 +42,12 @@ class TokenController extends Controller
     {
         $ttlMinutes = config('jwt.ttl', 60);
 
+        if ($account->role === UserRole::Customer) {
+            $account->loadMissing('customer');
+        } elseif ($account->role === UserRole::Staff || $account->role === UserRole::Admin) {
+            $account->loadMissing('staff');
+        }
+
         // Trích thông tin cá nhân từ profile, bỏ các id nội bộ
         $profileData = null;
         if ($profile) {
@@ -53,6 +60,7 @@ class TokenController extends Controller
             'token_type' => 'Bearer',
             'expires_in' => $ttlMinutes * 60,
             'access_token' => $accessToken,
+            'account' => $account,
             'profile' => $profileData,
         ])
             ->cookie(self::ACCESS_COOKIE, $accessToken, $ttlMinutes, '/', null, false, true, false, 'Strict')

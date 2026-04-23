@@ -20,7 +20,7 @@ class StaffController extends Controller
      */
     public function create()
     {
-        //
+        return view('Admin.Staff.create');
     }
 
     /**
