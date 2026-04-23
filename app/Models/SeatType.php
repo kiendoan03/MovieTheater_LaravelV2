@@ -13,6 +13,7 @@ class SeatType extends Model
         'type',
         'price',
         'color',
+        'is_couple',
     ];
 
     // Relationships
