@@ -187,17 +187,65 @@ class MovieController extends Controller
 
     public function show(Movie $movie)
     {
-        $movie->load([
+        $movies = Movie::with([
             'categories',
             'actors',
             'directors',
             'schedules'
-        ]);
+        ])
+            ->whereDate('end_date', '>=', now())
+            ->orderBy('release_date', 'desc')
+            ->get();
 
-        return view('admin.Movie.show', [
+        // phim đang chiếu
+        $movie_show = Movie::whereDate('release_date', '<=', now())
+            ->whereDate('end_date', '>=', now())
+            ->get();
+
+        // phim sắp chiếu
+        $upcoming_movies = Movie::whereDate('release_date', '>', now())
+            ->orderBy('release_date', 'asc')
+            ->get();
+
+        return view('client.home', [
             'movie' => $movie,
+            'movies' => $movies,
+            'movie_show' => $movie_show,
+            'upcoming_movies' => $upcoming_movies,
         ]);
     }
+
+
+    // public function show(Movie $movie = null)
+    // {
+    //     $movies = Movie::with([
+    //         'categories',
+    //         'actors',
+    //         'directors',
+    //         'schedules'
+    //     ])
+    //         ->whereDate('end_date', '>=', now())
+    //         ->orderBy('release_date', 'desc')
+    //         ->get();
+
+    //     // phim đang chiếu
+    //     $showingMovies = Movie::whereDate('release_date', '<=', now())
+    //         ->whereDate('end_date', '>=', now())
+    //         ->get();
+
+    //     // phim sắp chiếu
+    //     $upcomingMovies = Movie::whereDate('release_date', '>', now())
+    //         ->orderBy('release_date', 'asc')
+    //         ->get();
+
+    //     return view('client.home', [
+    //         'movie' => $movie,
+    //         'movies' => $movies,
+    //         'showingMovies' => $showingMovies,
+    //         'upcomingMovies' => $upcomingMovies,
+    //     ]);
+    // }
+
 
     public function edit(Movie $movie)
     {
@@ -351,13 +399,29 @@ class MovieController extends Controller
                 );
         }
 
-        // delete relation
+        //delete image
+
+        if ($movie->logo) {
+            Storage::delete('public/img/movie_logo/' . $movie->logo);
+        }
+
+        if ($movie->poster) {
+            Storage::delete('public/img/movie_poster/' . $movie->poster);
+        }
+
+        if ($movie->thumbnail) {
+            Storage::delete('public/img/movie_thumbnail/' . $movie->thumbnail);
+        }
+
+        //delete relation
 
         $movie->categories()->detach();
+
         $movie->actors()->detach();
+
         $movie->directors()->detach();
 
-        // delete movie
+        //delete movie 
 
         $name = $movie->movie_name;
 
@@ -369,10 +433,5 @@ class MovieController extends Controller
                 'success',
                 "Đã xóa phim \"{$name}\"!"
             );
-        $movie->load([
-            'categories',
-            'actors',
-            'directors'
-        ]);
     }
 }

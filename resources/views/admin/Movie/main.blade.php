@@ -181,6 +181,57 @@
         border: 1px solid rgba(248, 113, 113, .25);
         color: #f87171;
     }
+
+    .sw-toast {
+        position: absolute;
+
+        top: 50%;
+        left: 50%;
+
+        transform: translate(-50%, -50%);
+
+        z-index: 100;
+
+        padding: 12px 16px;
+        border-radius: 10px;
+
+        background: #111;
+        color: #fff;
+
+        font-size: 13px;
+        font-weight: 500;
+
+        opacity: 0;
+        transition: 0.25s;
+
+        pointer-events: none;
+
+        white-space: nowrap;
+    }
+
+    .sw-toast.success {
+        background: rgba(74, 222, 128, 0.12);
+        border: 1px solid rgba(74, 222, 128, 0.3);
+        color: #4ade80;
+    }
+
+    .sw-toast.danger {
+        background: rgba(248, 113, 113, 0.12);
+        border: 1px solid rgba(248, 113, 113, 0.3);
+        color: #f87171;
+    }
+
+    .sw-toast.show {
+        opacity: 1;
+    }
+
+    .cw-card {
+        position: relative;
+    }
+
+    .cw-head {
+        position: relative;
+    }
 </style>
 
 <div class="cw">
@@ -206,19 +257,19 @@
 
                 Tạo phim mới
             </a>
+            @if(session('success'))
+            <div id="toast-success" class="sw-toast success">
+                {{ session('success') }}
+            </div>
+            @endif
+
+            @if(session('error'))
+            <div id="toast-error" class="sw-toast danger">
+                {{ session('error') }}
+            </div>
+            @endif
         </div>
 
-        @if(session('success'))
-        <div class="sw-alert success">
-            {{ session('success') }}
-        </div>
-        @endif
-
-        @if(session('error'))
-        <div class="sw-alert danger">
-            {{ session('error') }}
-        </div>
-        @endif
 
         <!-- TABLE -->
         <div class="cw-card">
@@ -384,5 +435,20 @@
 
     </div>
 </div>
+<script>
+    function showToast(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
 
+        el.classList.add("show");
+
+        setTimeout(() => {
+            el.classList.remove("show");
+            setTimeout(() => el.remove(), 300);
+        }, 3000);
+    }
+
+    showToast("toast-success");
+    showToast("toast-error");
+</script>
 @endsection
