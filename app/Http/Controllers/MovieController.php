@@ -19,7 +19,7 @@ class MovieController extends Controller
             'categories',
             'actors',
             'directors'
-        ])->get();
+        ])->paginate(10);
 
         return view('admin.Movie.main', [
             'movies' => $movies,

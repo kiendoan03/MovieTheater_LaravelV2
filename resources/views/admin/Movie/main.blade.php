@@ -16,6 +16,7 @@
         font-weight: 500;
         padding: 14px 16px;
         border-bottom: 1px solid var(--border);
+        white-space: nowrap;
     }
 
     .table-custom tbody tr {
@@ -136,6 +137,50 @@
         font-weight: 600;
         color: #facc15;
     }
+
+    .sw-pagination {
+        display: flex;
+        justify-content: center;
+        padding: 1.25rem;
+        gap: 4px;
+    }
+
+    .sw-pagination .page-link {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        color: var(--muted);
+        padding: 5px 11px;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: all .15s;
+    }
+
+    .sw-pagination .page-link:hover,
+    .sw-pagination .page-link.active {
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
+    .sw-alert {
+        padding: 12px 16px;
+        border-radius: 10px;
+        font-size: 13px;
+        margin-bottom: 1rem;
+    }
+
+    .sw-alert.success {
+        background: rgba(74, 222, 128, .1);
+        border: 1px solid rgba(74, 222, 128, .25);
+        color: #4ade80;
+    }
+
+    .sw-alert.danger {
+        background: rgba(248, 113, 113, .1);
+        border: 1px solid rgba(248, 113, 113, .25);
+        color: #f87171;
+    }
 </style>
 
 <div class="cw">
@@ -145,14 +190,17 @@
         <div class="cw-head">
             <div>
                 <h2>Quản lý phim</h2>
+
                 <div class="cw-count">
-                    Tổng số: {{ $movies->count() }} phim
+                    Tổng số: {{ $movies->total() }} phim
                 </div>
             </div>
 
             <a href="{{ route('admin.movies.create') }}" class="btn-new">
-                <svg width="18" height="18" fill="none" stroke="currentColor"
-                    stroke-width="2.5" viewBox="0 0 24 24">
+                <svg width="18" height="18" fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    viewBox="0 0 24 24">
                     <path d="M12 5v14M5 12h14" />
                 </svg>
 
@@ -160,18 +208,31 @@
             </a>
         </div>
 
+        @if(session('success'))
+        <div class="sw-alert success">
+            {{ session('success') }}
+        </div>
+        @endif
+
+        @if(session('error'))
+        <div class="sw-alert danger">
+            {{ session('error') }}
+        </div>
+        @endif
+
         <!-- TABLE -->
         <div class="cw-card">
+
+            @if($movies->count())
 
             <table class="table-custom">
 
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>STT</th>
                         <th>Thông tin phim</th>
                         <th>Poster</th>
                         <th>Đánh giá</th>
-                        <!-- <th>Ngôn ngữ</th> -->
                         <th>Thời lượng</th>
                         <th>Trạng thái</th>
                         <th class="text-center" width="130">Thao tác</th>
@@ -184,9 +245,9 @@
 
                     <tr>
 
-                        <!-- ID -->
+                        <!-- STT -->
                         <td class="mono-id">
-                            #{{ str_pad($movie->id, 3, '0', STR_PAD_LEFT) }}
+                            {{ $loop->iteration + ($movies->currentPage() - 1) * $movies->perPage() }}
                         </td>
 
                         <!-- INFO -->
@@ -203,7 +264,11 @@
                         </td>
 
                         <!-- POSTER -->
-                        <td> <img class="movie-poster" src="{{ asset(Storage::url('img/movie_poster/' . $movie->poster)) }}" alt="{{ $movie->movie_name }}"> </td>
+                        <td>
+                            <img class="movie-poster"
+                                src="{{ asset(Storage::url('img/movie_poster/' . $movie->poster)) }}"
+                                alt="{{ $movie->movie_name }}">
+                        </td>
 
                         <!-- RATING -->
                         <td>
@@ -223,22 +288,19 @@
                             @if(now()->between($movie->release_date, $movie->end_date))
 
                             <span class="movie-status status-showing">
-                                <span>●</span>
-                                <span>Đang chiếu</span>
+                                ● Đang chiếu
                             </span>
 
                             @elseif(now()->lt($movie->release_date))
 
                             <span class="movie-status status-upcoming">
-                                <span>●</span>
-                                <span>Sắp chiếu</span>
+                                ● Sắp chiếu
                             </span>
 
                             @else
 
                             <span class="movie-status status-ended">
-                                <span>●</span>
-                                <span>Ngừng chiếu</span>
+                                ● Ngừng chiếu
                             </span>
 
                             @endif
@@ -282,10 +344,30 @@
 
             </table>
 
-            <!-- EMPTY -->
-            @if($movies->isEmpty())
+            {{-- PAGINATION --}}
+            @if($movies->hasPages())
+
+            <div class="sw-pagination">
+
+                @foreach($movies->links()->elements[0] as $page => $url)
+
+                <a href="{{ $url }}"
+                    class="page-link {{ $movies->currentPage() == $page ? 'active' : '' }}">
+
+                    {{ $page }}
+
+                </a>
+
+                @endforeach
+
+            </div>
+
+            @endif
+
+            @else
 
             <div class="empty-state">
+
                 <div class="empty-state-icon">
                     🎬
                 </div>
@@ -293,6 +375,7 @@
                 <p>
                     Chưa có phim nào.
                 </p>
+
             </div>
 
             @endif
