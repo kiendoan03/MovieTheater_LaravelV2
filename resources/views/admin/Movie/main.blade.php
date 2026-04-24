@@ -171,7 +171,7 @@
                         <th>Thông tin phim</th>
                         <th>Poster</th>
                         <th>Đánh giá</th>
-                        <th>Ngôn ngữ</th>
+                        <!-- <th>Ngôn ngữ</th> -->
                         <th>Thời lượng</th>
                         <th>Trạng thái</th>
                         <th class="text-center" width="130">Thao tác</th>
@@ -203,23 +203,13 @@
                         </td>
 
                         <!-- POSTER -->
-                        <td>
-                            <img
-                                class="movie-poster"
-                                src="{{ asset('img/movie_img/movie_poster/' . $movie->poster) }}"
-                                alt="{{ $movie->movie_name }}">
-                        </td>
+                        <td> <img class="movie-poster" src="{{ asset(Storage::url('img/movie_poster/' . $movie->poster)) }}" alt="{{ $movie->movie_name }}"> </td>
 
                         <!-- RATING -->
                         <td>
                             <span class="rating-box">
                                 ⭐ {{ $movie->rating }}
                             </span>
-                        </td>
-
-                        <!-- LANGUAGE -->
-                        <td>
-                            {{ $movie->language }}
                         </td>
 
                         <!-- LENGTH -->
