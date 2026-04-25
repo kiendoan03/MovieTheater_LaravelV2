@@ -13,7 +13,7 @@ class RoomTypeController extends Controller
      */
     public function index()
     {
-        $roomTypes = RoomType::all();
+        $roomTypes = RoomType::paginate(10);
 
         return view('admin.RoomType.main', [
             'roomTypes' => $roomTypes,
