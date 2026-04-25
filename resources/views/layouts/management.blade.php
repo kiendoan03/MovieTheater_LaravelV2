@@ -53,6 +53,23 @@
             background: var(--border-h);
         }
 
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--card);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-h);
+        }
+
         /* Header */
         .navbar {
             background-color: rgba(13, 15, 20, 0.8) !important;
@@ -112,7 +129,17 @@
             text-align: center;
         }
 
+        #sidebar .nav-link i {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
         /* DataTables Custom */
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter,
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_processing,
         .dataTables_wrapper .dataTables_length,
         .dataTables_wrapper .dataTables_filter,
         .dataTables_wrapper .dataTables_info,
@@ -131,9 +158,19 @@
             border-bottom: 1px solid var(--border) !important;
         }
 
+
+        table.dataTable {
+            border-color: var(--border) !important;
+        }
+
+        table.dataTable thead th {
+            border-bottom: 1px solid var(--border) !important;
+        }
+
         .dropdown-menu {
             background: var(--card);
             border: 1px solid var(--border);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
             border-radius: 12px;
             padding: 8px;
@@ -148,6 +185,7 @@
 
         .dropdown-item:hover {
             background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.05);
             color: var(--accent);
         }
 
@@ -155,10 +193,17 @@
             border-radius: 50%;
             height: 38px;
             width: 38px;
+            border-radius: 50%;
+            height: 38px;
+            width: 38px;
             border: 2px solid var(--border);
             object-fit: cover;
             cursor: pointer;
             transition: border-color 0.2s;
+        }
+
+        .user-avatar:hover {
+            border-color: var(--accent);
         }
 
         .user-avatar:hover {
@@ -174,6 +219,7 @@
             <a class="navbar-brand" href="#">
                 <img src="/img/logo/logo.png" height="40">
             </a>
+
 
             <div class="dropdown">
                 <img class="user-avatar" src="https://ui-avatars.com/api/?name=Admin&background=1a1e28&color=e8c96a"
@@ -237,33 +283,36 @@
 
     <script>
         $(document).ready(function() {
-            // Khởi tạo DataTable với style dark
-            if ($('#myTable').length) {
-                $('#myTable').DataTable({
-                    language: {
-                        search: "_INPUT_",
-                        searchPlaceholder: "Search records..."
-                    }
-                });
-            }
+                    $(document).ready(function() {
+                                // Khởi tạo DataTable với style dark
+                                if ($('#myTable').length) {
+                                    $('#myTable').DataTable({
+                                        language: {
+                                            search: "_INPUT_",
+                                            searchPlaceholder: "Search records..."
+                                        }
+                                    });
+                                }
 
-            // Xử lý Active Menu
-            const links = document.querySelectorAll('#sidebar .nav-link');
-            const activeId = localStorage.getItem('activeMenu');
+                                // Xử lý Active Menu
+                                const links = document.querySelectorAll('#sidebar .nav-link');
+                                const activeId = localStorage.getItem('activeMenu');
 
-            links.forEach(link => {
-                // Set active khi click
-                link.addEventListener('click', function() {
-                    localStorage.setItem('activeMenu', this.dataset.id);
-                });
+                                links.forEach(link => {
+                                    // Set active khi click
+                                    link.addEventListener('click', function() {
+                                        link.addEventListener('click', function() {
+                                            localStorage.setItem('activeMenu', this.dataset.id);
+                                        });
 
-                // Restore active state
-                if (link.dataset.id === activeId) {
-                    link.classList.add('active');
-                }
-            });
-        });
+                                        // Restore active state
+                                        if (link.dataset.id === activeId) {
+                                            link.classList.add('active');
+                                        }
+                                    });
+                                });
     </script>
 </body>
+
 
 </html>

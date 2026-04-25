@@ -19,7 +19,7 @@ class MovieController extends Controller
             'categories',
             'actors',
             'directors'
-        ])->get();
+        ])->paginate(10);
 
         return view('admin.Movie.main', [
             'movies' => $movies,
@@ -46,12 +46,11 @@ class MovieController extends Controller
         $request->validate([
             'movie_name'       => 'required|string|max:255',
 
-            'movie_logo'       => 'nullable|image',
-            'movie_poster'     => 'nullable|image',
-            'movie_thumbnail'  => 'nullable|image',
+            'movie_logo'       => 'required|image',
+            'movie_poster'     => 'required|image',
+            'movie_thumbnail'  => 'required|image',
 
-            // trailer giờ là link
-            'movie_trailer'    => 'nullable|url',
+            'movie_trailer'    => 'required|url',
 
             'movie_length'     => 'required|integer|min:1',
             'movie_language'   => 'required|string|max:255',
@@ -60,17 +59,40 @@ class MovieController extends Controller
             'movie_release_date' => 'required|date',
             'movie_end_date'     => 'required|date|after_or_equal:movie_release_date',
 
-            'movie_age'        => 'required|integer',
-            'movie_description' => 'required',
+            'movie_age'        => 'required|integer|min:1',
+            'movie_description' => 'required|string',
 
-            'movie_genre'      => 'nullable|array',
+            'movie_genre'      => 'required|array|min:1',
             'movie_genre.*'    => 'exists:categories,id',
 
-            'movie_actor'      => 'nullable|array',
+            'movie_actor'      => 'required|array|min:1',
             'movie_actor.*'    => 'exists:actors,id',
 
-            'movie_director'   => 'nullable|array',
+            'movie_director'   => 'required|array|min:1',
             'movie_director.*' => 'exists:directors,id',
+        ], [
+            'required' => ':attribute không được để trống.',
+            'movie_trailer.url' => 'Trailer phải là link hợp lệ.',
+
+            'movie_end_date.after_or_equal' =>
+            'Ngày kết thúc phải lớn hơn hoặc bằng ngày khởi chiếu.',
+
+        ], [
+            'movie_name' => 'Tên phim',
+            'movie_logo' => 'Logo',
+            'movie_poster' => 'Poster',
+            'movie_thumbnail' => 'Thumbnail',
+            'movie_trailer' => 'Trailer',
+            'movie_length' => 'Thời lượng',
+            'movie_language' => 'Ngôn ngữ',
+            'movie_country' => 'Quốc gia',
+            'movie_release_date' => 'Ngày khởi chiếu',
+            'movie_end_date' => 'Ngày kết thúc',
+            'movie_age' => 'Độ tuổi',
+            'movie_description' => 'Mô tả phim',
+            'movie_genre' => 'Thể loại',
+            'movie_actor' => 'Diễn viên',
+            'movie_director' => 'Đạo diễn',
         ]);
 
         // ================= upload =================
@@ -79,7 +101,6 @@ class MovieController extends Controller
         $poster = null;
         $thumbnail = null;
 
-        // trailer là string link
         $trailer = $request->movie_trailer;
 
         if ($request->hasFile('movie_logo')) {
@@ -140,11 +161,9 @@ class MovieController extends Controller
 
             'age_restricted' => $request->movie_age,
 
-            // lưu link youtube
             'trailer'        => $trailer,
         ]);
 
-        // ================= sync relation =================
 
         $movie->categories()->sync(
             $request->movie_genre ?? []
@@ -168,17 +187,65 @@ class MovieController extends Controller
 
     public function show(Movie $movie)
     {
-        $movie->load([
+        $movies = Movie::with([
             'categories',
             'actors',
             'directors',
             'schedules'
-        ]);
+        ])
+            ->whereDate('end_date', '>=', now())
+            ->orderBy('release_date', 'desc')
+            ->get();
 
-        return view('admin.Movie.show', [
+        // phim đang chiếu
+        $movie_show = Movie::whereDate('release_date', '<=', now())
+            ->whereDate('end_date', '>=', now())
+            ->get();
+
+        // phim sắp chiếu
+        $upcoming_movies = Movie::whereDate('release_date', '>', now())
+            ->orderBy('release_date', 'asc')
+            ->get();
+
+        return view('client.home', [
             'movie' => $movie,
+            'movies' => $movies,
+            'movie_show' => $movie_show,
+            'upcoming_movies' => $upcoming_movies,
         ]);
     }
+
+
+    // public function show(Movie $movie = null)
+    // {
+    //     $movies = Movie::with([
+    //         'categories',
+    //         'actors',
+    //         'directors',
+    //         'schedules'
+    //     ])
+    //         ->whereDate('end_date', '>=', now())
+    //         ->orderBy('release_date', 'desc')
+    //         ->get();
+
+    //     // phim đang chiếu
+    //     $showingMovies = Movie::whereDate('release_date', '<=', now())
+    //         ->whereDate('end_date', '>=', now())
+    //         ->get();
+
+    //     // phim sắp chiếu
+    //     $upcomingMovies = Movie::whereDate('release_date', '>', now())
+    //         ->orderBy('release_date', 'asc')
+    //         ->get();
+
+    //     return view('client.home', [
+    //         'movie' => $movie,
+    //         'movies' => $movies,
+    //         'showingMovies' => $showingMovies,
+    //         'upcomingMovies' => $upcomingMovies,
+    //     ]);
+    // }
+
 
     public function edit(Movie $movie)
     {
@@ -211,7 +278,6 @@ class MovieController extends Controller
             'movie_poster'     => 'nullable|image',
             'movie_thumbnail'  => 'nullable|image',
 
-            // trailer giờ là link
             'movie_trailer'    => 'nullable|url',
 
             'movie_length'     => 'required|integer|min:1',
@@ -231,7 +297,6 @@ class MovieController extends Controller
         $poster = $movie->poster;
         $thumbnail = $movie->thumbnail;
 
-        // trailer là link
         $trailer = $request->movie_trailer;
 
         // ================= upload new =================
@@ -296,7 +361,6 @@ class MovieController extends Controller
             'trailer'        => $trailer,
         ]);
 
-        // ================= sync relation =================
 
         $movie->categories()->sync(
             $request->movie_genre ?? []
@@ -335,13 +399,29 @@ class MovieController extends Controller
                 );
         }
 
-        // delete relation
+        //delete image
+
+        if ($movie->logo) {
+            Storage::delete('public/img/movie_logo/' . $movie->logo);
+        }
+
+        if ($movie->poster) {
+            Storage::delete('public/img/movie_poster/' . $movie->poster);
+        }
+
+        if ($movie->thumbnail) {
+            Storage::delete('public/img/movie_thumbnail/' . $movie->thumbnail);
+        }
+
+        //delete relation
 
         $movie->categories()->detach();
+
         $movie->actors()->detach();
+
         $movie->directors()->detach();
 
-        // delete movie
+        //delete movie 
 
         $name = $movie->movie_name;
 

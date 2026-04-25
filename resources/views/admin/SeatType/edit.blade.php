@@ -189,7 +189,7 @@
                 <div class="row g-3">
 
                     <!-- TYPE -->
-                    <div class="col-md-3">
+                    <div class="col-md-6">
                         <div class="cw-label-line">
                             <span>Loại ghế</span>
                         </div>
@@ -207,7 +207,7 @@
                     </div>
 
                     <!-- PRICE -->
-                    <div class="col-md-3">
+                    <div class="col-md-6">
                         <div class="cw-label-line">
                             <span>Giá</span>
                         </div>
@@ -226,23 +226,8 @@
                         @enderror
                     </div>
 
-                    <!-- COLOR -->
-                    <div class="col-md-3">
-                        <div class="cw-label-line">
-                            <span>Màu ghế</span>
-                        </div>
-
-                        <input type="color"
-                            name="color"
-                            value="{{ old('color', $seatType->color ?? '#13161e') }}">
-
-                        @error('color')
-                        <span class="cw-error">{{ $message }}</span>
-                        @enderror
-                    </div>
-
                     <!-- IS COUPLE -->
-                    <div class="col-md-3">
+                    <div class="col-md-6">
 
                         <div class="cw-label-line">
                             <span>Dạng ghế</span>
@@ -266,6 +251,21 @@
 
                     </div>
 
+                    <!-- COLOR -->
+                    <div class="col-md-6">
+                        <div class="cw-label-line">
+                            <span>Màu ghế</span>
+                        </div>
+
+                        <input type="color"
+                            name="color"
+                            value="{{ old('color', $seatType->color ?? '#13161e') }}">
+
+                        @error('color')
+                        <span class="cw-error">{{ $message }}</span>
+                        @enderror
+                    </div>
+
                 </div>
             </div>
 
@@ -279,4 +279,4 @@
     </div>
 </div>
 
-@endsections
+@endsection
