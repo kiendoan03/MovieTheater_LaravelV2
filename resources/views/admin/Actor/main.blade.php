@@ -1,6 +1,8 @@
 @extends('layouts.management')
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css">
 
 <div class="cw">
   <div class="container-fluid px-3 px-md-5">
@@ -17,7 +19,7 @@
     </div>
 
     <div class="cw-card">
-      <table class="table-custom">
+      <table class="table-custom" id="actorsTable">
         <thead>
           <tr>
             <th>ID</th>
@@ -68,5 +70,26 @@
 
   </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#actorsTable').DataTable({
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/vi.json"
+      },
+      "pageLength": 10,
+      "responsive": true,
+      "columnDefs": [
+        {
+          "targets": -1,
+          "orderable": false
+        }
+      ]
+    });
+  });
+</script>
 
 @endsection
