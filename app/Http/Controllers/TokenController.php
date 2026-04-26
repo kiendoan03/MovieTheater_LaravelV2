@@ -7,6 +7,7 @@ use App\Models\RefreshToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Enums\UserRole;
 
 class TokenController extends Controller
 {
@@ -41,6 +42,11 @@ class TokenController extends Controller
     {
         $ttlMinutes = config('jwt.ttl', 60);
 
+        if ($account->role === UserRole::Customer) {
+            $account->loadMissing('customer');
+        } elseif ($account->role === UserRole::Staff || $account->role === UserRole::Admin) {
+            $account->loadMissing('staff');
+        }
         // Trích thông tin cá nhân từ profile, bỏ các id nội bộ
         $profileData = null;
         if ($profile) {

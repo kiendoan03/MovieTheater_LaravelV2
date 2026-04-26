@@ -77,7 +77,7 @@ class TicketBookingController extends Controller
             $bookingMap[$booking->seat_id] = [
                 'status' => $booking->status,
                 'staff_id' => $booking->staff_id,
-                'price' => $booking->seat->seatType->price,
+                'price' => $booking->seat->seatType->price ?? 0,
             ];
         }
 
@@ -87,15 +87,18 @@ class TicketBookingController extends Controller
                 'row' => $seat->row,
                 'column' => $seat->column,
                 'type_id' => $seat->type_id,
-                'type_name' => $seat->seatType->type,
-                'price' => $seat->seatType->price,
-                'color' => $seat->seatType->color,
+                'type_name' => $seat->seatType?->type ?? 'Lối đi',
+                'price' => $seat->seatType?->price ?? 0,
+                'color' => $seat->seatType?->color ?? 'transparent',
                 'booking_status' => $bookingMap[$seat->id]['status'] ?? BookingStatus::Available->value,
                 'staff_id' => $bookingMap[$seat->id]['staff_id'] ?? null,
             ];
         });
 
-        $currentStaffId = auth('staff')->user()?->id;
+        // $currentStaffId = auth('staff')->user()?->id;
+        $user = auth('api')->user();
+        $currentStaffId = $user?->staff?->id ?? $user?->id;
+
 
         return view('admin.TicketBooking.seat-layout', compact(
             'schedule',
@@ -106,17 +109,19 @@ class TicketBookingController extends Controller
 
     /**
      * API: Lấy thông tin chi tiết lịch chiếu (cho AJAX)
+     * Returns ALL seats from room with their booking status
      */
     public function getScheduleSeats($scheduleId)
     {
         $schedule = Schedule::with(['movie', 'room.seats.seatType'])
             ->findOrFail($scheduleId);
 
+        // Get all bookings for this schedule
         $bookings = Booking::where('schedule_id', $scheduleId)
-            ->select('seat_id', 'status', 'staff_id')
             ->get()
             ->keyBy('seat_id');
 
+        // Map ALL seats from room + booking info
         $seats = $schedule->room->seats->map(function ($seat) use ($bookings) {
             $booking = $bookings->get($seat->id);
 
@@ -125,13 +130,13 @@ class TicketBookingController extends Controller
                 'row' => $seat->row,
                 'column' => $seat->column,
                 'type_id' => $seat->type_id,
-                'type_name' => $seat->seatType->type,
-                'price' => $seat->seatType->price,
-                'color' => $seat->seatType->color,
-                'status' => $booking->status ?? BookingStatus::Available->value,
-                'staff_id' => $booking->staff_id ?? null,
+                'type_name' => $seat->seatType?->type ?? 'Lối đi',
+                'price' => $seat->seatType?->price ?? 0,
+                'color' => $seat->seatType?->color ?? 'transparent',
+                'status' => $booking?->status ?? BookingStatus::Available->value,
+                'staff_id' => $booking?->staff_id ?? null,
             ];
-        });
+        })->values();
 
         return response()->json([
             'schedule_id' => $schedule->id,
@@ -333,10 +338,10 @@ class TicketBookingController extends Controller
      */
     public function getTicket($ticketCode)
     {
-        $ticket = Ticket::with(['bookings.seat.type', 'staff'])
+        $ticket = Ticket::with(['bookings.seat.seatType', 'staff'])
             ->where('code', $ticketCode)
             ->firstOrFail();
-
+            
         return response()->json([
             'ticket' => $ticket,
             'bookings' => $ticket->bookings,

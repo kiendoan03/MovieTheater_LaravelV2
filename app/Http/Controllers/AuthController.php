@@ -54,13 +54,13 @@ class AuthController extends Controller
             $account->load('customer');
             $profile = $account->customer
                 ?? ['id' => null, 'email' => $account->email, 'name' => null];
-        } elseif ($account->role === UserRole::Staff) {
+        } elseif ($account->role === UserRole::Staff || $account->role === UserRole::Admin) {
             $account->load('staff');
             $profile = $account->staff
                 ?? ['id' => null, 'email' => $account->email, 'name' => null];
-        } else {
-            // Admin — không có bảng riêng
-            $profile = ['id' => $account->id, 'email' => $account->email, 'role' => 'admin'];
+        // } else {
+        //     // Admin — không có bảng riêng
+        //     $profile = ['id' => $account->id, 'email' => $account->email, 'role' => 'admin'];
         }
 
         $accessToken = JWTAuth::fromUser($account);
