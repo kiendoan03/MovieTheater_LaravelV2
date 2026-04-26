@@ -55,6 +55,7 @@ class AuthController extends Controller
             $profile = $account->customer
                 ?? ['id' => null, 'email' => $account->email, 'name' => null];
         } elseif ($account->role === UserRole::Staff || $account->role === UserRole::Admin) {
+        } elseif ($account->role === UserRole::Staff || $account->role === UserRole::Admin) {
             $account->load('staff');
             $profile = $account->staff
                 ?? ['id' => null, 'email' => $account->email, 'name' => null];

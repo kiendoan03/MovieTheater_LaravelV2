@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('row');
             $table->integer('column');
             $table->unsignedBigInteger('room_id');
-            $table->unsignedBigInteger('type_id');
+            $table->unsignedBigInteger('type_id')->nullable();
             $table->timestamps();
             $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
             $table->foreign('type_id')->references('id')->on('seat_types')->onDelete('cascade');

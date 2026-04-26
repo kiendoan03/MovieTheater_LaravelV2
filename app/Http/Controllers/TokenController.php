@@ -8,6 +8,7 @@ use App\Models\RefreshToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Enums\UserRole;
 
 class TokenController extends Controller
 {

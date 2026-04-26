@@ -11,6 +11,7 @@ use App\Models\Ticket;
 use App\Services\PayOsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class TicketBookingController extends Controller
 {
@@ -77,7 +78,7 @@ class TicketBookingController extends Controller
             $bookingMap[$booking->seat_id] = [
                 'status' => $booking->status,
                 'staff_id' => $booking->staff_id,
-                'price' => $booking->seat->seatType->price,
+                'price' => $booking->seat->seatType->price ?? 0,
             ];
         }
 
@@ -87,15 +88,19 @@ class TicketBookingController extends Controller
                 'row' => $seat->row,
                 'column' => $seat->column,
                 'type_id' => $seat->type_id,
-                'type_name' => $seat->seatType->type,
-                'price' => $seat->seatType->price,
-                'color' => $seat->seatType->color,
+                'type_name' => $seat->seatType?->type ?? 'Lối đi',
+                'price' => $seat->seatType?->price ?? 0,
+                'color' => $seat->seatType?->color ?? 'transparent',
+                'is_couple' => $seat->seatType?->is_couple ?? false,
                 'booking_status' => $bookingMap[$seat->id]['status'] ?? BookingStatus::Available->value,
                 'staff_id' => $bookingMap[$seat->id]['staff_id'] ?? null,
             ];
         });
 
-        $currentStaffId = auth('staff')->user()?->id;
+        // $currentStaffId = auth('staff')->user()?->id;
+        $user = auth('api')->user();
+        $currentStaffId = $user?->staff?->id ?? $user?->id;
+
 
         return view('admin.TicketBooking.seat-layout', compact(
             'schedule',
@@ -106,17 +111,19 @@ class TicketBookingController extends Controller
 
     /**
      * API: Lấy thông tin chi tiết lịch chiếu (cho AJAX)
+     * Returns ALL seats from room with their booking status
      */
     public function getScheduleSeats($scheduleId)
     {
         $schedule = Schedule::with(['movie', 'room.seats.seatType'])
             ->findOrFail($scheduleId);
 
+        // Get all bookings for this schedule
         $bookings = Booking::where('schedule_id', $scheduleId)
-            ->select('seat_id', 'status', 'staff_id')
             ->get()
             ->keyBy('seat_id');
 
+        // Map ALL seats from room + booking info
         $seats = $schedule->room->seats->map(function ($seat) use ($bookings) {
             $booking = $bookings->get($seat->id);
 
@@ -125,13 +132,14 @@ class TicketBookingController extends Controller
                 'row' => $seat->row,
                 'column' => $seat->column,
                 'type_id' => $seat->type_id,
-                'type_name' => $seat->seatType->type,
-                'price' => $seat->seatType->price,
-                'color' => $seat->seatType->color,
-                'status' => $booking->status ?? BookingStatus::Available->value,
-                'staff_id' => $booking->staff_id ?? null,
+                'type_name' => $seat->seatType?->type ?? 'Lối đi',
+                'price' => $seat->seatType?->price ?? 0,
+                'color' => $seat->seatType?->color ?? 'transparent',
+                'is_couple' => $seat->seatType?->is_couple ?? false,    
+                'status' => $booking?->status ?? BookingStatus::Available->value,
+                'staff_id' => $booking?->staff_id ?? null,
             ];
-        });
+        })->values();
 
         return response()->json([
             'schedule_id' => $schedule->id,
@@ -174,7 +182,7 @@ class TicketBookingController extends Controller
         // Cập nhật status và staff_id
         $booking->update([
             'status' => $request->status,
-            'staff_id' => $staffId,
+            'staff_id' => $staffId = $request->status == BookingStatus::Available->value ? null : $staffId, // Nếu set lại thành Available thì xóa staff_id
         ]);
 
         // Broadcast event để update realtime
@@ -183,7 +191,8 @@ class TicketBookingController extends Controller
             $request->seat_id,
             $request->status,
             $staffId
-        ))->toOthers();
+        ));
+        // ))->toOthers();
 
         return response()->json([
             'message' => 'Ghế đã cập nhật',
@@ -333,10 +342,10 @@ class TicketBookingController extends Controller
      */
     public function getTicket($ticketCode)
     {
-        $ticket = Ticket::with(['bookings.seat.type', 'staff'])
+        $ticket = Ticket::with(['bookings.seat.seatType', 'staff'])
             ->where('code', $ticketCode)
             ->firstOrFail();
-
+            
         return response()->json([
             'ticket' => $ticket,
             'bookings' => $ticket->bookings,
@@ -346,59 +355,98 @@ class TicketBookingController extends Controller
     /**
      * Kiểm tra trạng thái thanh toán từ PayOs
      */
+    // public function checkPaymentStatus($ticketCode)
+    // {
+    //     $ticket = Ticket::where('code', $ticketCode)->firstOrFail();
+
+    //     // Kiểm tra xem booking đã Reserved chưa (webhook đã xử lý)
+    //     $bookingsReserved = Booking::where('ticket_id', $ticket->id)
+    //         ->where('status', BookingStatus::Reserved->value)
+    //         ->count();
+
+    //     $totalBookings = Booking::where('ticket_id', $ticket->id)->count();
+
+    //     if ($bookingsReserved === $totalBookings && $totalBookings > 0) {
+    //         // Đã thanh toán (webhook đã xử lý hoặc cash payment)
+    //         return response()->json([
+    //             'message' => 'Thanh toán thành công',
+    //             'status' => 'completed',
+    //             'ticket' => $ticket->load('bookings.seat.type'),
+    //         ]);
+    //     }
+
+    //     // Kiểm tra trạng thái với PayOs (polling)
+    //     $paymentStatus = $this->payOsService->getTransactionStatus($ticket->code);
+
+    //     if (isset($paymentStatus['data'])) {
+    //         $transactionStatus = $paymentStatus['data']['status'] ?? null;
+
+    //         // Nếu đã thanh toán ở PayOs, cập nhật booking
+    //         if ($transactionStatus === 'PAID' || $transactionStatus === 'COMPLETED') {
+    //             // Cập nhật tất cả booking của ticket thành Reserved
+    //             Booking::where('ticket_id', $ticket->id)->update([
+    //                 'status' => BookingStatus::Reserved->value,
+    //             ]);
+
+    //             // Broadcast event để notify realtime
+    //             broadcast(new \App\Events\PaymentCompleted($ticket))->toOthers();
+
+    //             return response()->json([
+    //                 'message' => 'Thanh toán thành công',
+    //                 'status' => 'completed',
+    //                 'ticket' => $ticket->load('bookings.seat.type'),
+    //             ]);
+    //         } elseif ($transactionStatus === 'CANCELLED') {
+    //             return response()->json([
+    //                 'message' => 'Thanh toán bị hủy',
+    //                 'status' => 'cancelled',
+    //             ]);
+    //         }
+    //     }
+
+    //     return response()->json([
+    //         'message' => 'Thanh toán đang chờ xử lý',
+    //         'status' => 'pending',
+    //     ]);
+    // }
     public function checkPaymentStatus($ticketCode)
     {
         $ticket = Ticket::where('code', $ticketCode)->firstOrFail();
 
-        // Kiểm tra xem booking đã Reserved chưa (webhook đã xử lý)
+        // Check bookings đã Reserved chưa
         $bookingsReserved = Booking::where('ticket_id', $ticket->id)
             ->where('status', BookingStatus::Reserved->value)
             ->count();
-
         $totalBookings = Booking::where('ticket_id', $ticket->id)->count();
 
         if ($bookingsReserved === $totalBookings && $totalBookings > 0) {
-            // Đã thanh toán (webhook đã xử lý hoặc cash payment)
-            return response()->json([
-                'message' => 'Thanh toán thành công',
-                'status' => 'completed',
-                'ticket' => $ticket->load('bookings.seat.type'),
-            ]);
+            return response()->json(['status' => 'completed', 'ticket' => $ticket]);
         }
 
-        // Kiểm tra trạng thái với PayOs (polling)
-        $paymentStatus = $this->payOsService->getTransactionStatus($ticket->code);
+        // Lấy orderCode số từ ticket code (bỏ chữ TK)
+        $orderCode = (int) preg_replace('/[^0-9]/', '', $ticket->code);
+
+        $paymentStatus = $this->payOsService->getTransactionStatus($orderCode);
+
+        Log::info('Check status orderCode: ' . $orderCode, $paymentStatus);
 
         if (isset($paymentStatus['data'])) {
             $transactionStatus = $paymentStatus['data']['status'] ?? null;
 
-            // Nếu đã thanh toán ở PayOs, cập nhật booking
-            if ($transactionStatus === 'PAID' || $transactionStatus === 'COMPLETED') {
-                // Cập nhật tất cả booking của ticket thành Reserved
+            if ($transactionStatus === 'PAID') {
                 Booking::where('ticket_id', $ticket->id)->update([
                     'status' => BookingStatus::Reserved->value,
                 ]);
+                broadcast(new \App\Events\PaymentCompleted($ticket));
+                return response()->json(['status' => 'completed', 'ticket' => $ticket]);
+            }
 
-                // Broadcast event để notify realtime
-                broadcast(new \App\Events\PaymentCompleted($ticket))->toOthers();
-
-                return response()->json([
-                    'message' => 'Thanh toán thành công',
-                    'status' => 'completed',
-                    'ticket' => $ticket->load('bookings.seat.type'),
-                ]);
-            } elseif ($transactionStatus === 'CANCELLED') {
-                return response()->json([
-                    'message' => 'Thanh toán bị hủy',
-                    'status' => 'cancelled',
-                ]);
+            if ($transactionStatus === 'CANCELLED') {
+                return response()->json(['status' => 'cancelled']);
             }
         }
 
-        return response()->json([
-            'message' => 'Thanh toán đang chờ xử lý',
-            'status' => 'pending',
-        ]);
+        return response()->json(['status' => 'pending']);
     }
 
     /**

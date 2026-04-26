@@ -473,8 +473,8 @@
                 }
 
                 // Cookie access_token được backend set tự động qua Set-Cookie header
-                // Chỉ lưu account để hiển thị UI (bao gồm cả quan hệ staff/customer)
-                localStorage.setItem('account', JSON.stringify(data.profile));
+                // Chỉ lưu profile để hiển thị UI
+                localStorage.setItem('profile', JSON.stringify(data.profile));
 
                 // Decode JWT payload (phần thứ 2, base64url) để lấy role claim
                 // JWT không mã hóa payload nên đọc được mà không cần secret
