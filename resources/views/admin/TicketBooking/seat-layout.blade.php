@@ -109,6 +109,7 @@
         }
         .seat.booked-other::after {
             /* content:'✕'; */
+            background-repeat: no-repeat;
             position:absolute;
             font-size:13px;
             font-weight:bold;
@@ -359,8 +360,8 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.15.1/dist/echo.iife.js"></script>
-    <script src="https://unpkg.com/@ably-labs/laravel-echo-ably/dist/index.js"></script>
+  <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.16.1/dist/echo.iife.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
 
     <script>
@@ -386,21 +387,33 @@
 
         function initializeEcho() {
             try {
-                if (window.Echo) {
-                    echo = new window.Echo({
-                        broadcaster: 'reverb',
-                        key: document.querySelector('meta[name="reverb-key"]')?.content || 'default',
-                        wsHost: document.querySelector('meta[name="reverb-host"]')?.content || '127.0.0.1',
-                        wsPort: document.querySelector('meta[name="reverb-port"]')?.content || 8080,
-                        wssPort: null,
-                        scheme: document.querySelector('meta[name="reverb-scheme"]')?.content || 'http',
-                        encrypted: false,
-                        enabledTransports: ['ws', 'wss'],
-                    });
-                    console.log('✓ Echo initialized');
-                } else {
-                    console.warn('⚠ Laravel Echo not loaded');
-                }
+                // echo = new window.Echo({
+                //     broadcaster: 'pusher',
+                //     key: 'tdtql3arrpu66stfqlru',
+                //     wsHost: 'localhost',
+                //     wsPort: 8080,
+                //     wssPort: 8080,
+                //     cluster: 'mt1',
+                //     forceTLS: false,
+                //     encrypted: false,
+                //     enabledTransports: ['ws'],
+                // });
+                echo = new window.Echo({
+                    broadcaster: 'pusher',
+                    key: '{{ config("reverb.apps.apps.0.key") }}',
+                    wsHost: '{{ config("reverb.apps.apps.0.options.host") ?? "localhost" }}',
+                    wsPort: {{ config("reverb.servers.reverb.port", 8080) }},
+                    wssPort: {{ config("reverb.servers.reverb.port", 8080) }},
+                    cluster: 'mt1',
+                    forceTLS: false,
+                    encrypted: false,
+                    enabledTransports: ['ws'],
+                });
+
+                console.log('✓ Echo initialized');
+                console.log('connector:', echo.connector);
+                console.log('connector type:', echo.options.broadcaster);
+
             } catch (error) {
                 console.error('✗ Echo initialization error:', error);
             }
@@ -515,10 +528,13 @@
                         seatEl.textContent = '';
                         seatEl.title = `${label} · Đã đặt`;
                         seatEl.style.borderColor = 'rgba(248,113,113,0.5)';
+                        seatEl.style.backgroundImage = 'url("/img/logo/favicon.png")';
+                        seatEl.style.backgroundSize = 'cover';
+                        seatEl.style.backgroundPosition = 'center';
+                        seatEl.style.backgroundRepeat = 'no-repeat';
                     } else {
                         seatEl.classList.add('available');
-                        // seatEl.style.background  = color + '28';
-                        // seatEl.style.backgroundImage = '/favicon.ico';
+                        seatEl.style.background  = color + '28';
                         seatEl.style.borderColor = color;
                         seatEl.style.color       = color;
                         seatEl.onclick = () => toggleSeat(seat);
@@ -759,7 +775,7 @@
 
             try {
                 echo.channel(`schedule.${scheduleId}`)
-                    .listen('SeatStatusChanged', (event) => {
+                    .listen('.seat.status.changed', (event) => {
                         console.log('  REALTIME EVENT received:', event);
                         handleSeatStatusChange(event.seat_id, event.status, event.staff_id);
                     });
@@ -803,7 +819,10 @@
                 seatEl.classList.add('booked-other');
                 seatEl.textContent = '';
                 // seatEl.style.background  = 'rgba(248,113,113,0.15)';
-                // seatEl.style.backgroundImage = '/favicon.ico';
+                seatEl.style.backgroundImage = 'url("/img/logo/favicon.png")'
+                seatEl.style.backgroundSize = 'cover';
+                seatEl.style.backgroundPosition = 'center';
+                seatEl.style.backgroundRepeat = 'no-repeat';
                 seatEl.style.borderColor = 'rgba(248,113,113,0.5)';
                 seatEl.style.color       = '';
                 seatEl.onclick = null;

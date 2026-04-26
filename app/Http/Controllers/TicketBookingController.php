@@ -181,7 +181,7 @@ class TicketBookingController extends Controller
         // Cập nhật status và staff_id
         $booking->update([
             'status' => $request->status,
-            'staff_id' => $staffId,
+            'staff_id' => $staffId = $request->status == BookingStatus::Available->value ? null : $staffId, // Nếu set lại thành Available thì xóa staff_id
         ]);
 
         // Broadcast event để update realtime
@@ -190,7 +190,8 @@ class TicketBookingController extends Controller
             $request->seat_id,
             $request->status,
             $staffId
-        ))->toOthers();
+        ));
+        // ))->toOthers();
 
         return response()->json([
             'message' => 'Ghế đã cập nhật',
