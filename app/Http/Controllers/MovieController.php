@@ -29,9 +29,7 @@ class MovieController extends Controller
     public function create()
     {
         $actors = Actor::orderBy('name')->get();
-
         $directors = Director::orderBy('name')->get();
-
         $categories = Category::orderBy('name')->get();
 
         return view('admin.Movie.create', [
@@ -45,35 +43,26 @@ class MovieController extends Controller
     {
         $request->validate([
             'movie_name'       => 'required|string|max:255',
-
             'movie_logo'       => 'required|image',
             'movie_poster'     => 'required|image',
             'movie_thumbnail'  => 'required|image',
-
             'movie_trailer'    => 'required|url',
-
             'movie_length'     => 'required|integer|min:1',
             'movie_language'   => 'required|string|max:255',
             'movie_country'    => 'required|string|max:255',
-
             'movie_release_date' => 'required|date',
             'movie_end_date'     => 'required|date|after_or_equal:movie_release_date',
-
             'movie_age'        => 'required|integer|min:1',
             'movie_description' => 'required|string',
-
             'movie_genre'      => 'required|array|min:1',
             'movie_genre.*'    => 'exists:categories,id',
-
             'movie_actor'      => 'required|array|min:1',
             'movie_actor.*'    => 'exists:actors,id',
-
             'movie_director'   => 'required|array|min:1',
             'movie_director.*' => 'exists:directors,id',
         ], [
             'required' => ':attribute không được để trống.',
             'movie_trailer.url' => 'Trailer phải là link hợp lệ.',
-
             'movie_end_date.after_or_equal' =>
             'Ngày kết thúc phải lớn hơn hoặc bằng ngày khởi chiếu.',
 
@@ -95,7 +84,7 @@ class MovieController extends Controller
             'movie_director' => 'Đạo diễn',
         ]);
 
-        // ================= upload =================
+        // upload 
 
         $logo = null;
         $poster = null;
@@ -139,40 +128,30 @@ class MovieController extends Controller
             );
         }
 
-        // ================= create movie =================
+        // create movie 
 
         $movie = Movie::create([
             'movie_name'     => $request->movie_name,
-
             'logo'           => $logo,
             'poster'         => $poster,
             'thumbnail'      => $thumbnail,
-
             'rating'         => 5,
-
             'synopsis'       => $request->movie_description,
             'language'       => $request->movie_language,
             'country'        => $request->movie_country,
-
             'length'         => $request->movie_length,
-
             'release_date'   => $request->movie_release_date,
             'end_date'       => $request->movie_end_date,
-
             'age_restricted' => $request->movie_age,
-
             'trailer'        => $trailer,
         ]);
-
 
         $movie->categories()->sync(
             $request->movie_genre ?? []
         );
-
         $movie->actors()->sync(
             $request->movie_actor ?? []
         );
-
         $movie->directors()->sync(
             $request->movie_director ?? []
         );
@@ -197,14 +176,24 @@ class MovieController extends Controller
             ->orderBy('release_date', 'desc')
             ->get();
 
-        // phim đang chiếu
+        // phim đang chiếu 
         $movie_show = Movie::whereDate('release_date', '<=', now())
             ->whereDate('end_date', '>=', now())
-            ->get();
+            ->orderBy('release_date', 'desc')
+            ->take(8)
+            ->get();;
 
         // phim sắp chiếu
         $upcoming_movies = Movie::whereDate('release_date', '>', now())
             ->orderBy('release_date', 'asc')
+            ->take(8)
+            ->get();
+
+        // TOP phim
+        $top_movies = Movie::whereDate('release_date', '<=', now())
+            ->whereDate('end_date', '>=', now())
+            ->orderBy('rating', 'desc')
+            ->take(8)
             ->get();
 
         return view('client.home', [
@@ -212,47 +201,13 @@ class MovieController extends Controller
             'movies' => $movies,
             'movie_show' => $movie_show,
             'upcoming_movies' => $upcoming_movies,
+            'top_movies' => $top_movies,
         ]);
     }
-
-
-    // public function show(Movie $movie = null)
-    // {
-    //     $movies = Movie::with([
-    //         'categories',
-    //         'actors',
-    //         'directors',
-    //         'schedules'
-    //     ])
-    //         ->whereDate('end_date', '>=', now())
-    //         ->orderBy('release_date', 'desc')
-    //         ->get();
-
-    //     // phim đang chiếu
-    //     $showingMovies = Movie::whereDate('release_date', '<=', now())
-    //         ->whereDate('end_date', '>=', now())
-    //         ->get();
-
-    //     // phim sắp chiếu
-    //     $upcomingMovies = Movie::whereDate('release_date', '>', now())
-    //         ->orderBy('release_date', 'asc')
-    //         ->get();
-
-    //     return view('client.home', [
-    //         'movie' => $movie,
-    //         'movies' => $movies,
-    //         'showingMovies' => $showingMovies,
-    //         'upcomingMovies' => $upcomingMovies,
-    //     ]);
-    // }
-
-
     public function edit(Movie $movie)
     {
         $actors = Actor::orderBy('name')->get();
-
         $directors = Director::orderBy('name')->get();
-
         $categories = Category::orderBy('name')->get();
 
         $movie->load([
@@ -273,33 +228,27 @@ class MovieController extends Controller
     {
         $request->validate([
             'movie_name'       => 'required|string|max:255',
-
             'movie_logo'       => 'nullable|image',
             'movie_poster'     => 'nullable|image',
             'movie_thumbnail'  => 'nullable|image',
-
             'movie_trailer'    => 'nullable|url',
-
             'movie_length'     => 'required|integer|min:1',
             'movie_language'   => 'required|string|max:255',
             'movie_country'    => 'required|string|max:255',
-
             'movie_release_date' => 'required|date',
             'movie_end_date'     => 'required|date|after_or_equal:movie_release_date',
-
             'movie_age'        => 'required|integer',
             'movie_description' => 'required',
         ]);
 
-        // ================= old data =================
+        // old data 
 
         $logo = $movie->logo;
         $poster = $movie->poster;
         $thumbnail = $movie->thumbnail;
-
         $trailer = $request->movie_trailer;
 
-        // ================= upload new =================
+        // upload new
 
         if ($request->hasFile('movie_logo')) {
 
@@ -337,27 +286,20 @@ class MovieController extends Controller
             );
         }
 
-        // ================= update =================
+        // update
 
         $movie->update([
             'movie_name'     => $request->movie_name,
-
             'logo'           => $logo,
             'poster'         => $poster,
             'thumbnail'      => $thumbnail,
-
             'synopsis'       => $request->movie_description,
             'language'       => $request->movie_language,
             'country'        => $request->movie_country,
-
             'length'         => $request->movie_length,
-
             'release_date'   => $request->movie_release_date,
             'end_date'       => $request->movie_end_date,
-
             'age_restricted' => $request->movie_age,
-
-            // update link youtube
             'trailer'        => $trailer,
         ]);
 
@@ -365,11 +307,9 @@ class MovieController extends Controller
         $movie->categories()->sync(
             $request->movie_genre ?? []
         );
-
         $movie->actors()->sync(
             $request->movie_actor ?? []
         );
-
         $movie->directors()->sync(
             $request->movie_director ?? []
         );
@@ -399,39 +339,74 @@ class MovieController extends Controller
                 );
         }
 
-        //delete image
-
         if ($movie->logo) {
             Storage::delete('public/img/movie_logo/' . $movie->logo);
         }
-
         if ($movie->poster) {
             Storage::delete('public/img/movie_poster/' . $movie->poster);
         }
-
         if ($movie->thumbnail) {
             Storage::delete('public/img/movie_thumbnail/' . $movie->thumbnail);
         }
-
-        //delete relation
-
         $movie->categories()->detach();
-
         $movie->actors()->detach();
-
         $movie->directors()->detach();
 
-        //delete movie 
-
         $name = $movie->movie_name;
-
         $movie->delete();
-
         return redirect()
             ->route('admin.movies.index')
             ->with(
                 'success',
                 "Đã xóa phim \"{$name}\"!"
             );
+    }
+    public function search(Request $request)
+    {
+        $keyword = $request->keyword;
+        $genre = (array) $request->genre;
+        $release_date = $request->release_date;
+        $format = $request->format;
+
+        $query = Movie::with(['categories', 'actors', 'directors']);
+
+        // tìm theo tên phim
+        $query->when($keyword, function ($q) use ($keyword) {
+            $q->where('movie_name', 'like', "%{$keyword}%");
+        });
+
+        // lọc theo thể loại
+        $query->when(!empty($genre), function ($q) use ($genre) {
+            $q->whereHas('categories', function ($sub) use ($genre) {
+                $sub->whereIn('categories.id', $genre);
+            });
+        });
+
+        // lọc theo ngày chiếu
+        $query->when($release_date, function ($q) use ($release_date) {
+            $q->whereDate('release_date', '<=', $release_date)
+                ->whereDate('end_date', '>=', $release_date);
+        });
+
+        // lọc theo format
+        $query->when($format, function ($q) use ($format) {
+            $q->where('format', $format);
+        });
+
+        $movies = $query
+            ->orderBy('release_date', 'desc')
+            ->paginate(12)
+            ->withQueryString();
+
+        $categories = Category::orderBy('name')->get();
+
+        return view('client.search', compact(
+            'movies',
+            'categories',
+            'keyword',
+            'genre',
+            'release_date',
+            'format'
+        ));
     }
 }

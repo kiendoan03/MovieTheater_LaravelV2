@@ -109,6 +109,7 @@ Route::prefix('Admin/Movie')->name('admin.')->group(function () {
 // ==========================================
 Route::prefix('/')->group(function(){
     Route::get('/', [App\Http\Controllers\MovieController::class, 'show'])->name('index');
+    Route::get('/search', [App\Http\Controllers\MovieController::class, 'search'])->name('movies.search');
     Route::get('/{movie_actor}/actor', [App\Http\Controllers\ActorController::class, 'show'])->name('actor');
     Route::get('/{movie_director}/director', [App\Http\Controllers\DirectorController::class, 'show'])->name('director');
 });
