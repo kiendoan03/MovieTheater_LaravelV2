@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ScheduleController;
-use App\Http\Controllers\TicketBookingController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PayOSController;
+use App\Http\Controllers\ScheduleController;
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,7 +34,6 @@ Route::prefix('/Admin/Dashboard')->name('admin.')->group(function () {
 // Route::post('/payos/login', [PayOSController::class, 'login'])->name('payos.login');
 // Route::get('/payos/statistics', [PayOSController::class, 'statistics'])->name('payos.statistics');
 
-
 // Route::get('/Admin/Dashboard',[App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 Route::prefix('Admin/Category')->name('admin.')->group(function () {
     Route::get('/', [\App\Http\Controllers\CategoryController::class, 'index'])->name('categories.index');
@@ -61,52 +60,50 @@ Route::prefix('Admin/Director')->name('admin.')->group(function () {
     Route::delete('/{director}/delete', [\App\Http\Controllers\DirectorController::class, 'destroy'])->name('directors.destroy');
 });
 
-    Route::prefix('Admin/Room')->name('admin.')->group(function () {
-        Route::get('/', [App\Http\Controllers\RoomController::class, 'index'])->name('rooms.index');
-        Route::get('/create', [App\Http\Controllers\RoomController::class, 'create'])->name('rooms.create');
-        Route::post('/create', [App\Http\Controllers\RoomController::class, 'store'])->name('rooms.store');
-        Route::get('/{room}', [App\Http\Controllers\RoomController::class, 'show'])->name('rooms.show');
-        Route::get('/{room}/edit', [App\Http\Controllers\RoomController::class, 'edit'])->name('rooms.edit');
-        Route::put('/{room}/edit', [App\Http\Controllers\RoomController::class, 'update'])->name('rooms.update');
-        Route::delete('/{room}/delete', [App\Http\Controllers\RoomController::class, 'destroy'])->name('rooms.destroy');
-    });
+Route::prefix('Admin/Room')->name('admin.')->group(function () {
+    Route::get('/', [App\Http\Controllers\RoomController::class, 'index'])->name('rooms.index');
+    Route::get('/create', [App\Http\Controllers\RoomController::class, 'create'])->name('rooms.create');
+    Route::post('/create', [App\Http\Controllers\RoomController::class, 'store'])->name('rooms.store');
+    Route::get('/{room}', [App\Http\Controllers\RoomController::class, 'show'])->name('rooms.show');
+    Route::get('/{room}/edit', [App\Http\Controllers\RoomController::class, 'edit'])->name('rooms.edit');
+    Route::put('/{room}/edit', [App\Http\Controllers\RoomController::class, 'update'])->name('rooms.update');
+    Route::delete('/{room}/delete', [App\Http\Controllers\RoomController::class, 'destroy'])->name('rooms.destroy');
+});
 
-    Route::prefix('Admin/RoomType')->name('admin.')->group(function () {
-        Route::get('/', [App\Http\Controllers\RoomTypeController::class, 'index'])->name('room_types.index');
-        Route::get('/create', [App\Http\Controllers\RoomTypeController::class, 'create'])->name('room_types.create');
-        Route::post('/create', [App\Http\Controllers\RoomTypeController::class, 'store'])->name('room_types.store');
-        Route::get('/{roomType}/edit', [App\Http\Controllers\RoomTypeController::class, 'edit'])->name('room_types.edit');
-        Route::put('/{roomType}/edit', [App\Http\Controllers\RoomTypeController::class, 'update'])->name('room_types.update');
-        Route::delete('/{roomType}/delete', [App\Http\Controllers\RoomTypeController::class, 'destroy'])->name('room_types.destroy');
-    });
+Route::prefix('Admin/RoomType')->name('admin.')->group(function () {
+    Route::get('/', [App\Http\Controllers\RoomTypeController::class, 'index'])->name('room_types.index');
+    Route::get('/create', [App\Http\Controllers\RoomTypeController::class, 'create'])->name('room_types.create');
+    Route::post('/create', [App\Http\Controllers\RoomTypeController::class, 'store'])->name('room_types.store');
+    Route::get('/{roomType}/edit', [App\Http\Controllers\RoomTypeController::class, 'edit'])->name('room_types.edit');
+    Route::put('/{roomType}/edit', [App\Http\Controllers\RoomTypeController::class, 'update'])->name('room_types.update');
+    Route::delete('/{roomType}/delete', [App\Http\Controllers\RoomTypeController::class, 'destroy'])->name('room_types.destroy');
+});
 
-    Route::prefix('Admin/SeatType')->name('admin.')->group(function () {
-        Route::get('/', [App\Http\Controllers\SeatTypeController::class, 'index'])->name('seat_types.index');
-        Route::get('/create', [App\Http\Controllers\SeatTypeController::class, 'create'])->name('seat_types.create');
-        Route::post('/create', [App\Http\Controllers\SeatTypeController::class, 'store'])->name('seat_types.store');
-        Route::get('/{seatType}/edit', [App\Http\Controllers\SeatTypeController::class, 'edit'])->name('seat_types.edit');
-        Route::put('/{seatType}/edit', [App\Http\Controllers\SeatTypeController::class, 'update'])->name('seat_types.update');
-        Route::delete('/{seatType}/delete', [App\Http\Controllers\SeatTypeController::class, 'destroy'])->name('seat_types.destroy');
-    });
+Route::prefix('Admin/SeatType')->name('admin.')->group(function () {
+    Route::get('/', [App\Http\Controllers\SeatTypeController::class, 'index'])->name('seat_types.index');
+    Route::get('/create', [App\Http\Controllers\SeatTypeController::class, 'create'])->name('seat_types.create');
+    Route::post('/create', [App\Http\Controllers\SeatTypeController::class, 'store'])->name('seat_types.store');
+    Route::get('/{seatType}/edit', [App\Http\Controllers\SeatTypeController::class, 'edit'])->name('seat_types.edit');
+    Route::put('/{seatType}/edit', [App\Http\Controllers\SeatTypeController::class, 'update'])->name('seat_types.update');
+    Route::delete('/{seatType}/delete', [App\Http\Controllers\SeatTypeController::class, 'destroy'])->name('seat_types.destroy');
+});
 
-    Route::prefix('Admin/Schedule')->name('admin.')->group(function () {
-        Route::get('/', [App\Http\Controllers\ScheduleController::class, 'index'])->name('schedules.index');
-        Route::get('/create', [App\Http\Controllers\ScheduleController::class, 'create'])->name('schedules.create');
-        Route::post('/create', [App\Http\Controllers\ScheduleController::class, 'store'])->name('schedules.store');
-        Route::get('/{schedule}/edit', [App\Http\Controllers\ScheduleController::class, 'edit'])->name('schedules.edit');
-        Route::put('/{schedule}/edit', [App\Http\Controllers\ScheduleController::class, 'update'])->name('schedules.update');
-        Route::delete('/{schedule}/delete', [App\Http\Controllers\ScheduleController::class, 'destroy'])->name('schedules.destroy');
-        Route::get('/by-room', [ScheduleController::class, 'byRoom'])->name('schedules.by-room');
-    });
-}); // end admin middleware group
+Route::prefix('Admin/Schedule')->name('admin.')->group(function () {
+    Route::get('/', [App\Http\Controllers\ScheduleController::class, 'index'])->name('schedules.index');
+    Route::get('/create', [App\Http\Controllers\ScheduleController::class, 'create'])->name('schedules.create');
+    Route::post('/create', [App\Http\Controllers\ScheduleController::class, 'store'])->name('schedules.store');
+    Route::get('/{schedule}/edit', [App\Http\Controllers\ScheduleController::class, 'edit'])->name('schedules.edit');
+    Route::put('/{schedule}/edit', [App\Http\Controllers\ScheduleController::class, 'update'])->name('schedules.update');
+    Route::delete('/{schedule}/delete', [App\Http\Controllers\ScheduleController::class, 'destroy'])->name('schedules.destroy');
+    Route::get('/by-room', [ScheduleController::class, 'byRoom'])->name('schedules.by-room');
+});
 
 // ==========================================
 // Ticket Booking Routes (Đặt vé tại quầy - Staff & Admin)
 // ==========================================
-Route::prefix('/')->group(function(){
+Route::prefix('/')->group(function () {
     Route::get('/', [App\Http\Controllers\MovieController::class, 'show'])->name('index');
     Route::get('/search', [App\Http\Controllers\MovieController::class, 'search'])->name('movies.search');
     Route::get('/{movie_actor}/actor', [App\Http\Controllers\ActorController::class, 'show'])->name('actor');
     Route::get('/{movie_director}/director', [App\Http\Controllers\DirectorController::class, 'show'])->name('director');
 });
-
