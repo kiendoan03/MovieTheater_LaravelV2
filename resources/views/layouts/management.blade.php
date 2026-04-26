@@ -241,11 +241,8 @@
             <div class="col-lg-3 d-none d-lg-block">
                 <div id="sidebar">
                     <div class="nav-label">Core</div>
-                    <a href="#" class="nav-link" data-id="dashboard"><i class="fa-solid fa-chart-pie"></i>
-                        Dashboard</a>
-                    <a href="{{ route('admin.ticket-booking.index') }}" class="nav-link" data-id="ticket-booking"><i
-                            class="fa-solid fa-ticket"></i> Ticket Booking</a>
-
+                    <a href="{{ route('admin.dashboard') }}" class="nav-link" data-id="dashboard"><i
+                            class="fa-solid fa-chart-pie"></i> Dashboard</a>
                     <div class="nav-label">Management</div>
                     <a href="#" class="nav-link" data-id="staffs"><i class="fa-solid fa-user-shield"></i>
                         Staffs</a>
@@ -253,7 +250,8 @@
                         Customers</a>
                     <a href="{{ route('admin.categories.index') }}" class="nav-link" data-id="genre"><i
                             class="fa-solid fa-tags"></i> Film Genre</a>
-                    <a href="#" class="nav-link" data-id="movies"><i class="fa-solid fa-film"></i> Movies</a>
+                    <a href="{{ route('admin.movies.index') }}" class="nav-link" data-id="movies"><i
+                            class="fa-solid fa-film"></i> Movies</a>
                     <a href="{{ route('admin.rooms.index') }}" class="nav-link" data-id="rooms"><i
                             class="fa-solid fa-door-open"></i> Rooms</a>
                     <a href="{{ route('admin.schedules.index') }}" class="nav-link" data-id="schedules"><i
