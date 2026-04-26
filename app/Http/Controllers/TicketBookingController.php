@@ -90,6 +90,7 @@ class TicketBookingController extends Controller
                 'type_name' => $seat->seatType?->type ?? 'Lối đi',
                 'price' => $seat->seatType?->price ?? 0,
                 'color' => $seat->seatType?->color ?? 'transparent',
+                'is_couple' => $seat->seatType?->is_couple ?? false,
                 'booking_status' => $bookingMap[$seat->id]['status'] ?? BookingStatus::Available->value,
                 'staff_id' => $bookingMap[$seat->id]['staff_id'] ?? null,
             ];
@@ -133,6 +134,7 @@ class TicketBookingController extends Controller
                 'type_name' => $seat->seatType?->type ?? 'Lối đi',
                 'price' => $seat->seatType?->price ?? 0,
                 'color' => $seat->seatType?->color ?? 'transparent',
+                'is_couple' => $seat->seatType?->is_couple ?? false,    
                 'status' => $booking?->status ?? BookingStatus::Available->value,
                 'staff_id' => $booking?->staff_id ?? null,
             ];

@@ -474,13 +474,24 @@
 
                 const seatsInRow = rowMap.get(rowNum).sort((a, b) => a.column - b.column);
 
-                seatsInRow.forEach(seat => {
+                seatsInRow.forEach((seat, idx) => { 
                     // Lối đi
                     if (!seat.type_id) {
                         const aisle = document.createElement('div');
                         aisle.className = 'seat is-aisle';
                         seatsWrapper.appendChild(aisle);
                         return;
+                    }
+
+                    // ── Couple seat: chèn gap trước mỗi ghế chẵn (đầu cặp mới) ──
+                    if (isCoupleType(seat.type_id) && seat.column % 2 === 1 && idx > 0) {
+                        // Tìm seat trước (không phải aisle) để kiểm tra có phải cặp kế tiếp không
+                        const prevSeat = seatsInRow[idx - 1];
+                        if (prevSeat && prevSeat.type_id && isCoupleType(prevSeat.type_id)) {
+                            const gap = document.createElement('div');
+                            gap.style.cssText = 'width:8px; flex-shrink:0;';
+                            seatsWrapper.appendChild(gap);
+                        }
                     }
 
                     // Ghế thường
@@ -553,6 +564,7 @@
                     name: seat.type_name,
                     price: seat.price,
                     color: seat.color,
+                    is_couple: seat.is_couple ?? false, 
                 });
             });
 
@@ -615,7 +627,58 @@
             legend.appendChild(bookedOther);
         }
 
+        // function toggleSeat(seat) {
+        //     const seatEl = document.getElementById(`seat-${seat.id}`);
+        //     const color  = seat.color || '#6b7280';
+        //     const label  = String.fromCharCode(64 + seat.row) + seat.column;
+
+        //     if (selectedSeats.has(seat.id)) {
+        //         selectedSeats.delete(seat.id);
+        //         seatEl.classList.remove('selected');
+        //         seatEl.style.background  = color + '28';
+        //         seatEl.style.borderColor = color;
+        //         seatEl.style.color       = color;
+        //         seatEl.textContent       = label;
+        //         updateSeatStatus(seat.id, 0);
+        //     } else {
+        //         selectedSeats.set(seat.id, seat);
+        //         seatEl.classList.add('selected');
+        //         seatEl.style.background  = 'var(--accent)';
+        //         seatEl.style.borderColor = 'var(--accent)';
+        //         seatEl.style.color       = '#0d0f14';
+        //         seatEl.textContent       = label;
+        //         updateSeatStatus(seat.id, 1);
+        //     }
+
+        //     updateUI();
+        // }
+
         function toggleSeat(seat) {
+            const isCouple = isCoupleType(seat.type_id);
+            const partner  = isCouple ? getCouplePartner(seat) : null;
+
+            const willSelect = !selectedSeats.has(seat.id);
+            // Toggle ghế được click
+            _toggleSingleSeat(seat);
+
+            // Nếu là couple và partner available → toggle luôn
+            if (partner) {
+                const partnerOccupied = partner.status === 2 ||
+                    (partner.status === 1 && partner.staff_id !== currentStaffId);
+
+                if (!partnerOccupied) {
+                    // Đồng bộ partner theo hướng đã xác định
+                    const partnerAlreadySelected = selectedSeats.has(partner.id);
+                    if (willSelect !== partnerAlreadySelected) {
+                        _toggleSingleSeat(partner);
+                    }
+                }
+            }
+
+            updateUI();
+        }
+
+        function _toggleSingleSeat(seat) {
             const seatEl = document.getElementById(`seat-${seat.id}`);
             const color  = seat.color || '#6b7280';
             const label  = String.fromCharCode(64 + seat.row) + seat.column;
@@ -637,8 +700,6 @@
                 seatEl.textContent       = label;
                 updateSeatStatus(seat.id, 1);
             }
-
-            updateUI();
         }
 
         function updateSeatStatus(seatId, status) {
@@ -986,6 +1047,20 @@
 
         function formatCurrency(amount) {
             return new Intl.NumberFormat('vi-VN').format(amount) + ' ₫';
+        }
+
+        function getCouplePartner(seat) {
+            // Ghế couple được ghép theo cặp: (1,2), (3,4), (5,6)...
+            // Nếu column lẻ → partner là column+1, nếu chẵn → partner là column-1
+            const partnerCol = seat.column % 2 !== 0 ? seat.column + 1 : seat.column - 1;
+            return Array.from(allSeats.values()).find(
+                s => s.row === seat.row && s.column === partnerCol && s.type_id === seat.type_id
+            );
+        }
+
+        function isCoupleType(typeId) {
+            const type = seatTypes.get(typeId);
+            return !!(type && type.is_couple); 
         }
     </script>
 @endsection
