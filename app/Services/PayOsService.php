@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class PayOsService
@@ -27,31 +28,54 @@ class PayOsService
      */
     public function createQRCode(string $orderCode, int $amount, string $description, string $returnUrl)
     {
+        $orderCodeInt = (int) preg_replace('/[^0-9]/', '', $orderCode);
+        
         $data = [
-            'orderCode' => $orderCode,
+            'orderCode' => $orderCodeInt,
             'amount' => $amount,
-            'description' => $description,
+            'description' => substr($description, 0, 25),
             'returnUrl' => $returnUrl,
             'cancelUrl' => $returnUrl,
-            'signature' => $this->generateSignature($orderCode, $amount),
+            'signature' => $this->generateSignature($orderCodeInt, $amount, substr($description, 0, 25), $returnUrl),
         ];
+
+        Log::info('PayOs request:', $data);
 
         try {
             $response = Http::withHeaders([
                 'x-client-id' => $this->clientId,
                 'x-api-key' => $this->apiKey,
-            ])->post("{$this->apiUrl}/qr-code/generate", $data);
+            ])->post("{$this->apiUrl}/v2/payment-requests", $data);
+
+            Log::info('PayOs response:', [
+                'status' => $response->status(),
+                'body' => $response->json(),
+            ]);
 
             if ($response->successful()) {
-                return $response->json();
+                $json = $response->json();
+                
+                // PayOs trả về code "00" là success
+                if ($json['code'] === '00') {
+                    return [
+                        'success' => true,
+                        'data' => $json['data'],
+                    ];
+                }
+                
+                return [
+                    'success' => false,
+                    'message' => $json['desc'] ?? 'Unknown error',
+                ];
             }
 
             return [
                 'success' => false,
-                'message' => $response->json('message') ?? 'Failed to create QR code',
-                'code' => $response->status(),
+                'message' => $response->json('desc') ?? $response->json('message') ?? 'Unknown error',
+                'error_detail' => $response->json(),
             ];
         } catch (\Exception $e) {
+            Log::error('PayOs exception:', ['message' => $e->getMessage()]);
             return [
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -68,7 +92,14 @@ class PayOsService
             $response = Http::withHeaders([
                 'x-client-id' => $this->clientId,
                 'x-api-key' => $this->apiKey,
-            ])->get("{$this->apiUrl}/transaction-status/{$orderCode}");
+            // ])->get("{$this->apiUrl}/transaction-status/{$orderCode}");
+            ])->get("{$this->apiUrl}/v2/payment-requests/{$orderCode}");
+
+
+            Log::info('PayOs check status response:', [
+                'status' => $response->status(),
+                'body' => $response->json(),
+            ]);
 
             if ($response->successful()) {
                 return $response->json();
@@ -117,9 +148,10 @@ class PayOsService
      * Tạo chữ ký (signature) cho request
      * Signature = HMAC-SHA256(checksum_key, orderCode|amount)
      */
-    public function generateSignature(string $orderCode, int $amount): string
+    public function generateSignature(string $orderCode, int $amount, string $description, string $returnUrl): string
     {
-        $data = "{$orderCode}|{$amount}";
+        $orderCodeInt = (int) preg_replace('/[^0-9]/', '', $orderCode);
+        $data = "amount={$amount}&cancelUrl={$returnUrl}&description={$description}&orderCode={$orderCodeInt}&returnUrl={$returnUrl}";
         return hash_hmac('sha256', $data, $this->checksumKey);
     }
 

@@ -7,5 +7,5 @@ return [
     'webhook_url' => env('PAYOS_WEBHOOK_URL'),
     
     // API Endpoints
-    'api_url' => 'https://api-merchant.payos.vn/v1',
+    'api_url' => 'https://api-merchant.payos.vn',
 ];

@@ -11,6 +11,7 @@ use App\Models\Ticket;
 use App\Services\PayOsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class TicketBookingController extends Controller
 {
@@ -354,59 +355,98 @@ class TicketBookingController extends Controller
     /**
      * Kiểm tra trạng thái thanh toán từ PayOs
      */
+    // public function checkPaymentStatus($ticketCode)
+    // {
+    //     $ticket = Ticket::where('code', $ticketCode)->firstOrFail();
+
+    //     // Kiểm tra xem booking đã Reserved chưa (webhook đã xử lý)
+    //     $bookingsReserved = Booking::where('ticket_id', $ticket->id)
+    //         ->where('status', BookingStatus::Reserved->value)
+    //         ->count();
+
+    //     $totalBookings = Booking::where('ticket_id', $ticket->id)->count();
+
+    //     if ($bookingsReserved === $totalBookings && $totalBookings > 0) {
+    //         // Đã thanh toán (webhook đã xử lý hoặc cash payment)
+    //         return response()->json([
+    //             'message' => 'Thanh toán thành công',
+    //             'status' => 'completed',
+    //             'ticket' => $ticket->load('bookings.seat.type'),
+    //         ]);
+    //     }
+
+    //     // Kiểm tra trạng thái với PayOs (polling)
+    //     $paymentStatus = $this->payOsService->getTransactionStatus($ticket->code);
+
+    //     if (isset($paymentStatus['data'])) {
+    //         $transactionStatus = $paymentStatus['data']['status'] ?? null;
+
+    //         // Nếu đã thanh toán ở PayOs, cập nhật booking
+    //         if ($transactionStatus === 'PAID' || $transactionStatus === 'COMPLETED') {
+    //             // Cập nhật tất cả booking của ticket thành Reserved
+    //             Booking::where('ticket_id', $ticket->id)->update([
+    //                 'status' => BookingStatus::Reserved->value,
+    //             ]);
+
+    //             // Broadcast event để notify realtime
+    //             broadcast(new \App\Events\PaymentCompleted($ticket))->toOthers();
+
+    //             return response()->json([
+    //                 'message' => 'Thanh toán thành công',
+    //                 'status' => 'completed',
+    //                 'ticket' => $ticket->load('bookings.seat.type'),
+    //             ]);
+    //         } elseif ($transactionStatus === 'CANCELLED') {
+    //             return response()->json([
+    //                 'message' => 'Thanh toán bị hủy',
+    //                 'status' => 'cancelled',
+    //             ]);
+    //         }
+    //     }
+
+    //     return response()->json([
+    //         'message' => 'Thanh toán đang chờ xử lý',
+    //         'status' => 'pending',
+    //     ]);
+    // }
     public function checkPaymentStatus($ticketCode)
     {
         $ticket = Ticket::where('code', $ticketCode)->firstOrFail();
 
-        // Kiểm tra xem booking đã Reserved chưa (webhook đã xử lý)
+        // Check bookings đã Reserved chưa
         $bookingsReserved = Booking::where('ticket_id', $ticket->id)
             ->where('status', BookingStatus::Reserved->value)
             ->count();
-
         $totalBookings = Booking::where('ticket_id', $ticket->id)->count();
 
         if ($bookingsReserved === $totalBookings && $totalBookings > 0) {
-            // Đã thanh toán (webhook đã xử lý hoặc cash payment)
-            return response()->json([
-                'message' => 'Thanh toán thành công',
-                'status' => 'completed',
-                'ticket' => $ticket->load('bookings.seat.type'),
-            ]);
+            return response()->json(['status' => 'completed', 'ticket' => $ticket]);
         }
 
-        // Kiểm tra trạng thái với PayOs (polling)
-        $paymentStatus = $this->payOsService->getTransactionStatus($ticket->code);
+        // Lấy orderCode số từ ticket code (bỏ chữ TK)
+        $orderCode = (int) preg_replace('/[^0-9]/', '', $ticket->code);
+
+        $paymentStatus = $this->payOsService->getTransactionStatus($orderCode);
+
+        Log::info('Check status orderCode: ' . $orderCode, $paymentStatus);
 
         if (isset($paymentStatus['data'])) {
             $transactionStatus = $paymentStatus['data']['status'] ?? null;
 
-            // Nếu đã thanh toán ở PayOs, cập nhật booking
-            if ($transactionStatus === 'PAID' || $transactionStatus === 'COMPLETED') {
-                // Cập nhật tất cả booking của ticket thành Reserved
+            if ($transactionStatus === 'PAID') {
                 Booking::where('ticket_id', $ticket->id)->update([
                     'status' => BookingStatus::Reserved->value,
                 ]);
+                broadcast(new \App\Events\PaymentCompleted($ticket));
+                return response()->json(['status' => 'completed', 'ticket' => $ticket]);
+            }
 
-                // Broadcast event để notify realtime
-                broadcast(new \App\Events\PaymentCompleted($ticket))->toOthers();
-
-                return response()->json([
-                    'message' => 'Thanh toán thành công',
-                    'status' => 'completed',
-                    'ticket' => $ticket->load('bookings.seat.type'),
-                ]);
-            } elseif ($transactionStatus === 'CANCELLED') {
-                return response()->json([
-                    'message' => 'Thanh toán bị hủy',
-                    'status' => 'cancelled',
-                ]);
+            if ($transactionStatus === 'CANCELLED') {
+                return response()->json(['status' => 'cancelled']);
             }
         }
 
-        return response()->json([
-            'message' => 'Thanh toán đang chờ xử lý',
-            'status' => 'pending',
-        ]);
+        return response()->json(['status' => 'pending']);
     }
 
     /**

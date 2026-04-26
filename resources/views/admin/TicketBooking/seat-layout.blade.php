@@ -963,9 +963,17 @@
             modal.show();
             sessionStorage.setItem('currentTicketCode', paymentData.ticket_code);
 
+            // if (echo) {
+            //     echo.private(`ticket.${paymentData.ticket_code}`)
+            //         .listen('PaymentCompleted', (event) => {
+            //             console.log('✓ Payment completed');
+            //             bootstrap.Modal.getInstance(document.getElementById('payosModal'))?.hide();
+            //             getTicketInfo(paymentData.ticket_code);
+            //         });
+            // }
             if (echo) {
-                echo.private(`ticket.${paymentData.ticket_code}`)
-                    .listen('PaymentCompleted', (event) => {
+                echo.channel(`ticket.${paymentData.ticket_code}`)
+                    .listen('.payment.completed', (event) => {
                         console.log('✓ Payment completed');
                         bootstrap.Modal.getInstance(document.getElementById('payosModal'))?.hide();
                         getTicketInfo(paymentData.ticket_code);
@@ -988,6 +996,14 @@
                         clearInterval(pollInterval);
                         bootstrap.Modal.getInstance(document.getElementById('payosModal'))?.hide();
                         getTicketInfo(ticketCode);
+                    } else if (data.status === 'failed') {
+                        clearInterval(pollInterval);
+                        bootstrap.Modal.getInstance(document.getElementById('payosModal'))?.hide();
+                        alert('Thanh toán thất bại. Vui lòng thử lại.');
+                    } else if (data.status === 'cancelled') {
+                        clearInterval(pollInterval);
+                        bootstrap.Modal.getInstance(document.getElementById('payosModal'))?.hide();
+                        alert('Thanh toán đã bị hủy. Vui lòng thử lại.');
                     }
                 })
                 .catch(error => console.error('✗ Poll error:', error));
