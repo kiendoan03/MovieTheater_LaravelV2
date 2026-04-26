@@ -102,3 +102,14 @@ Route::prefix('Admin/Movie')->name('admin.')->group(function () {
     Route::put('/{movie}/edit', [App\Http\Controllers\MovieController::class, 'update'])->name('movies.update');
     Route::delete('/{movie}/delete', [App\Http\Controllers\MovieController::class, 'destroy'])->name('movies.destroy');
 });
+
+
+// ==========================================
+// Customer web routes
+// ==========================================
+Route::prefix('/')->group(function(){
+    Route::get('/', [App\Http\Controllers\MovieController::class, 'show'])->name('index');
+    Route::get('/{movie_actor}/actor', [App\Http\Controllers\ActorController::class, 'show'])->name('actor');
+    Route::get('/{movie_director}/director', [App\Http\Controllers\DirectorController::class, 'show'])->name('director');
+});
+

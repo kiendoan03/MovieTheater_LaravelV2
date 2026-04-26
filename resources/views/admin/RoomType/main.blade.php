@@ -1,5 +1,6 @@
 @extends('layouts.management')
 @section('content')
+
 <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
 
 <style>
@@ -67,6 +68,7 @@
         color: var(--text);
         background: transparent;
         transition: 0.2s;
+        text-decoration: none;
     }
 
     .btn-circle:hover {
@@ -89,6 +91,32 @@
         font-size: 28px;
         margin-bottom: 10px;
     }
+
+    /* pagination */
+    .cw-pagination {
+        display: flex;
+        justify-content: center;
+        padding: 1.25rem;
+        gap: 4px;
+    }
+
+    .cw-pagination .page-link {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        color: var(--muted);
+        padding: 6px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: .15s;
+    }
+
+    .cw-pagination .page-link:hover,
+    .cw-pagination .page-link.active {
+        border-color: var(--accent);
+        color: var(--accent);
+    }
 </style>
 
 <div class="cw">
@@ -98,23 +126,37 @@
         <div class="cw-head">
             <div>
                 <h2>Quản lý loại phòng</h2>
-                <div class="cw-count">Tổng số: {{ $roomTypes->count() }} loại phòng</div>
+
+                <div class="cw-count">
+                    Tổng số: {{ $roomTypes->total() }} loại phòng
+                </div>
             </div>
 
             <a href="{{ route('admin.room_types.create') }}" class="btn-new">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <svg width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    viewBox="0 0 24 24">
+
                     <path d="M12 5v14M5 12h14" />
                 </svg>
+
                 Tạo loại phòng mới
             </a>
         </div>
 
         <!-- TABLE -->
         <div class="cw-card">
+
+            @if($roomTypes->count())
+
             <table class="table-custom">
+
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th width="80">STT</th>
                         <th>Thông tin loại phòng</th>
                         <th>Sức chứa</th>
                         <th class="text-center" width="120">Thao tác</th>
@@ -122,11 +164,14 @@
                 </thead>
 
                 <tbody>
+
                     @foreach($roomTypes as $roomType)
+
                     <tr>
-                        <!-- ID -->
+
+                        <!-- STT -->
                         <td class="mono-id">
-                            #{{ str_pad($roomType->id, 3, '0', STR_PAD_LEFT) }}
+                            {{ $loop->iteration + ($roomTypes->currentPage() - 1) * $roomTypes->perPage() }}
                         </td>
 
                         <!-- TYPE -->
@@ -143,34 +188,76 @@
 
                         <!-- ACTION -->
                         <td class="text-center">
+
                             <div class="btn-group-actions">
-                                <a href="{{ route('admin.room_types.edit', $roomType) }}" class="btn-circle">
+
+                                <a href="{{ route('admin.room_types.edit', $roomType) }}"
+                                    class="btn-circle">
+
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
 
-                                <form action="{{ route('admin.room_types.destroy', $roomType) }}" method="POST"
+                                <form action="{{ route('admin.room_types.destroy', $roomType) }}"
+                                    method="POST"
                                     onsubmit="return confirm('Xóa loại phòng?')">
+
                                     @csrf
                                     @method('DELETE')
 
                                     <button class="btn-circle btn-del">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
+
                                 </form>
+
                             </div>
+
                         </td>
+
                     </tr>
+
                     @endforeach
+
                 </tbody>
+
             </table>
 
-            <!-- EMPTY -->
-            @if($roomTypes->isEmpty())
-            <div class="empty-state">
-                <div class="empty-state-icon">🎬</div>
-                <p>Chưa có loại phòng nào.</p>
+            {{-- PAGINATION --}}
+            @if($roomTypes->hasPages())
+
+            <div class="cw-pagination">
+
+                @foreach($roomTypes->links()->elements[0] as $page => $url)
+
+                <a href="{{ $url }}"
+                    class="page-link {{ $roomTypes->currentPage() == $page ? 'active' : '' }}">
+
+                    {{ $page }}
+
+                </a>
+
+                @endforeach
+
             </div>
+
             @endif
+
+            @else
+
+            <div class="empty-state">
+
+                <div class="empty-state-icon">
+                    🎬
+                </div>
+
+                <p>
+                    Chưa có loại phòng nào.
+                </p>
+
+            </div>
+
+            @endif
+
         </div>
 
     </div>
