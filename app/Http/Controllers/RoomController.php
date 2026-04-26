@@ -45,7 +45,7 @@ class RoomController extends Controller
             'seats'              => 'required|array|min:1',
             'seats.*.row'        => 'required|integer|min:1',
             'seats.*.column'     => 'required|integer|min:1',
-            'seats.*.type_id'    => 'required|exists:seat_types,id',
+            'seats.*.type_id'    => 'nullable|exists:seat_types,id',
         ]);
 
         $roomType = RoomType::findOrFail($request->type_id);
@@ -60,7 +60,7 @@ class RoomController extends Controller
             'room_id'    => $room->id,
             'row'        => $s['row'],
             'column'     => $s['column'],
-            'type_id'    => $s['type_id'],
+            'type_id'    => $s['type_id'] ?? null,
             'created_at' => now(),
             'updated_at' => now(),
         ])->toArray();
@@ -68,9 +68,12 @@ class RoomController extends Controller
         // Insert bulk thay vì loop — nhanh hơn nhiều khi phòng có 100+ ghế
         Seat::insert($seatInserts);
 
+        // Count actual seats (excluding aisles with type_id = null)
+        $seatCount = collect($seats)->filter(fn($s) => $s['type_id'] !== null)->count();
+
         return redirect()
             ->route('admin.rooms.index')
-            ->with('success', "Tạo phòng \"{$room->room_name}\" thành công với " . count($seats) . " ghế!");
+            ->with('success', "Tạo phòng \"{$room->room_name}\" thành công với " . $seatCount . " ghế!");
     }
 
     public function show(Room $room)
@@ -115,7 +118,7 @@ class RoomController extends Controller
             'seats'              => 'required|array|min:1',
             'seats.*.row'        => 'required|integer|min:1',
             'seats.*.column'     => 'required|integer|min:1',
-            'seats.*.type_id'    => 'required|exists:seat_types,id',
+            'seats.*.type_id'    => 'nullable|exists:seat_types,id',
         ]);
 
         $roomType = RoomType::findOrFail($request->type_id);
@@ -133,12 +136,15 @@ class RoomController extends Controller
             'room_id'    => $room->id,
             'row'        => $s['row'],
             'column'     => $s['column'],
-            'type_id'    => $s['type_id'],
+            'type_id'    => $s['type_id'] ?? null,
             'created_at' => now(),
             'updated_at' => now(),
         ])->toArray();
 
         Seat::insert($seatInserts);
+
+        // Count actual seats (excluding aisles with type_id = null)
+        $seatCount = collect($seats)->filter(fn($s) => $s['type_id'] !== null)->count();
 
         return redirect()
             ->route('admin.rooms.index')

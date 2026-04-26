@@ -31,8 +31,8 @@
                             {{ $schedule->start_time->format('d/m/Y') }}
                         </small>
                         <div class="mt-2">
-                            <button class="btn btn-sm btn-primary">
-                                <i class="fas fa-chair"></i> Chọn ghế
+                            <button class="btn btn-sm btn-warning">
+                                <i class="fas fa-ticket"></i> Đăt vé
                             </button>
                         </div>
                     </div>

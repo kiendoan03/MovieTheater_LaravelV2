@@ -5,17 +5,17 @@
   @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
   :root {
-    --bg:         #0d0f14;
-    --surface:    #13161e;
-    --card:       #1a1e28;
-    --border:     rgba(255,255,255,0.07);
-    --border-h:   rgba(255,255,255,0.15);
-    --text:       #e8eaf0;
-    --muted:      #6b7280;
-    --accent:     #e8c96a;
-    --accent-bg:  rgba(232,201,106,0.10);
-    --danger:      #f87171;
-    --success:     #10b981;
+    --bg:        #0d0f14;
+    --surface:   #13161e;
+    --card:      #1a1e28;
+    --border:    rgba(255,255,255,0.07);
+    --border-h:  rgba(255,255,255,0.15);
+    --text:      #e8eaf0;
+    --muted:     #6b7280;
+    --accent:    #e8c96a;
+    --accent-bg: rgba(232,201,106,0.10);
+    --danger:    #f87171;
+    --success:   #10b981;
   }
 
   .cw { font-family:'Sora',sans-serif; color:var(--text); padding:2rem 0 5rem; }
@@ -40,7 +40,6 @@
   .info-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
   .info-value { font-size: 15px; font-weight: 500; color: var(--text); }
 
-  /* Status Badge */
   .badge-status {
     display: inline-flex; align-items:center; gap: 6px;
     padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;
@@ -60,14 +59,15 @@
     letter-spacing:.18em; color:rgba(232,201,106,.35); margin-top:14px;
   }
 
-  /* Seat Grid */
-  .seat-grid-wrap { overflow-x:auto; padding: 1rem 0; }
+  /* Seat Grid - Cập nhật giống file Edit */
+  .seat-grid-wrap { overflow-x:auto; padding-bottom:1rem; }
   .seat-grid-inner { display:inline-flex; flex-direction:column; align-items:center; min-width: 100%; }
-  .seat-row { display:flex; align-items:center; gap:5px; margin-bottom:6px; }
+  
+  .seat-row { display:flex; align-items:center; gap:4px; margin-bottom:5px; }
   
   .row-lbl {
     font-family:'JetBrains Mono',monospace; font-size:11px;
-    color:var(--muted); width:25px; text-align:center;
+    color:var(--muted); width:20px; text-align:center; flex-shrink:0;
   }
 
   .seat {
@@ -75,10 +75,20 @@
     border:1.5px solid transparent;
     display:flex; align-items:center; justify-content:center;
     font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:600;
-    transition: transform .2s;
+    flex-shrink:0; transition: transform .2s;
   }
-  .seat:hover { transform: scale(1.1); }
-  .seat.empty { background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.05); color: transparent; }
+  .seat.empty { background: rgba(255,255,255,0.025); border-color: rgba(255,255,255,0.05); }
+
+  /* Lối đi - Copy style từ file Edit */
+  .seat-aisle {
+    width:18px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .seat-aisle::before {
+    content:''; position:absolute; top:4px; bottom:4px; left:50%;
+    transform:translateX(-50%); width:1px;
+    background:rgba(232,201,106,.2); border-radius:1px;
+  }
 
   /* Legend */
   .legend { display:flex; flex-wrap:wrap; gap:20px; margin-top:1.5rem; padding-top:1.5rem; border-top:1px solid var(--border); }
@@ -104,23 +114,52 @@
   .btn-edit:hover { background: #f0d47a; transform: translateY(-1px); }
   .btn-back { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
   .btn-back:hover { border-color: var(--border-h); }
+
+  /* Container chứa toàn bộ ghế trong 1 hàng để căn giữa */
+  .row-seats-wrapper {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      flex: 1; /* Chiếm khoảng trống ở giữa 2 nhãn */
+  }
+
+  /* Đảm bảo hàng luôn có độ rộng bằng nhau */
+  .seat-row {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 6px;
+  }
+
+  /* Nhãn hàng */
+  .row-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      width: 30px; /* Tăng nhẹ độ rộng để cân đối */
+      text-align: center;
+      flex-shrink: 0;
+      font-weight: 600;
+  }
+
+  .row-lbl.left { margin-right: 10px; }
+  .row-lbl.right { margin-left: 10px; }
+
+  /* Cập nhật seat-grid-inner để chiếm toàn bộ chiều rộng */
+  .seat-grid-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+  }
 </style>
 
 @php
-function seatColorMap(string $type): string {
-    return match(strtolower(trim($type))) {
-        'standard', 'thường', 'thuong', 'tiêu chuẩn' => '#3b82f6',
-        'vip'                                         => '#a855f7',
-        'premium'                                     => '#f59e0b',
-        'couple', 'đôi', 'doi'                        => '#ec4899',
-        default                                       => '#6b7280',
-    };
-}
-
 $maxRow = $room->seats->max('row') ?? 0;
 $maxCol = $room->seats->max('column') ?? 0;
 $seatsByPosition = $room->seats->groupBy(fn($item) => $item->row . '-' . $item->column);
-$seatTypeCounts = $room->seats->groupBy('type_id');
+$seatTypeCounts = $room->seats->where('type_id', '!==', null)->groupBy('type_id');
+$actualSeatCount = $room->seats->where('type_id', '!==', null)->count();
 @endphp
 
 <div class="cw">
@@ -156,7 +195,7 @@ $seatTypeCounts = $room->seats->groupBy('type_id');
             <div class="info-item">
               <span class="info-label">Trạng thái cấu hình</span>
               <div>
-                @if($room->seats->count() == $room->capacity)
+                @if($actualSeatCount == $room->capacity)
                   <span class="badge-status status-full">● Hoàn tất thiết kế</span>
                 @else
                   <span class="badge-status status-warn">● Chưa đủ số ghế</span>
@@ -175,13 +214,13 @@ $seatTypeCounts = $room->seats->groupBy('type_id');
           <div class="stats-grid">
             <div class="stat-box">
               <div class="stat-lbl">Đã thiết kế</div>
-              <div class="stat-val">{{ $room->seats->count() }}</div>
+              <div class="stat-val">{{ $actualSeatCount }}</div>
             </div>
             @foreach($seatTypeCounts as $typeId => $grouped)
               @php $st = $grouped->first()->seatType; @endphp
               <div class="stat-box">
                 <div class="stat-lbl">{{ $st->type }}</div>
-                <div class="stat-val" style="color: {{ seatColorMap($st->type) }};">
+                <div class="stat-val" style="color: {{ $st->color ?? '#6b7280' }};">
                   {{ $grouped->count() }}
                 </div>
               </div>
@@ -202,40 +241,54 @@ $seatTypeCounts = $room->seats->groupBy('type_id');
 
           <div class="seat-grid-wrap">
             <div class="seat-grid-inner">
-              @for($r = 1; $r <= $maxRow; $r++)
-                <div class="seat-row">
-                  <span class="row-lbl">{{ chr(64 + $r) }}</span>
-                  @for($c = 1; $c <= $maxCol; $c++)
-                    @php 
-                      $seat = $seatsByPosition->get($r . '-' . $c)?->first(); 
-                      $color = $seat ? seatColorMap($seat->seatType->type) : '';
-                    @endphp
-                    
-                    @if($seat)
-                      <div class="seat" 
-                           style="background: {{ $color }}20; border-color: {{ $color }}; color: {{ $color }};"
-                           title="{{ chr(64 + $r) }}{{ $c }} - {{ $seat->seatType->type }}">
-                        {{ $c }}
-                      </div>
-                    @else
-                      <div class="seat empty"></div>
-                    @endif
-                  @endfor
-                </div>
-              @endfor
+                @for($r = 1; $r <= $maxRow; $r++)
+                    <div class="seat-row">
+                        {{-- 1. Nhãn bên trái --}}
+                        <span class="row-lbl left">{{ chr(64 + $r) }}</span>
+
+                        {{-- 2. Cụm ghế căn giữa --}}
+                        <div class="row-seats-wrapper">
+                            @php
+                                // Lấy tất cả ghế của hàng hiện tại, sắp xếp theo cột
+                                $rowSeats = $room->seats->where('row', $r)->sortBy('column');
+                            @endphp
+
+                            @foreach($rowSeats as $seat)
+                                @if(is_null($seat->type_id))
+                                    {{-- Lối đi --}}
+                                    <div class="seat-aisle" title="Lối đi"></div>
+                                @else
+                                    {{-- Ghế có loại --}}
+                                    @php 
+                                        $st = $seat->seatType;
+                                        $color = $st->color ?? '#6b7280'; 
+                                    @endphp
+                                    <div class="seat" 
+                                        style="background: {{ $color }}28; border-color: {{ $color }}; color: {{ $color }};"
+                                        title="{{ chr(64 + $r) }}{{ $seat->column }} - {{ $st->type }}">
+                                        {{ chr(64 + $r) }}{{ $seat->column }}
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+
+                        {{-- 3. Nhãn bên phải --}}
+                        <span class="row-lbl right">{{ chr(64 + $r) }}</span>
+                    </div>
+                @endfor
             </div>
-          </div>
+        </div>
 
           <div class="legend">
-            @foreach($room->seats->map(fn($s) => $s->seatType)->unique('id') as $st)
+            @foreach($room->seats->where('type_id', '!==', null)->map(fn($s) => $s->seatType)->unique('id') as $st)
               <div class="legend-item">
-                <div class="legend-dot" style="background: {{ seatColorMap($st->type) }};"></div>
+                <div class="legend-dot" style="background: {{ $st->color ?? '#6b7280' }};"></div>
                 <span>{{ $st->type }} ({{ number_format($st->price, 0, ',', '.') }}₫)</span>
               </div>
             @endforeach
             <div class="legend-item">
-                <div class="legend-dot" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border);"></div>
-                <span>Lối đi / Trống</span>
+                <div style="width:14px;height:14px;border-radius:3px;border:1px dashed rgba(232,201,106,.4)"></div>
+                <span>Lối đi</span>
             </div>
           </div>
         </div>

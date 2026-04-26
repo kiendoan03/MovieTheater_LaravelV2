@@ -124,7 +124,8 @@
         <tbody>
           @foreach($rooms as $room)
           @php
-            $percent = ($room->capacity > 0) ? ($room->seats->count() / $room->capacity) * 100 : 0;
+            $actualSeats = $room->seats->where('type_id', '!==', null)->count();
+            $percent = ($room->capacity > 0) ? ($actualSeats / $room->capacity) * 100 : 0;
             $percent = min(100, $percent);
           @endphp
           <tr>
@@ -143,7 +144,7 @@
             </td>
             <td>
               <div class="room-main" style="font-size: 13px;">
-                {{ $room->seats->count() }} / {{ $room->capacity }}
+                {{ $actualSeats }} / {{ $room->capacity }}
               </div>
               <div class="prog-wrap">
                 <div class="prog-bar">
