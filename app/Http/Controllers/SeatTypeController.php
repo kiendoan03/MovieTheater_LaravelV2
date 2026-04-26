@@ -13,7 +13,7 @@ class SeatTypeController extends Controller
      */
     public function index()
     {
-        $seatTypes = SeatType::all();
+        $seatTypes = SeatType::paginate(10);
 
         return view('admin.SeatType.main', [
             'seatTypes' => $seatTypes,

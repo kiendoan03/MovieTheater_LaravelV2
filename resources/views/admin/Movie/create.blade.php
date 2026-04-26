@@ -88,6 +88,7 @@
     .sw-select,
     textarea {
         width: 100%;
+        min-height: 44px;
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: 8px;
@@ -96,13 +97,28 @@
         font-size: 13px;
         padding: 10px 12px;
         outline: none;
-        transition: border-color .2s;
+        box-sizing: border-box;
+        transition: .2s;
     }
 
     .sw-input:focus,
     .sw-select:focus,
     textarea:focus {
         border-color: var(--accent);
+        box-shadow: 0 0 0 2px rgba(232, 201, 106, .08);
+    }
+
+    .sw-input:-webkit-autofill,
+    .sw-input:-webkit-autofill:hover,
+    .sw-input:-webkit-autofill:focus,
+    textarea:-webkit-autofill,
+    textarea:-webkit-autofill:hover,
+    textarea:-webkit-autofill:focus {
+        -webkit-text-fill-color: var(--text);
+        -webkit-box-shadow: 0 0 0 1000px var(--surface) inset;
+        transition: background-color 9999s ease-in-out 0s;
+        caret-color: var(--text);
+        border: 1px solid var(--accent);
     }
 
     .sw-error {
@@ -167,7 +183,7 @@
         border-radius: 8px;
         cursor: pointer;
         text-decoration: none;
-        transition: all .2s;
+        transition: .2s;
     }
 
     .btn-cancel:hover {
@@ -185,40 +201,137 @@
         padding: 10px 28px;
         border-radius: 8px;
         cursor: pointer;
-        transition: all .2s;
+        transition: .2s;
     }
 
     .btn-submit:hover {
         background: #f0d47a;
     }
 
-    .ts-control,
-    .ts-dropdown {
-        background: var(--surface) !important;
-        border: 1px solid var(--border) !important;
-        color: var(--text) !important;
-        border-radius: 8px !important;
+    .ts-wrapper {
+        width: 100%;
+    }
+
+    .ts-wrapper.single .ts-control,
+    .ts-wrapper.multi .ts-control {
+        width: 100%;
+        min-height: 44px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        padding: 6px 12px;
+        box-shadow: none;
+        transition: .2s;
+    }
+
+    .ts-wrapper.single .ts-control:hover,
+    .ts-wrapper.multi .ts-control:hover {
+        border-color: var(--border-h);
+    }
+
+    .ts-wrapper.focus .ts-control {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px rgba(232, 201, 106, .08);
+    }
+
+    .ts-wrapper.single .ts-control .item,
+    .ts-wrapper.multi .ts-control .item {
+        color: var(--text);
+        font-size: 13px;
+        font-family: 'Sora', sans-serif;
     }
 
     .ts-control input {
-        color: var(--text) !important;
-    }
-
-    .ts-dropdown .option {
-        background: var(--surface);
+        background: transparent;
         color: var(--text);
+        font-size: 13px;
+        font-family: 'Sora', sans-serif;
+        margin: 0;
+        padding: 0;
     }
 
-    .ts-dropdown .active {
-        background: rgba(255, 255, 255, .08) !important;
+    .ts-control input::placeholder {
+        color: var(--muted);
     }
+
+    /* autofill tomselect */
+
+    .ts-control input:-webkit-autofill,
+    .ts-control input:-webkit-autofill:hover,
+    .ts-control input:-webkit-autofill:focus {
+        -webkit-text-fill-color: var(--text);
+        -webkit-box-shadow: 0 0 0 1000px var(--surface) inset;
+        transition: background-color 9999s ease-in-out 0s;
+        caret-color: var(--text);
+    }
+
+    /* multi item */
 
     .ts-wrapper.multi .ts-control>div {
         background: var(--accent-bg);
         color: var(--accent);
         border: 1px solid rgba(232, 201, 106, .2);
         border-radius: 999px;
-        padding: 2px 8px;
+        padding: 4px 10px;
+        margin: 3px;
+        font-size: 12px;
+    }
+
+    .ts-wrapper.multi .ts-control>div .remove {
+        border-left: none;
+        color: var(--accent);
+        margin-left: 6px;
+    }
+
+    /* FIX WHITE BACKGROUND WHEN CLICK COUNTRY */
+
+    .ts-wrapper.single .ts-control,
+    .ts-wrapper.single .ts-control input,
+    .ts-wrapper.single.focus .ts-control,
+    .ts-wrapper.single.focus .ts-control input,
+    .ts-wrapper.single.input-active .ts-control,
+    .ts-wrapper.single.input-active .ts-control input {
+        background: var(--surface) !important;
+        color: var(--text) !important;
+        box-shadow: none;
+    }
+
+    .ts-wrapper.single .ts-control input:-webkit-autofill,
+    .ts-wrapper.single .ts-control input:-webkit-autofill:hover,
+    .ts-wrapper.single .ts-control input:-webkit-autofill:focus {
+        -webkit-text-fill-color: var(--text) !important;
+        -webkit-box-shadow: 0 0 0 1000px var(--surface) inset !important;
+        background: var(--surface) !important;
+        transition: background-color 9999s ease-in-out 0s;
+    }
+
+    .ts-dropdown {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        margin-top: 6px;
+    }
+
+    .ts-dropdown .option {
+        background: var(--card);
+        color: var(--text);
+        padding: 10px 12px;
+        font-size: 13px;
+        transition: .15s;
+    }
+
+    .ts-dropdown .option:hover,
+    .ts-dropdown .active {
+        background: rgba(255, 255, 255, .06);
+        color: var(--text);
+    }
+
+    .ts-dropdown .selected {
+        background: rgba(232, 201, 106, .12);
+        color: var(--accent);
     }
 
     textarea {
@@ -232,7 +345,6 @@
 
         <div class="sw-head">
             <h2>Thêm phim mới</h2>
-            <span class="sw-crumb">Admin / Movie / Create</span>
         </div>
 
         <form method="POST"
@@ -269,6 +381,9 @@
                             class="sw-input"
                             value="{{ old('movie_length') }}"
                             required>
+                        @error('movie_length')
+                        <span class="sw-error">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="col-md-3">
@@ -277,6 +392,9 @@
                             name="movie_age"
                             class="sw-input"
                             value="{{ old('movie_age') }}">
+                        @error('movie_age')
+                        <span class="sw-error">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="col-md-6">
@@ -286,6 +404,9 @@
                             class="sw-input"
                             value="{{ old('movie_release_date') }}"
                             required>
+                        @error('movie_release_date')
+                        <span class="sw-error">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="col-md-6">
@@ -295,6 +416,9 @@
                             class="sw-input"
                             value="{{ old('movie_end_date') }}"
                             required>
+                        @error('movie_end_date')
+                        <span class="sw-error">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     {{-- NGÔN NGỮ --}}
@@ -307,7 +431,6 @@
                             placeholder="Ví dụ: English, Tiếng Việt, Japanese..."
                             value="{{ old('movie_language') }}"
                             required>
-
                         @error('movie_language')
                         <span class="sw-error">{{ $message }}</span>
                         @enderror
@@ -320,7 +443,6 @@
                         <select name="movie_country"
                             id="movie_country"
                             required>
-
                             <option value="">Chọn quốc gia</option>
 
                             @php
@@ -366,6 +488,9 @@
                         <label class="sw-label">Mô tả phim</label>
 
                         <textarea name="movie_description">{{ old('movie_description') }}</textarea>
+                        @error('movie_description')
+                        <span class="sw-error">{{ $message }}</span>
+                        @enderror
                     </div>
 
                 </div>
@@ -392,6 +517,9 @@
                             </option>
                             @endforeach
                         </select>
+                        @error('movie_genre')
+                        <span class="sw-error">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     {{-- DIỄN VIÊN --}}
@@ -407,6 +535,9 @@
                             </option>
                             @endforeach
                         </select>
+                        @error('movie_actor')
+                        <span class="sw-error">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     {{-- ĐẠO DIỄN --}}
@@ -422,6 +553,9 @@
                             </option>
                             @endforeach
                         </select>
+                        @error('movie_director')
+                        <span class="sw-error">{{ $message }}</span>
+                        @enderror
                     </div>
 
                 </div>
@@ -442,7 +576,10 @@
                             name="movie_poster"
                             class="sw-input"
                             accept="image/*"
-                            onchange="previewPoster(event)">
+                            onchange="previewImage(event, 'posterPreview')">
+                        @error('movie_poster')
+                        <span class="sw-error">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="col-md-6">
@@ -451,7 +588,11 @@
                         <input type="file"
                             name="movie_logo"
                             class="sw-input"
-                            accept="image/*">
+                            accept="image/*"
+                            onchange="previewImage(event, 'logoPreview')">
+                        @error('movie_logo')
+                        <span class="sw-error">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="col-md-6">
@@ -460,26 +601,94 @@
                         <input type="file"
                             name="movie_thumbnail"
                             class="sw-input"
-                            accept="image/*">
+                            accept="image/*"
+                            onchange="previewImage(event, 'thumbnailPreview')">
+                        @error('movie_thumbnail')
+                        <span class="sw-error">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="col-md-12"> <label class="sw-label">Link trailer YouTube</label> <input type="url" name="movie_trailer" class="sw-input" placeholder="https://www.youtube.com/watch?v=xxxx" value="{{ old('movie_trailer') }}"> </div>
 
                 </div>
 
-                <div class="movie-preview mt-4">
-                    <img id="posterPreview"
-                        src="https://placehold.co/300x450?text=Poster">
+                <div class="row mt-4 g-4">
 
-                    <div class="movie-preview-info">
-                        <div class="movie-preview-title">
-                            Preview poster
+                    {{-- POSTER --}}
+                    <div class="col-md-4">
+
+                        <div class="movie-preview">
+
+                            <img
+                                id="posterPreview"
+                                src="https://placehold.co/300x450?text=Poster">
+
+                            <div class="movie-preview-info">
+
+                                <div class="movie-preview-title">
+                                    Poster
+                                </div>
+
+                                <div class="movie-preview-meta">
+                                    Preview poster phim
+                                </div>
+
+                            </div>
+
                         </div>
 
-                        <div class="movie-preview-meta">
-                            Poster phim sẽ hiển thị ở đây sau khi upload.
-                        </div>
                     </div>
+
+                    {{-- LOGO --}}
+                    <div class="col-md-4">
+
+                        <div class="movie-preview">
+
+                            <img
+                                id="logoPreview"
+                                src="https://placehold.co/300x450?text=Logo">
+
+                            <div class="movie-preview-info">
+
+                                <div class="movie-preview-title">
+                                    Logo
+                                </div>
+
+                                <div class="movie-preview-meta">
+                                    Preview logo phim
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {{-- THUMBNAIL --}}
+                    <div class="col-md-4">
+
+                        <div class="movie-preview">
+
+                            <img
+                                id="thumbnailPreview"
+                                src="https://placehold.co/300x450?text=Thumbnail">
+
+                            <div class="movie-preview-info">
+
+                                <div class="movie-preview-title">
+                                    Thumbnail
+                                </div>
+
+                                <div class="movie-preview-meta">
+                                    Preview thumbnail phim
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
             </div>
@@ -518,6 +727,7 @@
         plugins: ['remove_button'],
         placeholder: 'Chọn đạo diễn'
     });
+
     new TomSelect('#movie_country', {
         create: false,
         sortField: {
@@ -527,11 +737,13 @@
         placeholder: 'Chọn quốc gia'
     });
 
-    function previewPoster(event) {
+    function previewImage(event, id) {
+
         const file = event.target.files[0];
 
         if (file) {
-            document.getElementById('posterPreview').src =
+
+            document.getElementById(id).src =
                 URL.createObjectURL(file);
         }
     }
