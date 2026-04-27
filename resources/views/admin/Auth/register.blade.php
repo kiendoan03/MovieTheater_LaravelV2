@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng ký — NETFNIX</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
 
@@ -24,12 +26,18 @@
             --danger: #ef4444;
         }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             background-color: var(--bg);
             color: var(--text);
-            font-family: 'Sora', sans-serif;
+            font-family: 'Inter', sans-serif;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -48,11 +56,34 @@
             animation: floatBlob 14s ease-in-out infinite;
             pointer-events: none;
         }
-        .bg-blob-1 { width: 500px; height: 500px; background: var(--accent); top: -150px; left: -150px; }
-        .bg-blob-2 { width: 350px; height: 350px; background: #7c6dfa; bottom: -80px; right: -80px; animation-delay: -7s; }
+
+        .bg-blob-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--accent);
+            top: -150px;
+            left: -150px;
+        }
+
+        .bg-blob-2 {
+            width: 350px;
+            height: 350px;
+            background: #7c6dfa;
+            bottom: -80px;
+            right: -80px;
+            animation-delay: -7s;
+        }
+
         @keyframes floatBlob {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(25px, 15px) scale(1.07); }
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate(25px, 15px) scale(1.07);
+            }
         }
 
         /* Card */
@@ -68,22 +99,40 @@
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
             animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
+
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(28px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(28px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Brand */
         .brand-logo {
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Inter', sans-serif;
             font-size: 11px;
             letter-spacing: 0.25em;
             text-transform: uppercase;
             color: var(--accent);
             margin-bottom: 0.4rem;
         }
-        .brand-title { font-size: 1.65rem; font-weight: 700; line-height: 1.2; }
-        .brand-sub { font-size: 13px; color: var(--muted); margin-top: 0.35rem; }
+
+        .brand-title {
+            font-size: 1.65rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .brand-sub {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 0.35rem;
+        }
 
         /* Step indicator */
         .steps {
@@ -92,6 +141,7 @@
             gap: 0;
             margin: 1.5rem 0;
         }
+
         .step-item {
             display: flex;
             flex-direction: column;
@@ -99,6 +149,7 @@
             flex: 1;
             position: relative;
         }
+
         .step-item:not(:last-child)::after {
             content: '';
             position: absolute;
@@ -110,9 +161,14 @@
             z-index: 0;
             transition: background 0.4s;
         }
-        .step-item.done:not(:last-child)::after { background: var(--success); }
+
+        .step-item.done:not(:last-child)::after {
+            background: var(--success);
+        }
+
         .step-circle {
-            width: 28px; height: 28px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             border: 1.5px solid var(--border);
             background: var(--surface);
@@ -126,16 +182,19 @@
             z-index: 1;
             transition: all 0.3s;
         }
+
         .step-item.active .step-circle {
             border-color: var(--accent);
             background: var(--accent-bg);
             color: var(--accent);
         }
+
         .step-item.done .step-circle {
             border-color: var(--success);
-            background: rgba(34,197,94,0.1);
+            background: rgba(34, 197, 94, 0.1);
             color: var(--success);
         }
+
         .step-label {
             font-size: 10px;
             color: var(--muted);
@@ -143,8 +202,14 @@
             letter-spacing: 0.04em;
             font-weight: 500;
         }
-        .step-item.active .step-label { color: var(--accent); }
-        .step-item.done .step-label { color: var(--success); }
+
+        .step-item.active .step-label {
+            color: var(--accent);
+        }
+
+        .step-item.done .step-label {
+            color: var(--success);
+        }
 
         /* Form */
         .form-label {
@@ -155,25 +220,38 @@
             letter-spacing: 0.08em;
             margin-bottom: 0.45rem;
         }
-        .input-wrap { position: relative; }
-        .input-wrap > i.prefix {
-            position: absolute; left: 14px; top: 50%;
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-wrap>i.prefix {
+            position: absolute;
+            left: 14px;
+            top: 50%;
             transform: translateY(-50%);
-            color: var(--muted); font-size: 14px; pointer-events: none;
+            color: var(--muted);
+            font-size: 14px;
+            pointer-events: none;
             transition: color 0.2s;
         }
+
         .form-control {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 12px;
             color: var(--text);
-            font-family: 'Sora', sans-serif;
+            font-family: 'Inter', sans-serif;
             font-size: 14px;
             padding: 0.7rem 1rem 0.7rem 2.7rem;
             transition: border-color 0.2s, box-shadow 0.2s;
             width: 100%;
         }
-        .form-control.no-icon { padding-left: 1rem; }
+
+        .form-control.no-icon {
+            padding-left: 1rem;
+        }
+
         .form-control:focus {
             outline: none;
             border-color: var(--accent);
@@ -181,20 +259,41 @@
             background: var(--surface);
             color: var(--text);
         }
-        .input-wrap:focus-within > i.prefix { color: var(--accent); }
-        .form-control::placeholder { color: var(--muted); }
-        .form-control.is-valid { border-color: var(--success); }
+
+        .input-wrap:focus-within>i.prefix {
+            color: var(--accent);
+        }
+
+        .form-control::placeholder {
+            color: var(--muted);
+        }
+
+        .form-control.is-valid {
+            border-color: var(--success);
+        }
 
         /* OTP input group */
-        .otp-group { display: flex; gap: 0.5rem; }
-        .otp-group .form-control { flex: 1; text-align: center; letter-spacing: 0.15em; font-size: 1.1rem; font-weight: 600; padding: 0.7rem 0.5rem; }
+        .otp-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .otp-group .form-control {
+            flex: 1;
+            text-align: center;
+            letter-spacing: 0.15em;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.7rem 0.5rem;
+        }
+
         .otp-group .btn-otp-send {
             white-space: nowrap;
             background: var(--accent-bg);
-            border: 1px solid rgba(232,201,106,0.25);
+            border: 1px solid rgba(232, 201, 106, 0.25);
             border-radius: 12px;
             color: var(--accent);
-            font-family: 'Sora', sans-serif;
+            font-family: 'Inter', sans-serif;
             font-size: 13px;
             font-weight: 600;
             padding: 0 1rem;
@@ -202,21 +301,44 @@
             transition: background 0.2s;
             flex-shrink: 0;
         }
-        .otp-group .btn-otp-send:hover:not(:disabled) { background: rgba(232,201,106,0.18); }
-        .otp-group .btn-otp-send:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .otp-group .btn-otp-send:hover:not(:disabled) {
+            background: rgba(232, 201, 106, 0.18);
+        }
+
+        .otp-group .btn-otp-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
         /* Countdown */
-        .otp-hint { font-size: 12px; color: var(--muted); margin-top: 0.4rem; min-height: 18px; }
-        .otp-hint .countdown { color: var(--accent); font-weight: 600; }
+        .otp-hint {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 0.4rem;
+            min-height: 18px;
+        }
+
+        .otp-hint .countdown {
+            color: var(--accent);
+            font-weight: 600;
+        }
 
         /* Toggle password */
         .toggle-pw {
-            position: absolute; right: 14px; top: 50%;
+            position: absolute;
+            right: 14px;
+            top: 50%;
             transform: translateY(-50%);
-            color: var(--muted); cursor: pointer; font-size: 14px;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 14px;
             transition: color 0.2s;
         }
-        .toggle-pw:hover { color: var(--text); }
+
+        .toggle-pw:hover {
+            color: var(--text);
+        }
 
         /* Submit button */
         .btn-submit {
@@ -225,7 +347,7 @@
             color: #0d0f14;
             border: none;
             border-radius: 12px;
-            font-family: 'Sora', sans-serif;
+            font-family: 'Inter', sans-serif;
             font-size: 14px;
             font-weight: 700;
             padding: 0.8rem;
@@ -237,16 +359,33 @@
             gap: 8px;
             margin-top: 1.5rem;
         }
+
         .btn-submit:hover:not(:disabled) {
             opacity: 0.88;
             transform: translateY(-1px);
             box-shadow: 0 8px 20px rgba(232, 201, 106, 0.25);
         }
-        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
         /* Spinner */
-        .spinner { width: 15px; height: 15px; border: 2px solid rgba(13,15,20,0.3); border-top-color: #0d0f14; border-radius: 50%; animation: spin 0.7s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner {
+            width: 15px;
+            height: 15px;
+            border: 2px solid rgba(13, 15, 20, 0.3);
+            border-top-color: #0d0f14;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
         /* Alert */
         .alert-msg {
@@ -258,25 +397,82 @@
             gap: 9px;
             margin-bottom: 1rem;
         }
-        .alert-msg.error { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); color: #fca5a5; }
-        .alert-msg.success { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); color: #86efac; }
-        .alert-msg.show { display: flex; animation: fadeIn 0.25s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
+
+        .alert-msg.error {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: #fca5a5;
+        }
+
+        .alert-msg.success {
+            background: rgba(34, 197, 94, 0.08);
+            border: 1px solid rgba(34, 197, 94, 0.25);
+            color: #86efac;
+        }
+
+        .alert-msg.show {
+            display: flex;
+            animation: fadeIn 0.25s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
 
         /* Step panels */
-        .step-panel { display: none; }
-        .step-panel.active { display: block; animation: fadeIn 0.3s ease; }
+        .step-panel {
+            display: none;
+        }
+
+        .step-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
 
         /* Footer */
-        .footer-note { text-align: center; font-size: 13px; color: var(--muted); margin-top: 1.5rem; }
-        .footer-note a { color: var(--accent); text-decoration: none; font-weight: 600; }
-        .footer-note a:hover { text-decoration: underline; }
+        .footer-note {
+            text-align: center;
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 1.5rem;
+        }
 
-        .divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+        .footer-note a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-note a:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 1.5rem 0;
+        }
 
         /* Two-column grid */
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-        @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 
@@ -288,7 +484,7 @@
 
         {{-- Brand --}}
         <div class="mb-1">
-            <div class="brand-logo">⬡ &nbsp;NETFNIX Cinema</div>
+            <div class="brand-logo"><i class="fa-solid fa-clapperboard"></i> &nbsp;NETFNIX Cinema</div>
             <h1 class="brand-title">Tạo tài khoản</h1>
             <p class="brand-sub">Xác thực email trước, sau đó điền thông tin.</p>
         </div>
@@ -310,15 +506,18 @@
         </div>
 
         {{-- Alert --}}
-        <div class="alert-msg error" id="alertError"><i class="fa-solid fa-circle-exclamation"></i><span id="alertErrMsg"></span></div>
-        <div class="alert-msg success" id="alertSuccess"><i class="fa-solid fa-circle-check"></i><span id="alertOkMsg"></span></div>
+        <div class="alert-msg error" id="alertError"><i class="fa-solid fa-circle-exclamation"></i><span
+                id="alertErrMsg"></span></div>
+        <div class="alert-msg success" id="alertSuccess"><i class="fa-solid fa-circle-check"></i><span
+                id="alertOkMsg"></span></div>
 
         {{-- STEP 1: Email + Gửi OTP --}}
         <div class="step-panel active" id="panel-1">
             <div class="mb-3">
                 <label class="form-label" for="reg-email">Địa chỉ Email</label>
                 <div class="input-wrap">
-                    <input id="reg-email" type="email" class="form-control" placeholder="you@example.com" autocomplete="email">
+                    <input id="reg-email" type="email" class="form-control" placeholder="you@example.com"
+                        autocomplete="email">
                     <i class="fa-regular fa-envelope prefix"></i>
                 </div>
             </div>
@@ -330,12 +529,14 @@
         {{-- STEP 2: Nhập OTP --}}
         <div class="step-panel" id="panel-2">
             <p style="font-size:13.5px; color:var(--muted); margin-bottom:1rem;">
-                Mã OTP đã gửi đến <strong id="emailDisplay" style="color:var(--text)"></strong>. Hiệu lực <strong style="color:var(--accent)">5 phút</strong>.
+                Mã OTP đã gửi đến <strong id="emailDisplay" style="color:var(--text)"></strong>. Hiệu lực <strong
+                    style="color:var(--accent)">5 phút</strong>.
             </p>
             <div class="mb-3">
                 <label class="form-label" for="reg-otp">Mã OTP</label>
                 <div class="otp-group">
-                    <input id="reg-otp" type="text" class="form-control" placeholder="• • • • • •" maxlength="6" inputmode="numeric">
+                    <input id="reg-otp" type="text" class="form-control" placeholder="• • • • • •" maxlength="6"
+                        inputmode="numeric">
                     <button class="btn-otp-send" id="btnResendOtp" disabled>Gửi lại</button>
                 </div>
                 <div class="otp-hint" id="otpHint"></div>
@@ -350,7 +551,8 @@
             <div class="mb-3">
                 <label class="form-label" for="reg-name">Họ và tên</label>
                 <div class="input-wrap">
-                    <input id="reg-name" type="text" class="form-control" placeholder="Nguyễn Văn A" autocomplete="name">
+                    <input id="reg-name" type="text" class="form-control" placeholder="Nguyễn Văn A"
+                        autocomplete="name">
                     <i class="fa-regular fa-user prefix"></i>
                 </div>
             </div>
@@ -370,7 +572,8 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label" for="reg-address">Địa chỉ <span style="color:var(--muted);font-size:10px;">(tuỳ chọn)</span></label>
+                <label class="form-label" for="reg-address">Địa chỉ <span
+                        style="color:var(--muted);font-size:10px;">(tuỳ chọn)</span></label>
                 <div class="input-wrap">
                     <input id="reg-address" type="text" class="form-control" placeholder="123 Đường ABC, Hà Nội">
                     <i class="fa-solid fa-location-dot prefix"></i>
@@ -389,7 +592,8 @@
             <div class="mb-1">
                 <label class="form-label" for="reg-password-confirm">Xác nhận mật khẩu</label>
                 <div class="input-wrap">
-                    <input id="reg-password-confirm" type="password" class="form-control" placeholder="Nhập lại mật khẩu">
+                    <input id="reg-password-confirm" type="password" class="form-control"
+                        placeholder="Nhập lại mật khẩu">
                     <i class="fa-solid fa-shield-halved prefix"></i>
                     <span class="toggle-pw" id="togglePw2"><i class="fa-regular fa-eye" id="eye2"></i></span>
                 </div>
@@ -417,12 +621,14 @@
             el.classList.add('show');
             document.getElementById('alertSuccess').classList.remove('show');
         }
+
         function showOk(msg) {
             const el = document.getElementById('alertSuccess');
             document.getElementById('alertOkMsg').textContent = msg;
             el.classList.add('show');
             document.getElementById('alertError').classList.remove('show');
         }
+
         function clearAlerts() {
             document.getElementById('alertError').classList.remove('show');
             document.getElementById('alertSuccess').classList.remove('show');
@@ -449,7 +655,7 @@
 
         /* ---- Countdown cho nút gửi lại OTP ---- */
         function startResendCountdown(seconds = 60) {
-            const btn  = document.getElementById('btnResendOtp');
+            const btn = document.getElementById('btnResendOtp');
             const hint = document.getElementById('otpHint');
             btn.disabled = true;
             let s = seconds;
@@ -480,26 +686,46 @@
 
         /* ---- STEP 1: Gửi OTP ---- */
         async function sendOtp(email) {
-            const res  = await fetch(`${API}/send-otp`, {
+            const res = await fetch(`${API}/send-otp`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                body: JSON.stringify({ email }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    email
+                }),
             });
-            return { ok: res.ok, data: await res.json() };
+            return {
+                ok: res.ok,
+                data: await res.json()
+            };
         }
 
         document.getElementById('btnSendOtp').addEventListener('click', async () => {
             clearAlerts();
             const email = document.getElementById('reg-email').value.trim();
-            if (!email) { showErr('Vui lòng nhập địa chỉ email.'); return; }
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showErr('Email không hợp lệ.'); return; }
+            if (!email) {
+                showErr('Vui lòng nhập địa chỉ email.');
+                return;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showErr('Email không hợp lệ.');
+                return;
+            }
 
             setLoading('btnSendOtp', 'btnSendOtpText', true, 'Gửi mã OTP');
-            const { ok, data } = await sendOtp(email).finally(() =>
+            const {
+                ok,
+                data
+            } = await sendOtp(email).finally(() =>
                 setLoading('btnSendOtp', 'btnSendOtpText', false, 'Gửi mã OTP')
             );
 
-            if (!ok) { showErr(data.message ?? 'Không thể gửi OTP, thử lại.'); return; }
+            if (!ok) {
+                showErr(data.message ?? 'Không thể gửi OTP, thử lại.');
+                return;
+            }
 
             verifiedEmail = email;
             document.getElementById('emailDisplay').textContent = email;
@@ -511,8 +737,14 @@
         /* ---- Gửi lại OTP ---- */
         document.getElementById('btnResendOtp').addEventListener('click', async () => {
             clearAlerts();
-            const { ok, data } = await sendOtp(verifiedEmail);
-            if (!ok) { showErr(data.message ?? 'Không thể gửi lại OTP.'); return; }
+            const {
+                ok,
+                data
+            } = await sendOtp(verifiedEmail);
+            if (!ok) {
+                showErr(data.message ?? 'Không thể gửi lại OTP.');
+                return;
+            }
             showOk('Đã gửi lại mã OTP.');
             startResendCountdown(60);
         });
@@ -521,18 +753,30 @@
         document.getElementById('btnVerifyOtp').addEventListener('click', async () => {
             clearAlerts();
             const otp = document.getElementById('reg-otp').value.trim();
-            if (otp.length !== 6) { showErr('OTP phải đủ 6 chữ số.'); return; }
+            if (otp.length !== 6) {
+                showErr('OTP phải đủ 6 chữ số.');
+                return;
+            }
 
             setLoading('btnVerifyOtp', 'btnVerifyOtpText', true, 'Xác thực OTP');
             const res = await fetch(`${API}/verify-otp`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                body: JSON.stringify({ email: verifiedEmail, otp }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: verifiedEmail,
+                    otp
+                }),
             });
             const data = await res.json();
             setLoading('btnVerifyOtp', 'btnVerifyOtpText', false, 'Xác thực OTP');
 
-            if (!res.ok) { showErr(data.message ?? 'OTP không đúng.'); return; }
+            if (!res.ok) {
+                showErr(data.message ?? 'OTP không đúng.');
+                return;
+            }
 
             clearInterval(resendTimer);
             showOk('Email đã được xác thực!');
@@ -542,24 +786,42 @@
         /* ---- STEP 3: Đăng ký ---- */
         document.getElementById('btnRegister').addEventListener('click', async () => {
             clearAlerts();
-            const name     = document.getElementById('reg-name').value.trim();
-            const phone    = document.getElementById('reg-phone').value.trim();
-            const dob      = document.getElementById('reg-dob').value;
-            const address  = document.getElementById('reg-address').value.trim();
+            const name = document.getElementById('reg-name').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
+            const dob = document.getElementById('reg-dob').value;
+            const address = document.getElementById('reg-address').value.trim();
             const password = document.getElementById('reg-password').value;
-            const confirm  = document.getElementById('reg-password-confirm').value;
+            const confirm = document.getElementById('reg-password-confirm').value;
 
-            if (!name)    { showErr('Vui lòng nhập họ tên.'); return; }
-            if (!phone)   { showErr('Vui lòng nhập số điện thoại.'); return; }
-            if (!dob)     { showErr('Vui lòng chọn ngày sinh.'); return; }
-            if (password.length < 6) { showErr('Mật khẩu phải có ít nhất 6 ký tự.'); return; }
-            if (password !== confirm) { showErr('Mật khẩu xác nhận không khớp.'); return; }
+            if (!name) {
+                showErr('Vui lòng nhập họ tên.');
+                return;
+            }
+            if (!phone) {
+                showErr('Vui lòng nhập số điện thoại.');
+                return;
+            }
+            if (!dob) {
+                showErr('Vui lòng chọn ngày sinh.');
+                return;
+            }
+            if (password.length < 6) {
+                showErr('Mật khẩu phải có ít nhất 6 ký tự.');
+                return;
+            }
+            if (password !== confirm) {
+                showErr('Mật khẩu xác nhận không khớp.');
+                return;
+            }
 
             setLoading('btnRegister', 'btnRegisterText', true, 'Tạo tài khoản');
 
             const res = await fetch(`${API}/register`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
                 credentials: 'same-origin',
                 body: JSON.stringify({
                     email: verifiedEmail,
@@ -574,14 +836,18 @@
             const data = await res.json();
             setLoading('btnRegister', 'btnRegisterText', false, 'Tạo tài khoản');
 
-            if (!res.ok) { showErr(data.message ?? 'Đăng ký thất bại.'); return; }
+            if (!res.ok) {
+                showErr(data.message ?? 'Đăng ký thất bại.');
+                return;
+            }
 
             // Lưu profile, cookie set bởi backend
             localStorage.setItem('profile', JSON.stringify(data.profile));
 
-            // Customer mới đăng ký → redirect về trang chủ
-            window.location.href = '/';
+            // Customer mới đăng ký → redirect về login
+            window.location.href = '{{ route('login') }}?registered=1';
         });
     </script>
 </body>
+
 </html>

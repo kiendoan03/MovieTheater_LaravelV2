@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập — NETFNIX</title>
     <link
-        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
@@ -36,7 +36,7 @@
         body {
             background-color: var(--bg);
             color: var(--text);
-            font-family: 'Sora', sans-serif;
+            font-family: 'Inter', sans-serif;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -113,7 +113,7 @@
 
         /* Logo */
         .brand-logo {
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Inter', sans-serif;
             font-size: 11px;
             font-weight: 500;
             letter-spacing: 0.25em;
@@ -172,7 +172,7 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             color: var(--text);
-            font-family: 'Sora', sans-serif;
+            font-family: 'Inter', sans-serif;
             font-size: 14px;
             padding: 0.75rem 1rem 0.75rem 2.75rem;
             transition: border-color 0.2s, box-shadow 0.2s;
@@ -220,7 +220,7 @@
             color: #0d0f14;
             border: none;
             border-radius: 12px;
-            font-family: 'Sora', sans-serif;
+            font-family: 'Inter', sans-serif;
             font-size: 14px;
             font-weight: 700;
             padding: 0.8rem;
@@ -283,6 +283,20 @@
             animation: fadeIn 0.25s ease;
         }
 
+        .alert-success {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            border-radius: 12px;
+            color: #6ee7b7;
+            font-size: 13.5px;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.25rem;
+            animation: fadeIn 0.25s ease;
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -323,7 +337,7 @@
 
         {{-- Brand --}}
         <div class="mb-4">
-            <div class="brand-logo">⧡ &nbsp;NETFNIX Cinema</div>
+            <div class="brand-logo"><i class="fa-solid fa-clapperboard"></i> &nbsp;NETFNIX Cinema</div>
             <h1 class="brand-title">Đăng nhập</h1>
             <p class="brand-sub">Chào mừng trở lại — vui lòng xác thực tài khoản.</p>
         </div>
@@ -334,6 +348,19 @@
         <div class="alert-error" id="alertError">
             <i class="fa-solid fa-circle-exclamation"></i>
             <span id="alertMsg">Đã có lỗi xảy ra.</span>
+        </div>
+
+        {{-- Success alert --}}
+        @if (session('success'))
+            <div class="alert-success">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>{{ session('success') }}</span>
+            </div>
+        @endif
+
+        <div class="alert-success" id="alertRegistered" style="display: none;">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Đăng ký thành công! Vui lòng đăng nhập.</span>
         </div>
 
         {{-- Form --}}
@@ -371,6 +398,11 @@
 
     <script>
         const API_BASE = '/api/auth';
+
+        // Check for registered query param
+        if (new URLSearchParams(window.location.search).has('registered')) {
+            document.getElementById('alertRegistered').style.display = 'flex';
+        }
 
         // Toggle password visibility
         document.getElementById('togglePw').addEventListener('click', function() {
@@ -442,7 +474,8 @@
 
                 // Cookie access_token được backend set tự động qua Set-Cookie header
                 // Chỉ lưu profile để hiển thị UI
-                localStorage.setItem('profile', JSON.stringify(data.profile));
+                // localStorage.setItem('profile', JSON.stringify(data.profile));
+                localStorage.setItem('account', JSON.stringify(data.profile));
 
                 // Decode JWT payload (phần thứ 2, base64url) để lấy role claim
                 // JWT không mã hóa payload nên đọc được mà không cần secret
