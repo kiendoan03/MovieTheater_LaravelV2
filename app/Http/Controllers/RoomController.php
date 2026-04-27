@@ -12,7 +12,8 @@ class RoomController extends Controller
 {
     public function index()
     {
-        $rooms = Room::with('roomType')->get();
+        // $rooms = Room::with('roomType')->get();
+        $rooms = Room::with('roomType')->paginate(10); // Phân trang 10 phòng mỗi trang
 
         return view('admin.Room.main', [
             'rooms' => $rooms,

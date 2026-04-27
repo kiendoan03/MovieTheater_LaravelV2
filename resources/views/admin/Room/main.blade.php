@@ -93,6 +93,15 @@
   }
   .btn-new:hover { background: #f0d47a; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(232,201,106,0.2); }
 
+  /* pagination */
+  .sw-pagination { display:flex; justify-content:center; padding:1.25rem; gap:4px; }
+  .sw-pagination .page-link {
+    font-family:'JetBrains Mono',monospace; font-size:12px;
+    background:var(--surface); border:1px solid var(--border); color:var(--muted);
+    padding:5px 11px; border-radius:6px; text-decoration:none; transition:all .15s;
+  }
+  .sw-pagination .page-link:hover,
+  .sw-pagination .page-link.active { border-color:var(--accent); color:var(--accent); }
 </style>
 
 <div class="cw">
@@ -113,7 +122,7 @@
       <table class="table-custom">
         <thead>
           <tr>
-            <th>ID</th>
+            <th>STT</th>
             <th>Thông tin phòng</th>
             <th>Loại phòng</th>
             <th>Sức chứa</th>
@@ -129,9 +138,10 @@
             $percent = min(100, $percent);
           @endphp
           <tr>
-            <td style="font-family:'JetBrains Mono'; color: var(--muted); width: 80px;">
+            {{-- <td style="font-family:'JetBrains Mono'; color: var(--muted); width: 80px;">
               #{{ str_pad($room->id, 3, '0', STR_PAD_LEFT) }}
-            </td>
+            </td> --}}
+            <td class="seat-count">{{ $loop->iteration  + ($rooms->currentPage() - 1) * $rooms->perPage() }}</td> 
             <td>
               <span class="room-main">{{ $room->room_name }}</span>
               <span class="room-sub">Cập nhật: {{ $room->updated_at->format('d/m/Y') }}</span>
@@ -173,6 +183,13 @@
           @endforeach
         </tbody>
       </table>
+      @if($rooms->hasPages())
+          <div class="sw-pagination">
+            @foreach($rooms->links()->elements[0] as $page => $url)
+              <a href="{{ $url }}" class="page-link {{ $rooms->currentPage() == $page ? 'active' : '' }}">{{ $page }}</a>
+            @endforeach
+          </div>
+      @endif
       
       @if($rooms->isEmpty())
         <div style="text-align: center; padding: 4rem; color: var(--muted);">

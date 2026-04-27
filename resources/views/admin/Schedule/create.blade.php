@@ -137,7 +137,7 @@
 
     <div class="sw-head">
       <h2>Thêm lịch chiếu</h2>
-      <span class="sw-crumb">Admin / Lịch chiếu / Thêm mới</span>
+      {{-- <span class="sw-crumb">Admin / Lịch chiếu / Thêm mới</span> --}}
     </div>
 
     @if($errors->has('conflict'))
