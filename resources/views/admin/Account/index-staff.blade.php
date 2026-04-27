@@ -9,7 +9,7 @@
                 <div>
                     <h2>Quản lý nhân viên</h2>
                     {{-- $staffs là collection Account, mỗi item là 1 Account có eager load staff --}}
-                    <div class="cw-count">Tổng số: {{ $staffs->count() }} nhân viên</div>
+                    <div class="cw-count">Tổng số: {{ $staffs->total() }} nhân viên</div>
                 </div>
                 <a href="{{ route('admin.accounts.staff.create') }}" class="btn-new">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -24,8 +24,8 @@
                 <table class="table-custom">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Thông tin nhân viên</th>
+                            <th>STT</th>
+                            <th>Họ và tên</th>
                             <th>Số điện thoại</th>
                             <th>Ngày sinh</th>
                             <th>Trạng thái</th>
@@ -37,15 +37,11 @@
                         @foreach ($staffs as $account)
                             <tr>
                                 <td class="mono-id">
-                                    #{{ str_pad($account->staff?->id ?? $account->id, 3, '0', STR_PAD_LEFT) }}
+                                    {{ $loop->iteration + ($staffs->currentPage() - 1) * $staffs->perPage() }}
                                 </td>
 
                                 <td>
                                     <span class="room-main">{{ $account->staff?->name ?? '—' }}</span>
-                                    <span class="room-sub">{{ $account->email }}</span>
-                                    @if ($account->staff?->address)
-                                        <span class="room-sub">{{ $account->staff->address }}</span>
-                                    @endif
                                 </td>
 
                                 <td>
@@ -105,6 +101,12 @@
                     <div class="empty-state">
                         <div class="empty-state-icon">👤</div>
                         <p>Chưa có nhân viên nào được thêm.</p>
+                    </div>
+                @endif
+
+                @if ($staffs->hasPages())
+                    <div class="pagination-wrapper">
+                        {{ $staffs->links() }}
                     </div>
                 @endif
             </div>

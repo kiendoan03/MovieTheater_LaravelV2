@@ -12,7 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // Dọn refresh token hết hạn / đã revoke mỗi đêm lúc 3:00 AM
+        $schedule->command('tokens:clean-expired')->dailyAt('03:00');
     }
 
     /**

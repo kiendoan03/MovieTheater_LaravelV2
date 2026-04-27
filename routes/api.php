@@ -65,7 +65,7 @@ Route::apiResource('seats', SeatController::class)->only(['index', 'show']);
 // ==========================================
 // CỤM 2: PROTECTED ROUTES (Bắt buộc phải Đăng Nhập)
 // ==========================================
-Route::middleware(['jwt.cookie', 'auth:api'])->group(function () {
+Route::middleware(['jwt.cookie', 'silent.refresh', 'auth:api'])->group(function () {
 
     // --- ZONE A: Dành cho TẤT CẢ User (Customer, Staff, Admin đều làm được) ---
     // Đặt vé, xem vé của mình...

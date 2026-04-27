@@ -18,7 +18,7 @@ class StaffController extends Controller
         $staffs = Account::with('staff')
             ->where('role', UserRole::Staff)
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('admin.Account.index-staff', compact('staffs'));
     }

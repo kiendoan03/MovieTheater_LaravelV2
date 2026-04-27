@@ -329,13 +329,8 @@
 
                 <div class="staff-card">
 
-                    <div class="admin-badge">
-                        <i class="fa-solid fa-shield-halved"></i> Admin Panel
-                    </div>
-
                     <div class="brand-logo"><i class="fa-solid fa-clapperboard"></i> &nbsp;NETFNIX Cinema</div>
                     <h2 class="brand-title">Thêm nhân viên</h2>
-                    <p class="brand-sub">Tạo tài khoản Staff mới — không cần xác thực email.</p>
 
                     <div class="divider"></div>
 

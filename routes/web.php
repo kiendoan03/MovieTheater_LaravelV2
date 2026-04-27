@@ -13,6 +13,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\RoomTypeController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SeatTypeController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\TicketBookingController;
 use Illuminate\Support\Facades\Route;
@@ -64,6 +65,14 @@ Route::middleware(['jwt.cookie', 'role:admin'])->group(function () {
         Route::get('/{id}/edit', [StaffController::class, 'edit'])->name('staff.edit');
         Route::put('/{id}/edit', [StaffController::class, 'update'])->name('staff.update');
         Route::delete('/{id}/delete', [StaffController::class, 'destroy'])->name('staff.destroy');
+    });
+
+    Route::prefix('Admin/Customer')->name('admin.accounts.')->group(function () {
+        Route::get('/', [CustomerController::class, 'index'])->name('customer.index');
+        Route::get('/{id}', [CustomerController::class, 'show'])->name('customer.show');
+        Route::get('/{id}/edit', [CustomerController::class, 'edit'])->name('customer.edit');
+        Route::put('/{id}/edit', [CustomerController::class, 'update'])->name('customer.update');
+        Route::delete('/{id}/delete', [CustomerController::class, 'destroy'])->name('customer.destroy');
     });
 
     Route::prefix('Admin/Category')->name('admin.')->group(function () {
