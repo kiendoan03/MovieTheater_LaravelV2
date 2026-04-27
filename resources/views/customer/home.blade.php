@@ -1,4 +1,4 @@
-@extends('layouts.clientmanagement')
+@extends('layouts.client')
 
 @section('title', 'NetFnix')
 
@@ -217,330 +217,388 @@
 
     .movie-card {
         position: relative;
+
         overflow: hidden;
-        border-radius: 28px;
-        background: linear-gradient(180deg, rgba(255, 255, 255, .02), rgba(255, 255, 255, .01));
+
+        border-radius: 20px;
+
+        background:
+            linear-gradient(180deg,
+                rgba(255, 255, 255, .02),
+                rgba(255, 255, 255, .01));
+
         border: 1px solid rgba(255, 255, 255, .06);
-        height: 470px;
+
+        height: 330px;
+
         transition: .35s;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, .35), inset 0 1px 0 rgba(255, 255, 255, .03)
+
+        box-shadow:
+            0 10px 25px rgba(0, 0, 0, .35),
+            inset 0 1px 0 rgba(255, 255, 255, .03);
     }
 
     .movie-card::before {
         content: "";
+
         position: absolute;
         inset: 0;
-        border-radius: 22px;
+
+        border-radius: 20px;
+
         padding: 1px;
-        background: linear-gradient(135deg, rgba(255, 255, 255, .18), rgba(255, 255, 255, .02));
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+
+        background:
+            linear-gradient(135deg,
+                rgba(255, 255, 255, .18),
+                rgba(255, 255, 255, .02));
+
+        -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+
         -webkit-mask-composite: xor;
+
         mask-composite: exclude;
+
         opacity: 0;
+
         transition: .35s;
+
         z-index: 3;
-        pointer-events: none
+
+        pointer-events: none;
     }
 
     .movie-card:hover::before {
-        opacity: 1
+        opacity: 1;
     }
 
     .movie-card:hover {
-        box-shadow: 0 20px 50px rgba(0, 0, 0, .5), 0 0 30px rgba(255, 31, 69, .15)
+        transform: translateY(-6px);
+
+        box-shadow:
+            0 20px 45px rgba(0, 0, 0, .5),
+            0 0 25px rgba(255, 31, 69, .15);
     }
 
     .movie-card img {
         width: 100%;
         height: 100%;
+
         object-fit: cover;
-        transition: .55s
+
+        transition: .55s;
     }
 
     .movie-card:hover img {
-        transform: scale(1.08)
+        transform: scale(1.08);
     }
 
     .movie-overlay {
         position: absolute;
         inset: 0;
+
         z-index: 5;
-        background: linear-gradient(to top, rgba(0, 0, 0, .98)8%, rgba(0, 0, 0, .55)40%, rgba(0, 0, 0, .1)100%);
-        padding: 24px;
+
+        background:
+            linear-gradient(to top,
+                rgba(0, 0, 0, .98) 8%,
+                rgba(0, 0, 0, .55) 40%,
+                rgba(0, 0, 0, .1) 100%);
+
+        padding: 16px;
+
         display: flex;
         flex-direction: column;
-        justify-content: flex-end
-    }
-
-    .movie-top {
-        position: absolute;
-        top: 18px;
-        left: 18px;
-        right: 18px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center
-    }
-
-    .movie-rating {
-        padding: 7px 14px;
-        border-radius: 999px;
-        background: rgba(0, 0, 0, .45);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, .08);
-        font-size: 13px;
-        font-weight: 600
-    }
-
-    .movie-age {
-        width: 42px;
-        height: 42px;
-        border-radius: 50%;
-        background: rgba(255, 31, 69, .18);
-        border: 1px solid rgba(255, 31, 69, .35);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 13px;
-        font-weight: 700;
-        color: #ff6b87
+        justify-content: flex-end;
     }
 
     .movie-name {
-        font-size: 23px;
+        font-size: 16px;
+
         font-weight: 700;
-        line-height: 1.4;
+
+        line-height: 1.35;
+
         font-family: 'Montserrat', sans-serif;
-        transition: .3s
+
+        transition: .3s;
+
+        margin-bottom: 8px;
     }
 
     .movie-card:hover .movie-name {
-        color: #ff4f72
-    }
-
-    .movie-desc {
-        font-size: 13px;
-        line-height: 1.7;
-        color: #d0d0d0;
-        margin-bottom: 18px
+        color: #ff4f72;
     }
 
     .movie-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-bottom: 20px
-    }
+        color: #d4d4d8;
 
-    .movie-meta span {
-        padding: 8px 14px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, .07);
-        border: 1px solid rgba(255, 255, 255, .05);
-        font-size: 12px;
-        color: #e9e9e9
+        font-size: 11px;
+
+        margin-bottom: 12px;
+
+        line-height: 1.6;
     }
 
     .movie-actions {
         display: flex;
-        gap: 12px
+
+        justify-content: center;
+
+        align-items: center;
+
+        gap: 10px;
+
+        width: 100%;
+
     }
 
     .btn-card {
         border: none;
         border-radius: 999px;
-        padding: 11px 18px;
-        font-size: 14px;
+        padding: 8px 12px;
+        font-size: 11px;
         font-weight: 600;
-        transition: .25s
+        transition: .25s;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        text-align: center;
+    }
+
+    .btn-play,
+    .btn-detail {
+        min-width: 0;
     }
 
     .btn-play {
-        background: linear-gradient(135deg, #ff1f45, #ff4d6d);
+        background:
+            linear-gradient(135deg,
+                #ff1f45,
+                #ff4d6d);
+
         color: #fff;
-        box-shadow: 0 12px 25px rgba(255, 31, 69, .35)
+
+        box-shadow:
+            0 10px 20px rgba(255, 31, 69, .35);
     }
 
     .btn-play:hover {
         transform: translateY(-2px);
-        box-shadow: 0 16px 30px rgba(255, 31, 69, .5)
+
+        box-shadow:
+            0 14px 26px rgba(255, 31, 69, .5);
     }
 
     .btn-detail {
-        background: linear-gradient(135deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .15));
+        background:
+            linear-gradient(135deg,
+                rgba(255, 255, 255, .08),
+                rgba(255, 255, 255, .15));
+
         color: #fff;
-        box-shadow: 0 10px 20px rgba(255, 255, 255, .08)
+        box-shadow:
+            0 8px 18px rgba(255, 255, 255, .08);
     }
 
     .btn-detail:hover {
         transform: translateY(-2px);
-        box-shadow: 0 14px 24px rgba(255, 255, 255, .15)
+        background: rgba(255, 255, 255, .20);
+        box-shadow: 0 15px 35px rgba(255, 255, 255, .18);
     }
 
     .top-card {
         position: relative;
+
         overflow: hidden;
-        border-radius: 28px;
-        height: 480px
+
+        border-radius: 20px;
+
+        height: 330px;
     }
 
     .top-card img {
         width: 100%;
         height: 100%;
+
         object-fit: cover;
-        transition: .55s
+
+        transition: .55s;
     }
 
     .top-card:hover img {
-        transform: scale(1.08)
+        transform: scale(1.08);
     }
 
     .top-name {
-        font-size: 23px;
+        font-size: 16px;
+
         font-weight: 700;
+
         line-height: 1.4;
+
         font-family: 'Montserrat', sans-serif;
-        transition: .3s
+
+        transition: .3s;
     }
 
     .top-card:hover .top-name {
-        color: #ff4f72
+        color: #ff4f72;
     }
 
     .top-rank {
         position: absolute;
-        top: 18px;
-        left: 18px;
+
+        top: 12px;
+        left: 12px;
+
         z-index: 4;
-        width: 62px;
-        height: 62px;
+
+        width: 44px;
+        height: 44px;
+
         border-radius: 50%;
-        background: linear-gradient(135deg, var(--primary), #ff5576);
+
+        background:
+            linear-gradient(135deg,
+                var(--primary),
+                #ff5576);
+
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 25px;
+
+        font-size: 18px;
+
         font-weight: 800;
-        box-shadow: 0 0 25px rgba(255, 31, 69, .5), inset 0 2px 8px rgba(255, 255, 255, .15)
+
+        box-shadow:
+            0 0 20px rgba(255, 31, 69, .5),
+            inset 0 2px 8px rgba(255, 255, 255, .15);
     }
 
     .upcoming-card {
         background: rgba(255, 255, 255, .03);
+
         border: 1px solid rgba(255, 255, 255, .05);
-        border-radius: 28px;
+
+        border-radius: 20px;
+
         overflow: hidden;
+
         transition: .35s;
-        height: 100%
+
+        height: 100%;
     }
 
     .upcoming-card:hover {
-        transform: translateY(-8px);
+        transform: translateY(-6px);
+
         border-color: rgba(255, 31, 69, .25);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, .45), 0 0 30px rgba(255, 31, 69, .08)
+
+        box-shadow:
+            0 20px 40px rgba(0, 0, 0, .45),
+            0 0 25px rgba(255, 31, 69, .08);
     }
 
     .upcoming-card img {
         width: 100%;
-        height: 360px;
+
+        height: 210px;
+
         object-fit: cover;
-        transition: .45s
+
+        transition: .45s;
     }
 
     .upcoming-card:hover img {
-        transform: scale(1.05)
+        transform: scale(1.05);
     }
 
     .upcoming-content {
-        padding: 24px
+        padding: 16px;
     }
 
-    .upcoming-title {
-        font-size: 22px;
-        font-weight: 700;
-        line-height: 1.4
+    .upcoming-title,
+    .upcoming-content h5 {
+        font-size: 16px;
     }
 
-    .upcoming-desc {
-        margin-top: 12px;
-        color: var(--text-soft);
-        line-height: 1.8;
-        font-size: 14px
+    .upcoming-desc,
+    .upcoming-content .text-secondary {
+        font-size: 12px;
+
+        line-height: 1.7;
     }
 
-    .release-date {
-        margin-top: 18px;
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        padding: 9px 16px;
-        border-radius: 999px;
-        background: rgba(255, 31, 69, .12);
-        border: 1px solid rgba(255, 31, 69, .18);
-        color: #ff6f8d;
-        font-size: 13px;
-        font-weight: 600
+
+    .custom-col-5 {
+        width: 20%;
+        padding: 0 10px;
     }
 
-    footer {
-        margin-top: 120px;
-        padding: 60px 0;
-        border-top: 1px solid rgba(255, 255, 255, .06);
-        background: rgba(255, 255, 255, .015)
-    }
+    @media(max-width:1400px) {
 
-    .footer-logo {
-        font-size: 36px;
-        font-weight: 800;
-        color: var(--primary);
-        letter-spacing: 3px
-    }
-
-    .footer-text {
-        margin-top: 18px;
-        color: #9b9b9b;
-        line-height: 1.9
-    }
-
-    @media(max-width:991px) {
-        .hero-title {
-            font-size: 48px
-        }
-
-        .movie-card {
-            height: 420px
-        }
-
+        .movie-card,
         .top-card {
-            height: 400px
+            height: 310px;
         }
     }
+
+    @media(max-width:1200px) {
+
+        .custom-col-5 {
+            width: 25%;
+        }
+
+        .movie-card,
+        .top-card {
+            height: 300px;
+        }
+    }
+
+
+    @media(max-width:992px) {
+
+        .custom-col-5 {
+            width: 33.3333%;
+        }
+
+        .movie-card,
+        .top-card {
+            height: 290px;
+        }
+    }
+
 
     @media(max-width:768px) {
-        .hero {
-            height: 85vh
+
+        .custom-col-5 {
+            width: 50%;
         }
 
-        .hero-title {
-            font-size: 38px
-        }
-
-        .hero-content {
-            max-width: 90%
-        }
-
-        .section-title {
-            font-size: 30px
-        }
-
-        .movie-card {
-            height: 390px
-        }
-
+        .movie-card,
         .top-card {
-            height: 360px
+            height: 270px;
         }
 
+        .movie-name,
+        .top-name {
+            font-size: 14px;
+        }
 
+        .btn-card {
+            padding: 7px 10px;
+            font-size: 10px;
+        }
+
+        .movie-meta {
+            font-size: 10px;
+        }
     }
 </style>
 @endpush
@@ -628,7 +686,7 @@
 
             @foreach($movie_show as $movie)
 
-            <div class="col-lg-3 col-md-6">
+            <div class="col-6 col-md-4 col-lg-3 custom-col-5">
 
                 <div class="movie-card movie-item"
                     data-name="{{ strtolower($movie->movie_name) }}">
@@ -700,7 +758,7 @@
 
             @foreach($top_movies as $index => $movie)
 
-            <div class="col-lg-3 col-md-6">
+            <div class="col-6 col-md-4 col-lg-3 custom-col-5">
 
                 <div class="top-card movie-item"
                     data-name="{{ strtolower($movie->movie_name) }}">
@@ -770,7 +828,7 @@
 
             @foreach($upcoming_movies as $movie)
 
-            <div class="col-lg-3 col-md-6">
+            <div class="col-6 col-md-4 col-lg-3 custom-col-5">
 
                 <div class="upcoming-card movie-item"
                     data-name="{{ strtolower($movie->movie_name) }}">
