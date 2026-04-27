@@ -1,4 +1,4 @@
-@extends('layouts.clientmanagement')
+@extends('layouts.client')
 
 @section('title', 'Tìm kiếm phim')
 
@@ -21,7 +21,9 @@
         border: 1px solid rgba(255, 255, 255, .08);
         border-radius: 30px;
         backdrop-filter: blur(18px);
-        box-shadow: 0 20px 45px rgba(0, 0, 0, .35), 0 0 25px rgba(255, 31, 69, .06);
+        box-shadow:
+            0 20px 45px rgba(0, 0, 0, .35),
+            0 0 25px rgba(255, 31, 69, .06);
     }
 
     .search-title {
@@ -73,8 +75,6 @@
     }
 
     .filter-btn,
-    .btn-play,
-    .btn-detail,
     .genre-option,
     .remove-tag {
         border: none;
@@ -97,62 +97,89 @@
         box-shadow: 0 18px 35px rgba(255, 31, 69, .38);
     }
 
-    .btn-play,
-    .btn-detail {
-        padding: 10px 18px;
-        font-size: 14px;
-    }
-
-    .btn-play {
-        background: linear-gradient(135deg, #ff1f45, #ff4d6d);
-        color: #fff;
-        box-shadow: 0 10px 25px rgba(255, 31, 69, .25);
-    }
-
-    .btn-detail {
-        background: rgba(255, 255, 255, .08);
-        color: #fff;
-        border: 1px solid rgba(255, 255, 255, .08);
-        box-shadow: 0 10px 20px rgba(255, 255, 255, .06);
-    }
-
-    .btn-play:hover,
-    .btn-detail:hover {
-        transform: translateY(-3px);
-    }
-
-    .btn-play:hover {
-        box-shadow: 0 15px 35px rgba(255, 31, 69, .45);
-    }
-
-    .btn-detail:hover {
-        background: rgba(255, 255, 255, .15);
-        box-shadow: 0 15px 35px rgba(255, 255, 255, .12);
-    }
+    /* ===== CARD ===== */
 
     .movie-card {
         position: relative;
+
         overflow: hidden;
-        height: 470px;
-        border-radius: 28px;
-        background: rgba(255, 255, 255, .03);
+
+        border-radius: 20px;
+
+        background:
+            linear-gradient(180deg,
+                rgba(255, 255, 255, .02),
+                rgba(255, 255, 255, .01));
+
         border: 1px solid rgba(255, 255, 255, .06);
+
+        height: 330px;
+
         transition: .35s;
+
         z-index: 1;
+
+        box-shadow:
+            0 10px 25px rgba(0, 0, 0, .35),
+            inset 0 1px 0 rgba(255, 255, 255, .03);
+    }
+
+    .movie-card::before {
+        content: "";
+
+        position: absolute;
+        inset: 0;
+
+        border-radius: 20px;
+
+        padding: 1px;
+
+        background:
+            linear-gradient(135deg,
+                rgba(255, 255, 255, .18),
+                rgba(255, 255, 255, .02));
+
+        -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+
+        -webkit-mask-composite: xor;
+
+        mask-composite: exclude;
+
+        opacity: 0;
+
+        transition: .35s;
+
+        z-index: 3;
+
+        pointer-events: none;
+    }
+
+    .movie-card:hover::before {
+        opacity: 1;
     }
 
     .movie-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 25px 45px rgba(0, 0, 0, .45), 0 0 35px rgba(255, 31, 69, .12);
+        transform: translateY(-6px);
+
+        box-shadow:
+            0 20px 45px rgba(0, 0, 0, .5),
+            0 0 25px rgba(255, 31, 69, .15);
     }
 
     .movie-card img {
         width: 100%;
         height: 100%;
+
         object-fit: cover;
+
         display: block;
-        transition: .5s;
+
+        transition: .55s;
+
         pointer-events: none;
+
         user-select: none;
     }
 
@@ -163,28 +190,137 @@
     .movie-overlay {
         position: absolute;
         inset: 0;
-        padding: 24px;
+
+        z-index: 5;
+
+        background:
+            linear-gradient(to top,
+                rgba(0, 0, 0, .98) 8%,
+                rgba(0, 0, 0, .55) 40%,
+                rgba(0, 0, 0, .1) 100%);
+
+        padding: 16px;
+
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
-        background: linear-gradient(to top, rgba(0, 0, 0, .96) 10%, rgba(0, 0, 0, .45) 45%, rgba(0, 0, 0, .05));
     }
 
     .movie-name {
-        font: 700 24px 'Montserrat', sans-serif;
-        margin-bottom: 12px;
+        font-size: 16px;
+
+        font-weight: 700;
+
+        line-height: 1.35;
+
+        font-family: 'Montserrat', sans-serif;
+
+        transition: .3s;
+
+        margin-bottom: 8px;
+
         color: #fff;
     }
 
+    .movie-card:hover .movie-name {
+        color: #ff4f72;
+    }
+
     .movie-meta {
-        font-size: 14px;
-        margin-bottom: 18px;
         color: #d4d4d8;
+
+        font-size: 11px;
+
+        margin-bottom: 12px;
+
+        line-height: 1.6;
     }
 
     .movie-actions {
         display: flex;
-        gap: 12px;
+
+        justify-content: center;
+
+        align-items: center;
+
+        gap: 10px;
+
+        width: 100%;
+    }
+
+    .btn-play,
+    .btn-detail {
+        border: none;
+
+        border-radius: 999px;
+
+        padding: 8px 12px;
+
+        font-size: 11px;
+
+        font-weight: 600;
+
+        transition: .25s;
+
+        flex: 1;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 6px;
+
+        text-align: center;
+
+        min-width: 0;
+    }
+
+    .btn-play {
+        background:
+            linear-gradient(135deg,
+                #ff1f45,
+                #ff4d6d);
+
+        color: #fff;
+
+        box-shadow:
+            0 10px 20px rgba(255, 31, 69, .35);
+    }
+
+    .btn-play:hover {
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 14px 26px rgba(255, 31, 69, .5);
+    }
+
+    .btn-detail {
+        background:
+            linear-gradient(135deg,
+                rgba(255, 255, 255, .08),
+                rgba(255, 255, 255, .15));
+
+        color: #fff;
+
+        box-shadow:
+            0 8px 18px rgba(255, 255, 255, .08);
+    }
+
+    .btn-detail:hover {
+        transform: translateY(-2px);
+
+        background: rgba(255, 255, 255, .20);
+
+        box-shadow:
+            0 15px 35px rgba(255, 255, 255, .18);
+    }
+
+    /* ===== 5 CARD / ROW ===== */
+
+    .custom-col-5 {
+        flex: 0 0 20%;
+        max-width: 20%;
+        padding: 0 10px;
     }
 
     .empty-box {
@@ -196,19 +332,76 @@
         color: #9f9f9f;
     }
 
-    .pagination {
+    .sw-pagination {
+        display: flex;
+
         justify-content: center;
+        align-items: center;
+
+        gap: 8px;
+
+        margin-top: 50px;
+
+        flex-wrap: wrap;
     }
 
-    .page-link {
-        background: rgba(255, 255, 255, .05) !important;
-        border: 1px solid rgba(255, 255, 255, .08) !important;
-        color: #fff !important;
+    .sw-pagination .page-link {
+        min-width: 42px;
+        height: 42px;
+
+        padding: 0 14px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 14px;
+
+        text-decoration: none;
+
+        font-size: 13px;
+        font-weight: 600;
+
+        color: #d4d4d8;
+
+        background: rgba(255, 255, 255, .04);
+
+        border: 1px solid rgba(255, 255, 255, .08);
+
+        backdrop-filter: blur(12px);
+
+        transition: .25s;
     }
 
-    .page-item.active .page-link {
-        background: #ff1f45 !important;
-        border-color: #ff1f45 !important;
+    .sw-pagination .page-link:hover {
+        transform: translateY(-2px);
+
+        color: #fff;
+
+        border-color: rgba(255, 31, 69, .35);
+
+        box-shadow:
+            0 10px 20px rgba(255, 31, 69, .18);
+    }
+
+    .sw-pagination .page-link.active {
+        color: #fff;
+
+        border-color: transparent;
+
+        background:
+            linear-gradient(135deg,
+                #ff1f45,
+                #ff4d6d);
+
+        box-shadow:
+            0 12px 24px rgba(255, 31, 69, .35);
+    }
+
+    .sw-pagination .opacity-50 {
+        opacity: .45;
+
+        pointer-events: none;
     }
 
     .genre-wrapper {
@@ -277,7 +470,9 @@
         border: 1px solid rgba(255, 255, 255, .08);
         border-radius: 20px;
         backdrop-filter: blur(18px);
-        box-shadow: 0 25px 45px rgba(0, 0, 0, .55), 0 0 35px rgba(255, 31, 69, .12);
+        box-shadow:
+            0 25px 45px rgba(0, 0, 0, .55),
+            0 0 35px rgba(255, 31, 69, .12);
     }
 
     .genre-dropdown.active {
@@ -320,17 +515,36 @@
         cursor: default;
     }
 
-    @media (max-width: 992px) {
+    @media(max-width:1200px) {
+
+        .custom-col-5 {
+            flex: 0 0 25%;
+            max-width: 25%;
+        }
+
+        .movie-card {
+            height: 300px;
+        }
+    }
+
+    @media(max-width:992px) {
+
         .search-title {
             font-size: 32px;
         }
 
+        .custom-col-5 {
+            flex: 0 0 33.3333%;
+            max-width: 33.3333%;
+        }
+
         .movie-card {
-            height: 420px;
+            height: 290px;
         }
     }
 
-    @media (max-width: 768px) {
+    @media(max-width:768px) {
+
         .search-filter {
             padding: 22px;
         }
@@ -339,12 +553,27 @@
             font-size: 28px;
         }
 
+        .custom-col-5 {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+
         .movie-card {
-            height: 380px;
+            height: 270px;
         }
 
         .movie-name {
-            font-size: 20px;
+            font-size: 14px;
+        }
+
+        .btn-play,
+        .btn-detail {
+            padding: 7px 10px;
+            font-size: 10px;
+        }
+
+        .movie-meta {
+            font-size: 10px;
         }
     }
 </style>
@@ -492,8 +721,7 @@
 
         @forelse($movies as $movie)
 
-        <div class="col-lg-3 col-md-6">
-
+        <div class="col-6 col-md-4 col-lg-3 custom-col-5">
             <div class="movie-card">
 
                 <img
@@ -565,12 +793,64 @@
         @endforelse
 
     </div>
+    {{-- PAGINATION --}}
+    @if($movies->hasPages())
 
-    <div class="mt-5">
+    <div class="sw-pagination">
 
-        {{ $movies->links() }}
+        {{-- Prev --}}
+        @if($movies->onFirstPage())
+
+        <span class="page-link opacity-50">
+            <i class="fa-solid fa-chevron-left"></i>
+        </span>
+
+        @else
+
+        <a href="{{ $movies->previousPageUrl() }}"
+            class="page-link">
+
+            <i class="fa-solid fa-chevron-left"></i>
+
+        </a>
+
+        @endif
+
+
+        {{-- Pages --}}
+        @foreach($movies->getUrlRange(1, $movies->lastPage()) as $page => $url)
+
+        <a href="{{ $url }}"
+            class="page-link {{ $movies->currentPage() == $page ? 'active' : '' }}">
+
+            {{ $page }}
+
+        </a>
+
+        @endforeach
+
+
+        {{-- Next --}}
+        @if($movies->hasMorePages())
+
+        <a href="{{ $movies->nextPageUrl() }}"
+            class="page-link">
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </a>
+
+        @else
+
+        <span class="page-link opacity-50">
+            <i class="fa-solid fa-chevron-right"></i>
+        </span>
+
+        @endif
 
     </div>
+
+    @endif
 
 </div>
 @push('scripts')

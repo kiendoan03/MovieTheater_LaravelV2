@@ -165,7 +165,7 @@
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
-        <div class="container"> <a class="navbar-brand brand-logo" href="{{ route('index') }}"> NETFNIX </a>
+        <div class="container"> <a class="navbar-brand brand-logo" href="{{ route('home') }}"> NETFNIX </a>
             <div class="d-flex align-items-center gap-3">
                 <div class="search-box"> <button class="nav-icon search-toggle" type="button"> <i class="fa-solid fa-magnifying-glass"></i> </button>
                     <form action="{{ route('movies.search') }}" method="GET" class="search-panel"> <i class="fa-solid fa-magnifying-glass search-icon"></i> <input type="text" name="keyword" id="movieSearch" placeholder="Tìm kiếm phim..." autocomplete="off"> </form>
