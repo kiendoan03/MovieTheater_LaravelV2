@@ -156,7 +156,7 @@
             position: relative;
         }
 
-        .input-wrap i {
+        .input-wrap>i {
             position: absolute;
             left: 14px;
             top: 50%;
@@ -188,7 +188,7 @@
         }
 
         .form-control:focus+i,
-        .input-wrap:focus-within i {
+        .input-wrap:focus-within>i {
             color: var(--accent);
         }
 

@@ -12,6 +12,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\RoomTypeController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SeatTypeController;
+use App\Http\Controllers\StaffController;
 use App\Http\Controllers\TicketBookingController;
 use Illuminate\Support\Facades\Route;
 
@@ -48,6 +49,15 @@ Route::prefix('/Admin/Dashboard')->name('admin.')->group(function () {
 Route::middleware(['jwt.cookie', 'role:admin'])->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
+    });
+
+    Route::prefix('Admin/Staff')->name('admin.accounts.')->group(function () {
+        Route::get('/', [StaffController::class, 'index'])->name('staff.index');
+        Route::get('/create', [StaffController::class, 'create'])->name('staff.create');
+        Route::post('/create', [StaffController::class, 'store'])->name('staff.store');
+        Route::get('/{id}/edit', [StaffController::class, 'edit'])->name('staff.edit');
+        Route::put('/{id}/edit', [StaffController::class, 'update'])->name('staff.update');
+        Route::delete('/{id}/delete', [StaffController::class, 'destroy'])->name('staff.destroy');
     });
 
     Route::prefix('Admin/Category')->name('admin.')->group(function () {
