@@ -4,10 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Enums\UserRole;
 use App\Models\Account;
-use App\Models\Customer;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AccountController extends Controller
 {
@@ -18,9 +14,21 @@ class AccountController extends Controller
     public function createAccount(array $data): Account
     {
         return Account::create([
-            'email'    => $data['email'],
+            'email' => $data['email'],
             'password' => $data['password'], // tự hash qua $casts
-            'role'     => UserRole::Customer,
+            'role' => UserRole::Customer,
         ]);
+    }
+
+    public function deactivateAccount($id)
+    {
+        $account = Account::findOrFail($id);
+        $account->update(['is_active' => false]);
+    }
+
+    public function activateAccount($id)
+    {
+        $account = Account::findOrFail($id);
+        $account->update(['is_active' => true]);
     }
 }
