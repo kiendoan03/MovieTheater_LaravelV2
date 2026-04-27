@@ -70,4 +70,61 @@ class OTPController extends Controller
             'isVerify' => true,
         ]);
     }
+
+    // ==========================================
+    // Forgot Password OTP (chỉ dành cho email đã tồn tại)
+    // ==========================================
+
+    public function sendForgotPasswordOTP(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:accounts,email',
+        ], [
+            'email.exists' => 'Email này chưa được đăng ký tài khoản.',
+        ]);
+
+        $email = $request->email;
+        $otpCode = $this->generateOTP();
+
+        Cache::put('otp_forgot_'.$email, $otpCode, now()->addSeconds(300));
+
+        try {
+            Mail::to($email)->send(new OTPMail($otpCode));
+
+            return response()->json(['message' => 'Mã OTP đã được gửi về email của bạn.']);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'Lỗi khi gửi email: '.$e->getMessage()], 500);
+        }
+    }
+
+    public function verifyForgotPasswordOTP(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:accounts,email',
+            'otp'   => 'required|string',
+        ]);
+
+        $email   = $request->email;
+        $otpCode = $request->otp;
+
+        $cachedOtp = Cache::get('otp_forgot_'.$email);
+
+        if (! $cachedOtp) {
+            return response()->json(['message' => 'Mã OTP đã hết hạn hoặc không tồn tại.'], 400);
+        }
+
+        if ($cachedOtp !== $otpCode) {
+            return response()->json(['message' => 'Mã OTP không chính xác.'], 400);
+        }
+
+        Cache::forget('otp_forgot_'.$email);
+
+        // Cờ riêng cho forgot password — khác với cờ đăng ký
+        Cache::put('pwd_reset_verified_'.$email, true, now()->addMinutes(15));
+
+        return response()->json([
+            'message'  => 'Xác thực OTP thành công.',
+            'isVerify' => true,
+        ]);
+    }
 }

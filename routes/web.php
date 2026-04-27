@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ActorController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
@@ -34,6 +35,11 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/logout', [AuthController::class, 'logout']);
+
+// Quên mật khẩu (3 bước: email → OTP → đặt lại)
+Route::get('/forgot-password', fn () => view('admin.Auth.forgot-password'))->name('forgot-password');
+Route::get('/forgot-password/otp', fn () => view('admin.Auth.forgot-password-otp'))->name('forgot-password.otp');
+Route::get('/forgot-password/reset', fn () => view('admin.Auth.forgot-password-reset'))->name('forgot-password.reset');
 
 // ==========================================
 // Admin Web Routes — Yêu cầu đăng nhập + role admin
@@ -168,3 +174,9 @@ Route::prefix('/')->group(function () {
 // PayOs Webhook (Public - không cần auth, đã exclude CSRF)
 // ==========================================
 Route::post('/webhook/payos', [PayOsWebhookController::class, 'handle']);
+
+// Change password
+Route::middleware(['jwt.cookie'])->group(function () {
+    Route::get('/change-password', [AccountController::class, 'changePasswordForm'])->name('change-password');
+    Route::post('/change-password', [AccountController::class, 'changePassword'])->name('change-password');
+});
