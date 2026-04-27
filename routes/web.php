@@ -1,10 +1,11 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PayOSController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\TicketBookingController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PayOSController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -33,7 +34,6 @@ Route::prefix('/Admin/Dashboard')->name('admin.')->group(function () {
 // Route::get('/payos', [PayOSController::class, 'index'])->name('payos.index');
 // Route::post('/payos/login', [PayOSController::class, 'login'])->name('payos.login');
 // Route::get('/payos/statistics', [PayOSController::class, 'statistics'])->name('payos.statistics');
-
 
 // Route::get('/Admin/Dashboard',[App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 Route::middleware(['jwt.cookie', 'role:admin'])->group(function () {
@@ -105,16 +105,16 @@ Route::middleware(['jwt.cookie', 'role:admin'])->group(function () {
         Route::delete('/{schedule}/delete', [App\Http\Controllers\ScheduleController::class, 'destroy'])->name('schedules.destroy');
         Route::get('/by-room', [ScheduleController::class, 'byRoom'])->name('schedules.by-room');
     });
-  
+
     Route::prefix('Admin/Movie')->name('admin.')->group(function () {
-      Route::get('/', [App\Http\Controllers\MovieController::class, 'index'])->name('movies.index');
-      Route::get('/create', [App\Http\Controllers\MovieController::class, 'create'])->name('movies.create');
-      Route::post('/create', [App\Http\Controllers\MovieController::class, 'store'])->name('movies.store');
-      Route::get('/{movie}', [App\Http\Controllers\MovieController::class, 'show'])->name('movies.show');
-      Route::get('/{movie}/edit', [App\Http\Controllers\MovieController::class, 'edit'])->name('movies.edit');
-      Route::put('/{movie}/edit', [App\Http\Controllers\MovieController::class, 'update'])->name('movies.update');
-      Route::delete('/{movie}/delete', [App\Http\Controllers\MovieController::class, 'destroy'])->name('movies.destroy');
-  });
+        Route::get('/', [App\Http\Controllers\MovieController::class, 'index'])->name('movies.index');
+        Route::get('/create', [App\Http\Controllers\MovieController::class, 'create'])->name('movies.create');
+        Route::post('/create', [App\Http\Controllers\MovieController::class, 'store'])->name('movies.store');
+        Route::get('/{movie}', [App\Http\Controllers\MovieController::class, 'show'])->name('movies.show');
+        Route::get('/{movie}/edit', [App\Http\Controllers\MovieController::class, 'edit'])->name('movies.edit');
+        Route::put('/{movie}/edit', [App\Http\Controllers\MovieController::class, 'update'])->name('movies.update');
+        Route::delete('/{movie}/delete', [App\Http\Controllers\MovieController::class, 'destroy'])->name('movies.destroy');
+    });
 }); // end admin middleware group
 
 // ==========================================
@@ -129,11 +129,16 @@ Route::middleware(['jwt.cookie', 'role:staff,admin'])->group(function () {
     });
 });
 
+// cho khách cần auth
+Route::middleware(['jwt.cookie', 'role:customer'])->group(function () {
+    Route::prefix('customer')->name('customer.')->group(function () {});
+
+});
 
 // ==========================================
 // Customer web routes
 // ==========================================
-Route::prefix('/')->group(function(){
+Route::prefix('/')->group(function () {
     Route::get('/', [App\Http\Controllers\MovieController::class, 'show'])->name('index');
     Route::get('/search', [App\Http\Controllers\MovieController::class, 'search'])->name('movies.search');
     Route::get('/{movie_actor}/actor', [App\Http\Controllers\ActorController::class, 'show'])->name('actor');
