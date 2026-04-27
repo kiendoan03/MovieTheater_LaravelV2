@@ -8,6 +8,7 @@
     <title>@yield('title', 'Admin Site')</title>
     <link rel="icon" href="/favicon.ico">
 
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link
         href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
@@ -207,7 +208,7 @@
                         Customers</a>
                     <a href="{{ route('admin.categories.index') }}" class="nav-link" data-id="genre"><i
                             class="fa-solid fa-tags"></i> Film Genre</a>
-                    <a href="#" class="nav-link" data-id="movies"><i class="fa-solid fa-film"></i> Movies</a>
+                    <a href="{{ route('admin.movies.index') }}" class="nav-link" data-id="movies"><i class="fa-solid fa-film"></i> Movies</a>
                     <a href="{{ route('admin.rooms.index') }}" class="nav-link" data-id="rooms"><i
                             class="fa-solid fa-door-open"></i> Rooms</a>
                     <a href="{{ route('admin.schedules.index') }}" class="nav-link" data-id="schedules"><i
