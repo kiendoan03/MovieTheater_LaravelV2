@@ -14,6 +14,7 @@ use App\Http\Controllers\RoomTypeController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SeatTypeController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\TicketBookingController;
 use Illuminate\Support\Facades\Route;
@@ -166,7 +167,12 @@ Route::middleware(['jwt.cookie', 'role:staff,admin'])->group(function () {
 
 // cho khách cần auth
 Route::middleware(['jwt.cookie', 'role:customer'])->group(function () {
-    Route::prefix('customer')->name('customer.')->group(function () {});
+    Route::prefix('customer')->name('customer.')->group(function () {
+        // Profile cá nhân
+        Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
+    });
 
 });
 

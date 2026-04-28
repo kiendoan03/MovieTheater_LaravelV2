@@ -501,9 +501,9 @@
                 <div class="profile-header">
                     <div class="profile-avatar">
                         @if ($stf?->avatar)
-                            <img src="{{ $stf->avatar }}" alt="">
+                            <img src="{{ asset('storage/img/avatars/' . $stf->avatar) }}" alt="">
                         @else
-                            <i class="fa-solid fa-user-tie"></i>
+                            <img src="{{ asset('images/default-avatar.png') }}" alt="">
                         @endif
                     </div>
 

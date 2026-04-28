@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use App\Models\Account;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CustomerController extends Controller
 {
@@ -112,17 +113,32 @@ class CustomerController extends Controller
         $account = Account::findOrFail($id);
 
         $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'phonenumber' => 'required|string|max:20',
-            'address' => 'nullable|string|max:500',
+            'name'          => 'required|string|max:255',
+            'phonenumber'   => 'required|string|max:20',
+            'address'       => 'nullable|string|max:500',
             'date_of_birth' => 'required|date',
+            'avatar'        => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $isActive = $request->boolean('is_active');
         $account->update(['is_active' => $isActive]);
 
         if ($account->customer) {
-            $account->customer->update(array_merge($data, ['is_active' => $isActive]));
+            $avatarPath = $account->customer->avatar;
+
+            if ($request->hasFile('avatar')) {
+                if ($avatarPath) {
+                    Storage::delete('public/img/avatars/' . $avatarPath);
+                }
+                $filename   = time() . '_avatar_' . $request->file('avatar')->getClientOriginalName();
+                Storage::putFileAs('public/img/avatars', $request->file('avatar'), $filename);
+                $avatarPath = $filename;
+            }
+
+            $account->customer->update(array_merge(
+                collect($data)->except('avatar')->toArray(),
+                ['avatar' => $avatarPath, 'is_active' => $isActive]
+            ));
         }
 
         return redirect()->back()->with('success', 'Cập nhật thông tin khách hàng thành công.');
