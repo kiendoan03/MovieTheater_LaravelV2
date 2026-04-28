@@ -66,11 +66,19 @@ class StaffController extends Controller
     }
 
     /**
-     * Xem thông tin chi tiết nhân viên (không dùng trong web).
+     * Xem chi tiết nhân viên + lịch sử vé bán (Admin panel).
+     * $id = Account ID
      */
-    public function show(Staff $staff)
+    public function show($id)
     {
-        //
+        $staff = Account::with([
+            'staff',
+            'staff.tickets.bookings.seat.seatType',
+            'staff.tickets.bookings.schedule.movie',
+            'staff.tickets.bookings.schedule.room',
+        ])->findOrFail($id);
+
+        return view('admin.Account.show-staff', compact('staff'));
     }
 
     /**

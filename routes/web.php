@@ -62,6 +62,7 @@ Route::middleware(['jwt.cookie', 'role:admin'])->group(function () {
         Route::get('/', [StaffController::class, 'index'])->name('staff.index');
         Route::get('/create', [StaffController::class, 'create'])->name('staff.create');
         Route::post('/create', [StaffController::class, 'store'])->name('staff.store');
+        Route::get('/{id}', [StaffController::class, 'show'])->name('staff.show');
         Route::get('/{id}/edit', [StaffController::class, 'edit'])->name('staff.edit');
         Route::put('/{id}/edit', [StaffController::class, 'update'])->name('staff.update');
         Route::delete('/{id}/delete', [StaffController::class, 'destroy'])->name('staff.destroy');

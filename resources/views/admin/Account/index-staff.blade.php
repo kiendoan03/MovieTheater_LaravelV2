@@ -76,6 +76,11 @@
                                 <td class="text-center">
                                     <div class="btn-group-actions btn-group-actions-right">
 
+                                        <a href="{{ route('admin.accounts.staff.show', $account) }}" class="btn-circle"
+                                            title="Xem chi tiết">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </a>
+
                                         <a href="{{ route('admin.accounts.staff.edit', $account) }}" class="btn-circle"
                                             title="Chỉnh sửa">
                                             <i class="fa-solid fa-pen-to-square"></i>

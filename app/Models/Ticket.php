@@ -39,7 +39,7 @@ class Ticket extends Model
      */
     public function getTotalFormatted(): string
     {
-        return number_format($this->final_price, 0, ',', '.') . ' VNĐ';
+        return number_format($this->final_price, 0, ',', '.').' VNĐ';
     }
 
     /**
@@ -50,15 +50,26 @@ class Ticket extends Model
         return $this->bookings()
             ->with('seat')
             ->get()
-            ->map(fn($b) => "{$b->seat->row}{$b->seat->column}")
+            ->map(fn ($b) => "{$b->seat->row}{$b->seat->column}")
             ->join(', ');
     }
 
     /**
-     * Check if all bookings are reserved (paid)
+     * Check if all bookings are reserved (paid).
+     * Uses the already-loaded "bookings" collection to avoid extra queries.
      */
     public function isFullyPaid(): bool
     {
-        return $this->bookings()->where('status', '!=', BookingStatus::Reserved->value)->count() === 0;
+        $bookings = $this->relationLoaded('bookings')
+            ? $this->bookings
+            : $this->bookings()->get();
+
+        if ($bookings->isEmpty()) {
+            return false;
+        }
+
+        return $bookings->every(
+            fn ($b) => $b->status === BookingStatus::Reserved
+        );
     }
 }
