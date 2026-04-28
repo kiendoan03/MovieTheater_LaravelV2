@@ -14,13 +14,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
-//        $admin = Auth::guard('staff')->user();
-
-
+        $categories = Category::paginate(10);
         return view('admin.category.main',[
                 'categories' => $categories,
-//                'admin' => $admin,
             ]
         );
     }
@@ -30,10 +26,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-//        $admin = Auth::guard('staff')->user();
-
         return view('admin.category.create',[
-//            'admin' => $admin,
         ]);
     }
 
@@ -63,11 +56,8 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-//        $admin = Auth::guard('staff')->user();
-
         return view('admin.category.edit',[
             'category' => $category,
-//            'admin' => $admin,
         ]);
     }
 
@@ -85,8 +75,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-//        CategoryMovieController::where('category_id', $category->id)->delete();
-
+       CategoryMovieController::where('category_id', $category->id)->delete();
         $category->delete();
         return redirect()->route('admin.categories.index')->with('success', 'Delete category successfully!');
     }

@@ -16,12 +16,9 @@ class ActorController extends Controller
      */
     public function index()
     {
-        $actors = Actor::all();
-//        $admin = Auth::guard('staff')->user();
-
+        $actors = Actor::paginate(10);
         return view('admin.actor.main',[
             'actors' => $actors,
-//            'admin' => $admin,
         ]);
     }
 

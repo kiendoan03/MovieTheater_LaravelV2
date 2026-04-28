@@ -8,7 +8,6 @@
     <div class="cw-head">
       <div>
         <h2>Chỉnh sửa danh mục</h2>
-        <div class="cw-crumb">Quản lý danh mục</div>
       </div>
       <a href="{{ route('admin.categories.index') }}" class="btn-cancel">Quay lại</a>
     </div>
