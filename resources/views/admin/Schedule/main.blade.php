@@ -126,7 +126,7 @@
         <table class="sw-table">
           <thead>
             <tr>
-              <th>#</th>
+              <th>STT</th>
               <th>Phim</th>
               <th>Phòng</th>
               <th>Ngày chiếu</th>
