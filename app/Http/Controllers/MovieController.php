@@ -181,19 +181,19 @@ class MovieController extends Controller
             ->whereDate('end_date', '>=', now())
             ->orderBy('release_date', 'desc')
             ->take(10)
-            ->get();;
+            ->get();
 
         // phim sắp chiếu
         $upcoming_movies = Movie::whereDate('release_date', '>', now())
             ->orderBy('release_date', 'asc')
-            ->take(10)
+            ->take(8)
             ->get();
 
         // TOP phim
         $top_movies = Movie::whereDate('release_date', '<=', now())
             ->whereDate('end_date', '>=', now())
             ->orderBy('rating', 'desc')
-            ->take(10)
+            ->take(4)
             ->get();
 
         return view('customer.home', [
@@ -395,7 +395,7 @@ class MovieController extends Controller
 
         $movies = $query
             ->orderBy('release_date', 'desc')
-            ->paginate(20)
+            ->paginate(12)
             ->withQueryString();
 
         $categories = Category::orderBy('name')->get();
