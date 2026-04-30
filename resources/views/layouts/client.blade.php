@@ -178,6 +178,11 @@
         }
     </style>
     @stack('styles')
+    <script>
+        if (!sessionStorage.getItem('introPlayed')) {
+            document.documentElement.classList.add('preload-intro');
+        }
+    </script>
 </head>
 
 
@@ -201,28 +206,27 @@
 </body>
 
 </html>
-<script>
-    const toggleBtn = document.querySelector('.search-toggle');
-    const searchPanel = document.querySelector('.search-panel');
-    const searchInput = document.getElementById('movieSearch');
-    toggleBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        searchPanel.classList.toggle('active');
-        if (searchPanel.classList.contains('active')) {
-            searchInput.focus({
-                preventScroll: true
-            });
-            searchInput.style.caretColor = 'white';
-        }
-    });
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.search-box')) {
-            searchPanel.classList.remove('active');
-            searchInput.blur();
-        }
-    });
-</script>
-   
+    <script>
+        const toggleBtn = document.querySelector('.search-toggle');
+        const searchPanel = document.querySelector('.search-panel');
+        const searchInput = document.getElementById('movieSearch');
+        toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            searchPanel.classList.toggle('active');
+            if (searchPanel.classList.contains('active')) {
+                searchInput.focus({
+                    preventScroll: true
+                });
+                searchInput.style.caretColor = 'white';
+            }
+        });
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-box')) {
+                searchPanel.classList.remove('active');
+                searchInput.blur();
+            }
+        });
+    </script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/js/all.min.js "></script>

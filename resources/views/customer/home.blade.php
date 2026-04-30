@@ -185,7 +185,7 @@
         </netflixintro>
     </div>
     <!-- home page -->
- 
+ <div class="home">
         <!-- movie selection-->
 
         <section class="movie_selection row mt-5">
@@ -225,52 +225,51 @@
         <!-- Top Movie -->
 
         <section class="top_movie">
-
-    <div class="row justify-content-center mt-5">
-        <div class="col-lg-7 col-md-8">
-            <div class="text-center">
-                <h1 class="text-light"
-                    style="font-size: 2.5vmax; font-family: 'Poppins', sans-serif;">
-                    Top Movie
-                </h1>
+            <div class="row justify-content-center mt-5">
+                <div class="col-lg-7 col-md-8">
+                    <div class="text-center">
+                        <h1 class="text-light"
+                            style="font-size: 2.5vmax; font-family: 'Poppins', sans-serif;">
+                            Top Movie
+                        </h1>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <div class="row mt-3">
+        <div class="row mt-3">
 
-        @foreach($top_movies as $index => $movie)
+            @foreach($top_movies as $index => $movie)
 
-            <div class="col-6 col-lg-3 mb-5">
+                <div class="col-6 col-lg-3 mb-5">
 
-                <div class="card image-container h-100">
+                    <div class="card image-container h-100">
 
-                    <div class="background-image">
+                        <div class="background-image">
 
-                        <div class="overlay-content">
-                            <h1>{{ $index + 1 }}</h1>
+                            <div class="overlay-content">
+                                <h1>{{ $index + 1 }}</h1>
+                            </div>
+
                         </div>
+
+                        <a href="">
+
+                            <img
+                                src="{{ asset('storage/img/movie_poster/' . $movie->poster) }}"
+                                alt="{{ $movie->movie_name }}"
+                                class="overlay-image">
+
+                        </a>
 
                     </div>
 
-                    <a href="">
-
-                        <img
-                            src="{{ asset('storage/img/movie_poster/' . $movie->poster) }}"
-                            alt="{{ $movie->movie_name }}"
-                            class="overlay-image">
-
-                    </a>
-
                 </div>
 
-            </div>
+            @endforeach
 
-        @endforeach
+        </div>
 
-    </div>
-
-</section>
+    </section>
 
         <!-- incomming -->
    
@@ -297,11 +296,14 @@
 
         </section>
 
-    
+    </div>
 @endsection 
 @push('scripts')
+    
+
     <script src="{{ asset('js/home_slider.js') }}"></script>
     <script src="{{ asset('js/intro.js') }}"></script>
+
 @endpush
 
 

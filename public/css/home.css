@@ -1,14 +1,9 @@
-/* =======================================
-        Slider
-        ====================================*/
-
 .home {
-    position: relative;
-    top: -200%;
     width: 100%;
     max-width: 100%;
-    z-index: -1;
-    transition: opacity 1s ease-in-out;
+    opacity: 0;
+    visibility: hidden;
+    transition: .5s;
 }
 
 .slick-dots {

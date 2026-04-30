@@ -5,18 +5,59 @@ body {
     width: 100%;
     height: 100%;
 }
+html.preload-intro body {
+    overflow: hidden;
+}
 
+/* ẨN TOÀN BỘ LAYOUT */
+html.preload-intro header,
+html.preload-intro footer,
+html.preload-intro nav,
+html.preload-intro main,
+html.preload-intro .home {
+    visibility: hidden;
+}
+
+/* CHỈ HIỆN INTRO */
+html.preload-intro #container {
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: flex !important;
+}
 #container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
     width: 100%;
     height: 100%;
-    background-color: #000000;
+
+    background-color: #000;
+
     overflow: hidden;
-    transition: 1s;
+
+    z-index: 999999;
+    inset: 0;
+    position: fixed;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: opacity .6s;
 }
+
+/* chỉ hiện khi lần đầu */
+.show-intro #container {
+    opacity: 1;
+    visibility: visible;
+}
+/* #container{
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: #000;
+} */
 
 #container netflixintro {
     display: block;
