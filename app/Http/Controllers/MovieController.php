@@ -46,7 +46,7 @@ class MovieController extends Controller
             'movie_logo'       => 'required|image',
             'movie_poster'     => 'required|image',
             'movie_thumbnail'  => 'required|image',
-            'movie_trailer'    => 'required|url',
+            'movie_trailer' => 'required|mimes:mp4,mov,avi,wmv|max:204800',
             'movie_length'     => 'required|integer|min:1',
             'movie_language'   => 'required|string|max:255',
             'movie_country'    => 'required|string|max:255',
@@ -62,7 +62,8 @@ class MovieController extends Controller
             'movie_director.*' => 'exists:directors,id',
         ], [
             'required' => ':attribute không được để trống.',
-            'movie_trailer.url' => 'Trailer phải là link hợp lệ.',
+            'movie_trailer.mimes' => 'Trailer phải là file video.',
+            'movie_trailer.max' => 'Trailer tối đa 200MB.',
             'movie_end_date.after_or_equal' =>
             'Ngày kết thúc phải lớn hơn hoặc bằng ngày khởi chiếu.',
 
@@ -90,7 +91,7 @@ class MovieController extends Controller
         $poster = null;
         $thumbnail = null;
 
-        $trailer = $request->movie_trailer;
+        $trailer = null;
 
         if ($request->hasFile('movie_logo')) {
 
@@ -127,7 +128,17 @@ class MovieController extends Controller
                 $thumbnail
             );
         }
+        if ($request->hasFile('movie_trailer')) {
 
+            $trailer = time() . '_trailer_' .
+                $request->file('movie_trailer')->getClientOriginalName();
+
+            Storage::putFileAs(
+                'public/video/movie_trailer',
+                $request->file('movie_trailer'),
+                $trailer
+            );
+        }
         // create movie 
 
         $movie = Movie::create([
@@ -181,19 +192,19 @@ class MovieController extends Controller
             ->whereDate('end_date', '>=', now())
             ->orderBy('release_date', 'desc')
             ->take(10)
-            ->get();;
+            ->get();
 
         // phim sắp chiếu
         $upcoming_movies = Movie::whereDate('release_date', '>', now())
             ->orderBy('release_date', 'asc')
-            ->take(10)
+            ->take(8)
             ->get();
 
         // TOP phim
         $top_movies = Movie::whereDate('release_date', '<=', now())
             ->whereDate('end_date', '>=', now())
             ->orderBy('rating', 'desc')
-            ->take(10)
+            ->take(4)
             ->get();
 
         return view('customer.home', [
@@ -231,7 +242,7 @@ class MovieController extends Controller
             'movie_logo'       => 'nullable|image',
             'movie_poster'     => 'nullable|image',
             'movie_thumbnail'  => 'nullable|image',
-            'movie_trailer'    => 'nullable|url',
+            'movie_trailer' => 'nullable|mimes:mp4,mov,avi,wmv|max:204800',
             'movie_length'     => 'required|integer|min:1',
             'movie_language'   => 'required|string|max:255',
             'movie_country'    => 'required|string|max:255',
@@ -246,7 +257,7 @@ class MovieController extends Controller
         $logo = $movie->logo;
         $poster = $movie->poster;
         $thumbnail = $movie->thumbnail;
-        $trailer = $request->movie_trailer;
+        $trailer = $movie->trailer;
 
         // upload new
 
@@ -283,6 +294,24 @@ class MovieController extends Controller
                 'public/img/movie_thumbnail',
                 $request->file('movie_thumbnail'),
                 $thumbnail
+            );
+        }
+        
+        if ($request->hasFile('movie_trailer')) {
+            // xóa trailer cũ
+            if ($movie->trailer) {
+                Storage::delete(
+                    'public/video/movie_trailer/' . $movie->trailer
+                );
+            }
+
+            $trailer = time() . '_trailer_' .
+                $request->file('movie_trailer')->getClientOriginalName();
+
+            Storage::putFileAs(
+                'public/video/movie_trailer',
+                $request->file('movie_trailer'),
+                $trailer
             );
         }
 
@@ -348,6 +377,9 @@ class MovieController extends Controller
         if ($movie->thumbnail) {
             Storage::delete('public/img/movie_thumbnail/' . $movie->thumbnail);
         }
+        if ($movie->trailer) {
+        Storage::delete('public/video/movie_trailer/' . $movie->trailer);
+        }
         $movie->categories()->detach();
         $movie->actors()->detach();
         $movie->directors()->detach();
@@ -395,7 +427,7 @@ class MovieController extends Controller
 
         $movies = $query
             ->orderBy('release_date', 'desc')
-            ->paginate(20)
+            ->paginate(12)
             ->withQueryString();
 
         $categories = Category::orderBy('name')->get();

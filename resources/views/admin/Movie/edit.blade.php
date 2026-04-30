@@ -407,7 +407,7 @@
                         <input type="date"
                             name="movie_release_date"
                             class="sw-input"
-                            value="{{ old('movie_release_date', $movie->release_date) }}"
+                            value="{{ old('movie_release_date', $movie->release_date?->format('Y-m-d')) }}"
                             required>
                         @error('movie_release_date')
                         <span class="sw-error">{{ $message }}</span>
@@ -420,7 +420,7 @@
                         <input type="date"
                             name="movie_end_date"
                             class="sw-input"
-                            value="{{ old('movie_end_date', $movie->end_date) }}"
+                            value="{{ old('movie_end_date', $movie->end_date?->format('Y-m-d')) }}"
                             required>
                         @error('movie_end_date')
                         <span class="sw-error">{{ $message }}</span>
@@ -673,13 +673,13 @@
                     </div>
 
                     <div class="col-md-12">
-                        <label class="sw-label">Link trailer YouTube</label>
+                        <label class="sw-label">Trailer phim</label>
 
-                        <input type="url"
+                        <input type="file"
                             name="movie_trailer"
                             class="sw-input"
-                            placeholder="https://www.youtube.com/watch?v=xxxx"
-                            value="{{ old('movie_trailer', $movie->trailer) }}">
+                            accept="video/*">
+
                         @error('movie_trailer')
                         <span class="sw-error">{{ $message }}</span>
                         @enderror
@@ -769,6 +769,46 @@
                         </div>
 
                     </div>
+                   @if($movie->trailer)
+
+                    <div class="col-md-12">
+
+                        <div class="movie-preview">
+
+                            <video
+                                controls
+                                style="
+                                    width: 100%;
+                                    max-width: 700px;
+                                    aspect-ratio: 16 / 9;
+                                    border-radius: 10px;
+                                    background: #000;
+                                    object-fit: cover;
+                                ">
+
+                                <source
+                                    src="{{ asset('storage/video/movie_trailer/' . $movie->trailer) }}"
+                                    type="video/mp4">
+
+                            </video>
+
+                            <div class="movie-preview-info">
+
+                                <div class="movie-preview-title">
+                                    Trailer
+                                </div>
+
+                                <div class="movie-preview-meta">
+                                    Trailer hiện tại của phim
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    @endif
 
                 </div>
 
