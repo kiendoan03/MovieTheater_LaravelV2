@@ -13,6 +13,7 @@ use App\Http\Controllers\RoomTypeController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SeatTypeController;
 use App\Http\Controllers\TicketBookingController;
+use App\Http\Controllers\TicketBookingCustomerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,18 +38,18 @@ Route::get('/logout', [AuthController::class, 'logout']);
 // ==========================================
 // Admin Web Routes — Yêu cầu đăng nhập + role admin
 // ==========================================
-Route::prefix('/Admin/Dashboard')->name('admin.')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-});
+// Route::prefix('/Admin/Dashboard')->name('admin.')->group(function () {
+//     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+// });
 // Route::get('/payos', [PayOSController::class, 'index'])->name('payos.index');
 // Route::post('/payos/login', [PayOSController::class, 'login'])->name('payos.login');
 // Route::get('/payos/statistics', [PayOSController::class, 'statistics'])->name('payos.statistics');
 
 // Route::get('/Admin/Dashboard',[DashboardController::class, 'index'])->name('dashboard');
 Route::middleware(['jwt.cookie', 'role:admin'])->group(function () {
-    Route::prefix('admin')->name('admin.')->group(function () {
-        Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
-    });
+    Route::prefix('/Admin/Dashboard')->name('admin.')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+});
 
     Route::prefix('Admin/Category')->name('admin.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('categories.index');
@@ -150,8 +151,11 @@ Route::middleware(['jwt.cookie', 'role:customer'])->group(function () {
 Route::prefix('/')->group(function () {
     Route::get('/', [MovieController::class, 'show'])->name('index');
     Route::get('/search', [MovieController::class, 'search'])->name('movies.search');
+    Route::get('/{movie}/detail', [App\Http\Controllers\MovieController::class, 'detail'])->name('detail');
     Route::get('/{movie_actor}/actor', [ActorController::class, 'show'])->name('actor');
     Route::get('/{movie_director}/director', [DirectorController::class, 'show'])->name('director');
+    Route::get('/seat-layout/{scheduleId}', [TicketBookingCustomerController::class, 'seatLayoutCustomer'])->name('seat-layout-customer');
+    Route::get('/payment-status/{ticketCode}', [TicketBookingCustomerController::class, 'paymentStatus'])->name('payment-status');
 });
 
 // ==========================================

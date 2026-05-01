@@ -11,6 +11,9 @@ use App\Models\Schedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+
 class MovieController extends Controller
 {
     public function index()
@@ -409,4 +412,77 @@ class MovieController extends Controller
             'format'
         ));
     }
+
+    public function detail(Movie $movie){
+        $actors = Actor::all();
+        $directors = Director::all();
+        $categories = Category::all();
+        $date =  $movie->release_date;
+        $end =  $movie->end_date;
+        $movie_cate = Movie::join('category_movies', 'category_movies.movie_id', '=', 'movies.id')
+        ->join('categories', 'categories.id', '=', 'category_movies.category_id')
+        ->where('movies.id', $movie -> id)
+        ->get(['movies.*', 'category_movies.*', 'categories.*']);
+
+        foreach($movie_cate as $cate){
+            $related_movie = Movie::join('category_movies', 'category_movies.movie_id', '=', 'movies.id')
+            ->join('categories', 'categories.id', '=', 'category_movies.category_id')
+            ->where('categories.id',  $cate -> category_id)
+            ->get(['movies.*', 'category_movies.*', 'categories.*']);
+        }
+
+        $movie_actor = Movie::join('actor_movies', 'actor_movies.movie_id', '=', 'movies.id')
+        ->join('actors', 'actors.id', '=', 'actor_movies.actor_id')
+        ->where('movies.id', $movie -> id)
+        ->get(['movies.id', 'actor_movies.*', 'actors.*']);
+
+        $movie_director = Movie::join('director_movies', 'director_movies.movie_id', '=', 'movies.id')
+        ->join('directors', 'directors.id', '=', 'director_movies.director_id')
+        ->where('movies.id', $movie -> id)
+        ->get(['movies.id', 'director_movies.*', 'directors.*']);
+
+        $now = Carbon::today();
+
+        $schedules = Schedule::join('movies', 'movies.id', '=', 'schedules.movie_id')
+        ->join('rooms', 'rooms.id', '=', 'schedules.room_id')
+        ->where('movies.id', $movie -> id)
+        ->where('schedules.start_time', '>=', $now)
+        ->orderBy('schedules.start_time', 'ASC')
+        ->get(['movies.*','schedules.*','rooms.*','schedules.id as schedule_id']);
+
+        // if(Auth::guard('customers')->check()){
+        //     $user = Auth::guard('customers')->user();
+        //     return view('Customer.movieDetailed',[
+        //         'movie' => $movie,
+        //         'actors' => $actors,
+        //         'directors' => $directors,
+        //         'categories' => $categories,
+        //         'date' => $date,
+        //         'end' => $end,
+        //         'movie_cate' => $movie_cate,
+        //         'movie_actor' => $movie_actor,
+        //         'movie_director' => $movie_director,
+        //         'related_movie' => $related_movie,
+        //         'schedules' => $schedules,
+        //         'user' => $user,
+        //     ]);
+        // }else{
+           return view('Customer.movieDetailed',[
+            'movie' => $movie,
+            'actors' => $actors,
+            'directors' => $directors,
+            'categories' => $categories,
+            'date' => $date,
+            'end' => $end,
+            'movie_cate' => $movie_cate,
+            'movie_actor' => $movie_actor,
+            'movie_director' => $movie_director,
+            // 'related_movie' => $related_movie,
+            'schedules' => $schedules,
+        ]);
+        // }
+        
+        
+    }
+
 }

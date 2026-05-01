@@ -1,0 +1,18 @@
+.login__button div::after {
+    content: "";
+    position: absolute;
+    background-color: red;
+    height: .1em;
+    width: 0;
+    right: 0;
+    bottom: 0em;
+    transition: .5s;
+}
+
+.login__button:hover {
+    color: red;
+}
+
+.login__button:hover div::after {
+    width: 100%;
+}

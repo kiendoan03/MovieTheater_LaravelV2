@@ -714,7 +714,7 @@
                         alt="{{ $movie->movie_name }}">
 
                     <div class="movie-overlay">
-
+<a href="{{ route('detail', $movie) }}" class="movie-name">
                         <div class="top-name">
                             {{ $movie->movie_name }}
                         </div>
@@ -738,7 +738,7 @@
                             </button>
 
                         </div>
-
+</a>
                     </div>
 
                 </div>
@@ -771,7 +771,7 @@
             @foreach($upcoming_movies as $movie)
 
             <div class="col-lg-3 col-md-6">
-
+<a href="{{ route('detail', $movie) }}" class="movie-name">
                 <div class="upcoming-card movie-item"
                     data-name="{{ strtolower($movie->movie_name) }}">
 
@@ -798,7 +798,7 @@
                     </div>
 
                 </div>
-
+</a>
             </div>
 
             @endforeach
