@@ -1,4 +1,4 @@
-@extends('layouts.clientmanagement')
+@extends('layouts.client')
 
 @section('title', 'Tìm kiếm phim')
 
@@ -21,7 +21,9 @@
         border: 1px solid rgba(255, 255, 255, .08);
         border-radius: 30px;
         backdrop-filter: blur(18px);
-        box-shadow: 0 20px 45px rgba(0, 0, 0, .35), 0 0 25px rgba(255, 31, 69, .06);
+        box-shadow:
+            0 20px 45px rgba(0, 0, 0, .35),
+            0 0 25px rgba(255, 31, 69, .06);
     }
 
     .search-title {
@@ -73,8 +75,6 @@
     }
 
     .filter-btn,
-    .btn-play,
-    .btn-detail,
     .genre-option,
     .remove-tag {
         border: none;
@@ -95,120 +95,6 @@
     .filter-btn:hover {
         transform: translateY(-3px);
         box-shadow: 0 18px 35px rgba(255, 31, 69, .38);
-    }
-
-    .btn-play,
-    .btn-detail {
-        padding: 10px 18px;
-        font-size: 14px;
-    }
-
-    .btn-play {
-        background: linear-gradient(135deg, #ff1f45, #ff4d6d);
-        color: #fff;
-        box-shadow: 0 10px 25px rgba(255, 31, 69, .25);
-    }
-
-    .btn-detail {
-        background: rgba(255, 255, 255, .08);
-        color: #fff;
-        border: 1px solid rgba(255, 255, 255, .08);
-        box-shadow: 0 10px 20px rgba(255, 255, 255, .06);
-    }
-
-    .btn-play:hover,
-    .btn-detail:hover {
-        transform: translateY(-3px);
-    }
-
-    .btn-play:hover {
-        box-shadow: 0 15px 35px rgba(255, 31, 69, .45);
-    }
-
-    .btn-detail:hover {
-        background: rgba(255, 255, 255, .15);
-        box-shadow: 0 15px 35px rgba(255, 255, 255, .12);
-    }
-
-    .movie-card {
-        position: relative;
-        overflow: hidden;
-        height: 470px;
-        border-radius: 28px;
-        background: rgba(255, 255, 255, .03);
-        border: 1px solid rgba(255, 255, 255, .06);
-        transition: .35s;
-        z-index: 1;
-    }
-
-    .movie-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 25px 45px rgba(0, 0, 0, .45), 0 0 35px rgba(255, 31, 69, .12);
-    }
-
-    .movie-card img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        transition: .5s;
-        pointer-events: none;
-        user-select: none;
-    }
-
-    .movie-card:hover img {
-        transform: scale(1.08);
-    }
-
-    .movie-overlay {
-        position: absolute;
-        inset: 0;
-        padding: 24px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        background: linear-gradient(to top, rgba(0, 0, 0, .96) 10%, rgba(0, 0, 0, .45) 45%, rgba(0, 0, 0, .05));
-    }
-
-    .movie-name {
-        font: 700 24px 'Montserrat', sans-serif;
-        margin-bottom: 12px;
-        color: #fff;
-    }
-
-    .movie-meta {
-        font-size: 14px;
-        margin-bottom: 18px;
-        color: #d4d4d8;
-    }
-
-    .movie-actions {
-        display: flex;
-        gap: 12px;
-    }
-
-    .empty-box {
-        text-align: center;
-        padding: 90px 20px;
-        border-radius: 28px;
-        background: rgba(255, 255, 255, .03);
-        border: 1px solid rgba(255, 255, 255, .06);
-        color: #9f9f9f;
-    }
-
-    .pagination {
-        justify-content: center;
-    }
-
-    .page-link {
-        background: rgba(255, 255, 255, .05) !important;
-        border: 1px solid rgba(255, 255, 255, .08) !important;
-        color: #fff !important;
-    }
-
-    .page-item.active .page-link {
-        background: #ff1f45 !important;
-        border-color: #ff1f45 !important;
     }
 
     .genre-wrapper {
@@ -277,7 +163,9 @@
         border: 1px solid rgba(255, 255, 255, .08);
         border-radius: 20px;
         backdrop-filter: blur(18px);
-        box-shadow: 0 25px 45px rgba(0, 0, 0, .55), 0 0 35px rgba(255, 31, 69, .12);
+        box-shadow:
+            0 25px 45px rgba(0, 0, 0, .55),
+            0 0 35px rgba(255, 31, 69, .12);
     }
 
     .genre-dropdown.active {
@@ -308,45 +196,132 @@
         background: rgba(255, 31, 69, .18);
         color: #ff6f8d;
     }
-
-    .movie-card,
-    .movie-overlay,
-    .movie-name,
-    .movie-meta,
-    .movie-actions,
-    .search-title,
-    .search-sub,
-    .empty-box {
-        cursor: default;
+    .movie-box {
+    transition: .35s;
+    width: 100%;
     }
 
-    @media (max-width: 992px) {
-        .search-title {
-            font-size: 32px;
-        }
-
-        .movie-card {
-            height: 420px;
-        }
+    .movie-img {
+        width: 100%;
+        height: 180px;
+        border-radius: 10px;
+        object-fit: cover;
+        opacity: .9;
+        box-shadow:
+            #fff 0px 5px 15px;
+        transition:
+            transform .35s ease,
+            box-shadow .35s ease,
+            opacity .35s ease;
     }
 
-    @media (max-width: 768px) {
-        .search-filter {
-            padding: 22px;
+    .movie-box:hover .movie-img {
+
+        transform:
+            scale(1.05)
+            translateY(-5px);
+
+        opacity: 1;
+
+        box-shadow:
+            0 10px 30px rgba(255,255,255,.35),
+            0 0 25px rgba(255,255,255,.15);
+    }
+
+    .movie-content {
+        padding-top: 12px;
+    }
+
+    .movie-name {
+        font-size: .9rem;
+        color: #f5f5f5;
+        font-weight: 500;
+        letter-spacing: .2px;
         }
 
-        .search-title {
-            font-size: 28px;
-        }
+    @media(max-width:768px) {
 
-        .movie-card {
-            height: 380px;
-        }
+    .movie-img {
+        height: 160px;
+    }
 
-        .movie-name {
-            font-size: 20px;
+    .movie-name {
+        font-size: .95rem;
         }
     }
+    
+    .sw-pagination {
+        display: flex;
+
+        justify-content: center;
+        align-items: center;
+
+        gap: 8px;
+
+        margin-top: 50px;
+
+        flex-wrap: wrap;
+    }
+
+    .sw-pagination .page-link {
+        min-width: 42px;
+        height: 42px;
+
+        padding: 0 14px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 14px;
+
+        text-decoration: none;
+
+        font-size: 13px;
+        font-weight: 600;
+
+        color: #d4d4d8;
+
+        background: rgba(255, 255, 255, .04);
+
+        border: 1px solid rgba(255, 255, 255, .08);
+
+        backdrop-filter: blur(12px);
+
+        transition: .25s;
+    }
+
+    .sw-pagination .page-link:hover {
+        transform: translateY(-2px);
+
+        color: #fff;
+
+        border-color: rgba(255, 31, 69, .35);
+
+        box-shadow:
+            0 10px 20px rgba(255, 31, 69, .18);
+    }
+
+    .sw-pagination .page-link.active {
+        color: #fff;
+
+        border-color: transparent;
+
+        background:
+            linear-gradient(135deg,
+                #ff1f45,
+                #ff4d6d);
+
+        box-shadow:
+            0 12px 24px rgba(255, 31, 69, .35);
+    }
+
+    .sw-pagination .opacity-50 {
+        opacity: .45;
+
+        pointer-events: none;
+    }
+
 </style>
 
 @endpush
@@ -488,56 +463,26 @@
 
     </div>
 
-    <div class="row g-4">
+<section>
+    <div class="row gx-5 gy-5 mt-5">
 
         @forelse($movies as $movie)
 
-        <div class="col-lg-3 col-md-6">
+        <div class="col-3 mb-5">
 
-            <div class="movie-card">
+            <div class="movie-box">
 
-                <img
-                    src="{{ asset('storage/img/movie_poster/' . $movie->poster) }}"
-                    alt="{{ $movie->movie_name }}">
+                <a href="">
+                    <img
+                        src="{{ asset('storage/img/movie_thumbnail/' . $movie->thumbnail) }}"
+                        class="movie-img"
+                        alt="">
+                </a>
 
-                <div class="movie-overlay">
-
-                    <div class="movie-name">
+                <div class="movie-content">
+                    <span class="movie-name">
                         {{ $movie->movie_name }}
-                    </div>
-
-                    <div class="movie-meta">
-
-                        ⭐ {{ $movie->rating }}
-
-                        &nbsp; • &nbsp;
-
-                        {{ $movie->length }} phút
-
-                        &nbsp; • &nbsp;
-
-                        {{ $movie->country }}
-
-                    </div>
-
-                    <div class="movie-actions">
-
-                        <button class="btn-play">
-
-                            <i class="fa-solid fa-play"></i>
-                            Xem ngay
-
-                        </button>
-
-                        <button class="btn-detail">
-
-                            <i class="fa-solid fa-circle-info"></i>
-                            Chi tiết
-
-                        </button>
-
-                    </div>
-
+                    </span>
                 </div>
 
             </div>
@@ -565,12 +510,67 @@
         @endforelse
 
     </div>
+</section>
 
-    <div class="mt-5">
 
-        {{ $movies->links() }}
+    {{-- PAGINATION --}}
+    @if($movies->hasPages())
+
+    <div class="sw-pagination">
+
+        {{-- Prev --}}
+        @if($movies->onFirstPage())
+
+        <span class="page-link opacity-50">
+            <i class="fa-solid fa-chevron-left"></i>
+        </span>
+
+        @else
+
+        <a href="{{ $movies->previousPageUrl() }}"
+            class="page-link">
+
+            <i class="fa-solid fa-chevron-left"></i>
+
+        </a>
+
+        @endif
+
+
+        {{-- Pages --}}
+        @foreach($movies->getUrlRange(1, $movies->lastPage()) as $page => $url)
+
+        <a href="{{ $url }}"
+            class="page-link {{ $movies->currentPage() == $page ? 'active' : '' }}">
+
+            {{ $page }}
+
+        </a>
+
+        @endforeach
+
+
+        {{-- Next --}}
+        @if($movies->hasMorePages())
+
+        <a href="{{ $movies->nextPageUrl() }}"
+            class="page-link">
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </a>
+
+        @else
+
+        <span class="page-link opacity-50">
+            <i class="fa-solid fa-chevron-right"></i>
+        </span>
+
+        @endif
 
     </div>
+
+    @endif
 
 </div>
 @push('scripts')
@@ -663,33 +663,6 @@
         });
     });
 
-    updatePlaceholder();
-    genreSearch.value = '';
-
-    /* CARET HANDLING (giữ nguyên logic nhưng gọn) */
-    genreSearch.addEventListener('focus', () => {
-        genreSearch.style.caretColor = 'auto';
-    });
-
-    genreSearch.addEventListener('blur', () => {
-        genreSearch.style.caretColor = 'transparent';
-    });
-
-    /* GỘP 2 document click handler → 1 handler duy nhất */
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.genre-wrapper')) {
-            genreDropdown.classList.remove('active');
-            genreSearch.blur();
-            return;
-        }
-
-        const isInput = e.target.closest('input, textarea, [contenteditable]');
-        if (isInput) {
-            e.target.focus({
-                preventScroll: true
-            });
-        }
-    });
 </script>
 
 @endpush

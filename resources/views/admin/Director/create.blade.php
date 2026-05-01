@@ -8,7 +8,6 @@
     <div class="cw-head">
       <div>
         <h2>Thêm đạo diễn</h2>
-        <div class="cw-crumb">Quản lý đạo diễn</div>
       </div>
       <a href="{{ route('admin.directors.index') }}" class="btn-cancel">Quay lại</a>
     </div>

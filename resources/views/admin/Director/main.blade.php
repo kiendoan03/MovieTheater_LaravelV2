@@ -1,9 +1,6 @@
 @extends('layouts.management')
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css">
-
 <div class="cw">
   <div class="container-fluid px-3 px-md-5">
 
@@ -22,8 +19,8 @@
       <table class="table-custom" id="directorsTable">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Thông tin đạo diễn</th>
+            <th>STT</th>
+            <th>Tên đạo diễn</th>
             <th>Ảnh đạo diễn</th>
             <th class="text-center" width="16">Thao tác</th>
           </tr>
@@ -32,7 +29,7 @@
           @foreach($directors as $director)
           <tr>
             <td class="mono-id">
-              #{{ str_pad($director->id, 3, '0', STR_PAD_LEFT) }}
+              {{ $loop->iteration  + ($directors->currentPage() - 1) * $directors->perPage() }}
             </td>
             <td>
               <span class="room-main">{{ $director->name }}</span>
@@ -44,7 +41,7 @@
             <td class="text-center">
               <div class="btn-group-actions btn-group-actions-right">
                 <a href="{{ route('admin.directors.edit', $director) }}" class="btn-circle" title="Chỉnh sửa">
-                  <i class="fa-solid fa-pen-to-square"></i>
+                  ✏️
                 </a>
                 <form action="{{ route('admin.directors.destroy', $director) }}" method="POST" onsubmit="return confirm('Xác nhận xóa đạo diễn này?')">
                   @csrf
@@ -59,10 +56,16 @@
           @endforeach
         </tbody>
       </table>
-
+      @if($directors->hasPages())
+        <div class="sw-pagination">
+          @foreach($directors->links()->elements[0] as $page => $url)
+            <a href="{{ $url }}" class="page-link {{ $directors->currentPage() == $page ? 'active' : '' }}">{{ $page }}</a>
+          @endforeach
+        </div>
+      @endif
       @if($directors->isEmpty())
         <div class="empty-state">
-          <div class="empty-state-icon">🎬</div>
+          <div class="empty-state-icon"></div>
           <p>Chưa có đạo diễn nào được thêm.</p>
         </div>
       @endif
@@ -72,25 +75,6 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
-<script>
-  $(document).ready(function() {
-    $('#directorsTable').DataTable({
-      "language": {
-        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/vi.json"
-      },
-      "pageLength": 10,
-      "responsive": true,
-      "columnDefs": [
-        {
-          "targets": -1,
-          "orderable": false
-        }
-      ]
-    });
-  });
-</script>
-
 @endsection
 

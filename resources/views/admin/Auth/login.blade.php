@@ -156,7 +156,7 @@
             position: relative;
         }
 
-        .input-wrap i {
+        .input-wrap>i {
             position: absolute;
             left: 14px;
             top: 50%;
@@ -188,7 +188,7 @@
         }
 
         .form-control:focus+i,
-        .input-wrap:focus-within i {
+        .input-wrap:focus-within>i {
             color: var(--accent);
         }
 
@@ -393,6 +393,9 @@
 
         <p class="footer-note">
             Chưa có tài khoản? <a href="{{ route('register') }}">Đăng ký</a>
+        </p>
+        <p class="footer-note" style="margin-top: 0.5rem;">
+            <a href="{{ route('forgot-password') }}">Quên mật khẩu?</a>
         </p>
     </div>
 
