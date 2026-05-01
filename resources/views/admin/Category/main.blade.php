@@ -1,10 +1,6 @@
 @extends('layouts.management')
 @section('content')
-
 <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css">
-
 <div class="cw">
   <div class="container-fluid px-3 px-md-5">
 
@@ -23,8 +19,8 @@
       <table class="table-custom" id="categoriesTable">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Danh mục</th>
+            <th>STT</th>
+            <th>Thể Loại Phim</th>
             <th class="text-center" width="16">Thao tác</th>
           </tr>
         </thead>
@@ -32,7 +28,7 @@
           @foreach($categories as $category)
           <tr>
             <td class="mono-id">
-              #{{ str_pad($category->id, 3, '0', STR_PAD_LEFT) }}
+              {{ $loop->iteration  + ($categories->currentPage() - 1) * $categories->perPage() }}
             </td>
             <td>
               <span class="room-main">{{ $category->name }}</span>
@@ -40,7 +36,7 @@
             <td class="text-center">
               <div class="btn-group-actions btn-group-actions-right">
                 <a href="{{ route('admin.categories.edit', $category) }}" class="btn-circle" title="Chỉnh sửa">
-                  <i class="fa-solid fa-pen-to-square"></i>
+                  ✏️
                 </a>
                 <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" onsubmit="return confirm('Xác nhận xóa danh mục này?')">
                   @csrf
@@ -55,7 +51,13 @@
           @endforeach
         </tbody>
       </table>
-
+      @if($categories->hasPages())
+        <div class="sw-pagination">
+          @foreach($categories->links()->elements[0] as $page => $url)
+            <a href="{{ $url }}" class="page-link {{ $categories->currentPage() == $page ? 'active' : '' }}">{{ $page }}</a>
+          @endforeach
+        </div>
+      @endif
       @if($categories->isEmpty())
         <div class="empty-state">
           <div class="empty-state-icon">🏷️</div>
@@ -63,29 +65,7 @@
         </div>
       @endif
     </div>
-
   </div>
 </div>
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
-<script>
-  $(document).ready(function() {
-    $('#categoriesTable').DataTable({
-      "language": {
-        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/vi.json"
-      },
-      "pageLength": 10,
-      "responsive": true,
-      "columnDefs": [
-        {
-          "targets": -1,
-          "orderable": false
-        }
-      ]
-    });
-  });
-</script>
-
 @endsection

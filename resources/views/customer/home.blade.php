@@ -3,805 +3,267 @@
 @section('title', 'NetFnix')
 
 @push('styles')
-
-<style>
-    .hero {
-        position: relative;
-        height: 100vh;
-        overflow: hidden;
-    }
-
-    .hero-slider {
-        position: relative;
-        z-index: 1;
-
-        display: flex;
-        width: 100%;
-        height: 100%;
-
-        transition: transform 1.2s cubic-bezier(.77, 0, .18, 1);
-    }
-
-    .hero-slide {
-        min-width: 100%;
-        height: 100vh;
-        position: relative;
-    }
-
-    .hero-overlay {
-        position: absolute;
-        inset: 0;
-
-        background: linear-gradient(to top,
-                rgba(0, 0, 0, .65) 0%,
-                rgba(0, 0, 0, .18) 45%,
-                rgba(0, 0, 0, .05) 100%);
-
-        z-index: 2;
-        pointer-events: none;
-    }
-
-    .hero img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-
-        filter: brightness(.88);
-
-        transform: scale(1.03);
-        transition: transform 8s ease;
-    }
-
-    .hero-content {
-        position: absolute;
-
-        left: 7%;
-        bottom: 12%;
-
-        max-width: 650px;
-
-        z-index: 3;
-
-        color: #fff;
-    }
-
-    .hero-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-
-        padding: 10px 18px;
-
-        border-radius: 999px;
-
-        background: rgba(255, 31, 69, .18);
-
-        border: 1px solid rgba(255, 31, 69, .35);
-
-        color: #ff728d;
-
-        font-size: 14px;
-        font-weight: 600;
-
-        backdrop-filter: blur(10px);
-
-        margin-bottom: 22px;
-    }
-
-    .hero-title {
-        font-size: 78px;
-        font-weight: 800;
-
-        line-height: 1.02;
-        letter-spacing: -2px;
-
-        color: #fff;
-
-        text-shadow:
-            0 10px 30px rgba(0, 0, 0, .65),
-            0 0 40px rgba(255, 255, 255, .08);
-    }
-
-    .hero-desc {
-        margin-top: 22px;
-
-        color: rgba(255, 255, 255, .92);
-
-        line-height: 1.9;
-        font-size: 15px;
-
-        max-width: 90%;
-    }
-
-    .hero-buttons {
-        margin-top: 32px;
-
-        display: flex;
-        gap: 16px;
-        flex-wrap: wrap;
-    }
-
-    .btn-watch,
-    .btn-info-custom {
-        border-radius: 999px;
-
-        font-weight: 600;
-
-        transition: .3s;
-
-        position: relative;
-        z-index: 4;
-    }
-
-    .btn-watch {
-        background: linear-gradient(135deg,
-                var(--primary),
-                #ff365b);
-
-        border: none;
-
-        padding: 15px 32px;
-
-        color: #fff;
-
-        box-shadow:
-            0 10px 25px rgba(255, 31, 69, .3);
-    }
-
-    .btn-watch:hover {
-        transform: translateY(-3px);
-
-        box-shadow:
-            0 15px 35px rgba(255, 31, 69, .45);
-    }
-
-    .btn-info-custom {
-        background: rgba(255, 255, 255, .08);
-        border: 1px solid rgba(255, 255, 255, .08);
-        color: #fff;
-        padding: 15px 28px;
-        transition: .25s
-    }
-
-    .btn-info-custom:hover {
-        background: rgba(255, 255, 255, .15);
-        box-shadow: 0 15px 35px rgba(255, 255, 255, .15);
-        transform: translateY(-3px)
-    }
-
-    html {
-        scroll-behavior: smooth;
-    }
-
-    .section {
-        padding: 90px 0 20px
-    }
-
-    .section-header {
-        margin-bottom: 55px
-    }
-
-    .section-title {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        font-family: 'Montserrat', sans-serif;
-        font-size: 42px;
-        font-weight: 800;
-        letter-spacing: 1px;
-        margin-bottom: 18px
-    }
-
-    .section-title i {
-        width: 58px;
-        height: 58px;
-        border-radius: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, rgba(255, 31, 69, .22), rgba(255, 31, 69, .06));
-        border: 1px solid rgba(255, 31, 69, .25);
-        color: #ff4468;
-        font-size: 22px;
-        box-shadow: 0 0 25px rgba(255, 31, 69, .18)
-    }
-
-    .section-sub {
-        font-family: 'Poppins', sans-serif;
-        font-size: 16px;
-        line-height: 1.9;
-        color: #a8a8a8;
-        max-width: 680px;
-        padding-left: 72px
-    }
-
-    .movie-card {
-        position: relative;
-
-        overflow: hidden;
-
-        border-radius: 20px;
-
-        background:
-            linear-gradient(180deg,
-                rgba(255, 255, 255, .02),
-                rgba(255, 255, 255, .01));
-
-        border: 1px solid rgba(255, 255, 255, .06);
-
-        height: 330px;
-
-        transition: .35s;
-
-        box-shadow:
-            0 10px 25px rgba(0, 0, 0, .35),
-            inset 0 1px 0 rgba(255, 255, 255, .03);
-    }
-
-    .movie-card::before {
-        content: "";
-
-        position: absolute;
-        inset: 0;
-
-        border-radius: 20px;
-
-        padding: 1px;
-
-        background:
-            linear-gradient(135deg,
-                rgba(255, 255, 255, .18),
-                rgba(255, 255, 255, .02));
-
-        -webkit-mask:
-            linear-gradient(#fff 0 0) content-box,
-            linear-gradient(#fff 0 0);
-
-        -webkit-mask-composite: xor;
-
-        mask-composite: exclude;
-
-        opacity: 0;
-
-        transition: .35s;
-
-        z-index: 3;
-
-        pointer-events: none;
-    }
-
-    .movie-card:hover::before {
-        opacity: 1;
-    }
-
-    .movie-card:hover {
-        transform: translateY(-6px);
-
-        box-shadow:
-            0 20px 45px rgba(0, 0, 0, .5),
-            0 0 25px rgba(255, 31, 69, .15);
-    }
-
-    .movie-card img {
-        width: 100%;
-        height: 100%;
-
-        object-fit: cover;
-
-        transition: .55s;
-    }
-
-    .movie-card:hover img {
-        transform: scale(1.08);
-    }
-
-    .movie-overlay {
-        position: absolute;
-        inset: 0;
-
-        z-index: 5;
-
-        background:
-            linear-gradient(to top,
-                rgba(0, 0, 0, .98) 8%,
-                rgba(0, 0, 0, .55) 40%,
-                rgba(0, 0, 0, .1) 100%);
-
-        padding: 16px;
-
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-    }
-
-    .movie-name {
-        font-size: 16px;
-
-        font-weight: 700;
-
-        line-height: 1.35;
-
-        font-family: 'Montserrat', sans-serif;
-
-        transition: .3s;
-
-        margin-bottom: 8px;
-    }
-
-    .movie-card:hover .movie-name {
-        color: #ff4f72;
-    }
-
-    .movie-meta {
-        color: #d4d4d8;
-
-        font-size: 11px;
-
-        margin-bottom: 12px;
-
-        line-height: 1.6;
-    }
-
-    .movie-actions {
-        display: flex;
-
-        justify-content: center;
-
-        align-items: center;
-
-        gap: 10px;
-
-        width: 100%;
-
-    }
-
-    .btn-card {
-        border: none;
-        border-radius: 999px;
-        padding: 8px 12px;
-        font-size: 11px;
-        font-weight: 600;
-        transition: .25s;
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        text-align: center;
-    }
-
-    .btn-play,
-    .btn-detail {
-        min-width: 0;
-    }
-
-    .btn-play {
-        background:
-            linear-gradient(135deg,
-                #ff1f45,
-                #ff4d6d);
-
-        color: #fff;
-
-        box-shadow:
-            0 10px 20px rgba(255, 31, 69, .35);
-    }
-
-    .btn-play:hover {
-        transform: translateY(-2px);
-
-        box-shadow:
-            0 14px 26px rgba(255, 31, 69, .5);
-    }
-
-    .btn-detail {
-        background:
-            linear-gradient(135deg,
-                rgba(255, 255, 255, .08),
-                rgba(255, 255, 255, .15));
-
-        color: #fff;
-        box-shadow:
-            0 8px 18px rgba(255, 255, 255, .08);
-    }
-
-    .btn-detail:hover {
-        transform: translateY(-2px);
-        background: rgba(255, 255, 255, .20);
-        box-shadow: 0 15px 35px rgba(255, 255, 255, .18);
-    }
-
-    .top-card {
-        position: relative;
-
-        overflow: hidden;
-
-        border-radius: 20px;
-
-        height: 330px;
-    }
-
-    .top-card img {
-        width: 100%;
-        height: 100%;
-
-        object-fit: cover;
-
-        transition: .55s;
-    }
-
-    .top-card:hover img {
-        transform: scale(1.08);
-    }
-
-    .top-name {
-        font-size: 16px;
-
-        font-weight: 700;
-
-        line-height: 1.4;
-
-        font-family: 'Montserrat', sans-serif;
-
-        transition: .3s;
-    }
-
-    .top-card:hover .top-name {
-        color: #ff4f72;
-    }
-
-    .top-rank {
-        position: absolute;
-
-        top: 12px;
-        left: 12px;
-
-        z-index: 4;
-
-        width: 44px;
-        height: 44px;
-
-        border-radius: 50%;
-
-        background:
-            linear-gradient(135deg,
-                var(--primary),
-                #ff5576);
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        font-size: 18px;
-
-        font-weight: 800;
-
-        box-shadow:
-            0 0 20px rgba(255, 31, 69, .5),
-            inset 0 2px 8px rgba(255, 255, 255, .15);
-    }
-
-    .upcoming-card {
-        background: rgba(255, 255, 255, .03);
-
-        border: 1px solid rgba(255, 255, 255, .05);
-
-        border-radius: 20px;
-
-        overflow: hidden;
-
-        transition: .35s;
-
-        height: 100%;
-    }
-
-    .upcoming-card:hover {
-        transform: translateY(-6px);
-
-        border-color: rgba(255, 31, 69, .25);
-
-        box-shadow:
-            0 20px 40px rgba(0, 0, 0, .45),
-            0 0 25px rgba(255, 31, 69, .08);
-    }
-
-    .upcoming-card img {
-        width: 100%;
-
-        height: 210px;
-
-        object-fit: cover;
-
-        transition: .45s;
-    }
-
-    .upcoming-card:hover img {
-        transform: scale(1.05);
-    }
-
-    .upcoming-content {
-        padding: 16px;
-    }
-
-    .upcoming-title,
-    .upcoming-content h5 {
-        font-size: 16px;
-    }
-
-    .upcoming-desc,
-    .upcoming-content .text-secondary {
-        font-size: 12px;
-
-        line-height: 1.7;
-    }
-
-
-    .custom-col-5 {
-        width: 20%;
-        padding: 0 10px;
-    }
-
-    @media(max-width:1400px) {
-
-        .movie-card,
-        .top-card {
-            height: 310px;
-        }
-    }
-
-    @media(max-width:1200px) {
-
-        .custom-col-5 {
-            width: 25%;
-        }
-
-        .movie-card,
-        .top-card {
-            height: 300px;
-        }
-    }
-
-
-    @media(max-width:992px) {
-
-        .custom-col-5 {
-            width: 33.3333%;
-        }
-
-        .movie-card,
-        .top-card {
-            height: 290px;
-        }
-    }
-
-
-    @media(max-width:768px) {
-
-        .custom-col-5 {
-            width: 50%;
-        }
-
-        .movie-card,
-        .top-card {
-            height: 270px;
-        }
-
-        .movie-name,
-        .top-name {
-            font-size: 14px;
-        }
-
-        .btn-card {
-            padding: 7px 10px;
-            font-size: 10px;
-        }
-
-        .movie-meta {
-            font-size: 10px;
-        }
-    }
-</style>
+    <link rel="stylesheet" href="{{ asset('css/intro.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
 @endpush
 
 @section('content')
 
-@if($movie_show->count())
-
-<section class="hero">
-
-    <div class="hero-slider">
-
-        @foreach($movie_show as $movie)
-
-        <div class="hero-slide">
-
-            <!-- IMAGE -->
-            <img
-                src="{{ asset('storage/img/movie_thumbnail/' . $movie->thumbnail) }}"
-                alt="">
-
-            <!-- OVERLAY -->
-            <div class="hero-overlay"></div>
-
-            <!-- CONTENT -->
-            <div class="hero-content">
-
-                <div class="hero-badge">
-                    <i class="fa-solid fa-fire"></i>
-                    Trending Movie
+    <div id="container">
+        <!-- Edit the letter attr to: N, E, T, F, L, I or X -->
+        <netflixintro letter="N">
+            <div class="helper-1">
+                <div class="effect-brush">
+                    <span class="fur-31"></span>
+                    <span class="fur-30"></span>
+                    <span class="fur-29"></span>
+                    <span class="fur-28"></span>
+                    <span class="fur-27"></span>
+                    <span class="fur-26"></span>
+                    <span class="fur-25"></span>
+                    <span class="fur-24"></span>
+                    <span class="fur-23"></span>
+                    <span class="fur-22"></span>
+                    <span class="fur-21"></span>
+                    <span class="fur-20"></span>
+                    <span class="fur-19"></span>
+                    <span class="fur-18"></span>
+                    <span class="fur-17"></span>
+                    <span class="fur-16"></span>
+                    <span class="fur-15"></span>
+                    <span class="fur-14"></span>
+                    <span class="fur-13"></span>
+                    <span class="fur-12"></span>
+                    <span class="fur-11"></span>
+                    <span class="fur-10"></span>
+                    <span class="fur-9"></span>
+                    <span class="fur-8"></span>
+                    <span class="fur-7"></span>
+                    <span class="fur-6"></span>
+                    <span class="fur-5"></span>
+                    <span class="fur-4"></span>
+                    <span class="fur-3"></span>
+                    <span class="fur-2"></span>
+                    <span class="fur-1"></span>
                 </div>
-
-                <div class="hero-title">
-                    {{ $movie->movie_name }}
+                <div class="effect-lumieres">
+                    <span class="lamp-1"></span>
+                    <span class="lamp-2"></span>
+                    <span class="lamp-3"></span>
+                    <span class="lamp-4"></span>
+                    <span class="lamp-5"></span>
+                    <span class="lamp-6"></span>
+                    <span class="lamp-7"></span>
+                    <span class="lamp-8"></span>
+                    <span class="lamp-9"></span>
+                    <span class="lamp-10"></span>
+                    <span class="lamp-11"></span>
+                    <span class="lamp-12"></span>
+                    <span class="lamp-13"></span>
+                    <span class="lamp-14"></span>
+                    <span class="lamp-15"></span>
+                    <span class="lamp-16"></span>
+                    <span class="lamp-17"></span>
+                    <span class="lamp-18"></span>
+                    <span class="lamp-19"></span>
+                    <span class="lamp-20"></span>
+                    <span class="lamp-21"></span>
+                    <span class="lamp-22"></span>
+                    <span class="lamp-23"></span>
+                    <span class="lamp-24"></span>
+                    <span class="lamp-25"></span>
+                    <span class="lamp-26"></span>
+                    <span class="lamp-27"></span>
+                    <span class="lamp-28"></span>
                 </div>
-
-                <div class="hero-desc">
-                    {{ Str::limit($movie->synopsis, 220) }}
-                </div>
-
-                <div class="hero-buttons">
-
-                    <a href="#" class="btn btn-watch">
-                        <i class="fa-solid fa-play"></i>
-                        Xem ngay
-                    </a>
-
-                    <a href="#" class="btn btn-info-custom">
-                        <i class="fa-solid fa-circle-info"></i>
-                        Chi tiết
-                    </a>
-
-                </div>
-
             </div>
-
-        </div>
-
-        @endforeach
-
+            <div class="helper-2">
+                <div class="effect-brush">
+                    <span class="fur-31"></span>
+                    <span class="fur-30"></span>
+                    <span class="fur-29"></span>
+                    <span class="fur-28"></span>
+                    <span class="fur-27"></span>
+                    <span class="fur-26"></span>
+                    <span class="fur-25"></span>
+                    <span class="fur-24"></span>
+                    <span class="fur-23"></span>
+                    <span class="fur-22"></span>
+                    <span class="fur-21"></span>
+                    <span class="fur-20"></span>
+                    <span class="fur-19"></span>
+                    <span class="fur-18"></span>
+                    <span class="fur-17"></span>
+                    <span class="fur-16"></span>
+                    <span class="fur-15"></span>
+                    <span class="fur-14"></span>
+                    <span class="fur-13"></span>
+                    <span class="fur-12"></span>
+                    <span class="fur-11"></span>
+                    <span class="fur-10"></span>
+                    <span class="fur-9"></span>
+                    <span class="fur-8"></span>
+                    <span class="fur-7"></span>
+                    <span class="fur-6"></span>
+                    <span class="fur-5"></span>
+                    <span class="fur-4"></span>
+                    <span class="fur-3"></span>
+                    <span class="fur-2"></span>
+                    <span class="fur-1"></span>
+                </div>
+            </div>
+            <div class="helper-3">
+                <div class="effect-brush">
+                    <span class="fur-31"></span>
+                    <span class="fur-30"></span>
+                    <span class="fur-29"></span>
+                    <span class="fur-28"></span>
+                    <span class="fur-27"></span>
+                    <span class="fur-26"></span>
+                    <span class="fur-25"></span>
+                    <span class="fur-24"></span>
+                    <span class="fur-23"></span>
+                    <span class="fur-22"></span>
+                    <span class="fur-21"></span>
+                    <span class="fur-20"></span>
+                    <span class="fur-19"></span>
+                    <span class="fur-18"></span>
+                    <span class="fur-17"></span>
+                    <span class="fur-16"></span>
+                    <span class="fur-15"></span>
+                    <span class="fur-14"></span>
+                    <span class="fur-13"></span>
+                    <span class="fur-12"></span>
+                    <span class="fur-11"></span>
+                    <span class="fur-10"></span>
+                    <span class="fur-9"></span>
+                    <span class="fur-8"></span>
+                    <span class="fur-7"></span>
+                    <span class="fur-6"></span>
+                    <span class="fur-5"></span>
+                    <span class="fur-4"></span>
+                    <span class="fur-3"></span>
+                    <span class="fur-2"></span>
+                    <span class="fur-1"></span>
+                </div>
+            </div>
+            <div class="helper-4">
+                <div class="effect-brush">
+                    <span class="fur-31"></span>
+                    <span class="fur-30"></span>
+                    <span class="fur-29"></span>
+                    <span class="fur-28"></span>
+                    <span class="fur-27"></span>
+                    <span class="fur-26"></span>
+                    <span class="fur-25"></span>
+                    <span class="fur-24"></span>
+                    <span class="fur-23"></span>
+                    <span class="fur-22"></span>
+                    <span class="fur-21"></span>
+                    <span class="fur-20"></span>
+                    <span class="fur-19"></span>
+                    <span class="fur-18"></span>
+                    <span class="fur-17"></span>
+                    <span class="fur-16"></span>
+                    <span class="fur-15"></span>
+                    <span class="fur-14"></span>
+                    <span class="fur-13"></span>
+                    <span class="fur-12"></span>
+                    <span class="fur-11"></span>
+                    <span class="fur-10"></span>
+                    <span class="fur-9"></span>
+                    <span class="fur-8"></span>
+                    <span class="fur-7"></span>
+                    <span class="fur-6"></span>
+                    <span class="fur-5"></span>
+                    <span class="fur-4"></span>
+                    <span class="fur-3"></span>
+                    <span class="fur-2"></span>
+                    <span class="fur-1"></span>
+                </div>
+            </div>
+        </netflixintro>
     </div>
+    <!-- home page -->
+ <div class="home">
+        <!-- movie selection-->
 
-</section>
+        <section class="movie_selection row mt-5">
 
-@endif
-
-<div class="container">
-
-    <section class="section">
-
-        <div class="section-header">
-
-            <h2 class="section-title">
-                <i class="fa-solid fa-film"></i>
-                Phim đang chiếu
-            </h2>
-
-            <div class="section-sub">
-                Những bộ phim nổi bật đang được công chiếu trên hệ thống.
+            <div class="row justify-content-center mt-5">
+                <div class="col-lg-7 col-md-8">
+                    <div class="text-center">
+                        <h1 class="text-light" style="font-size: 2.5vmax; font-family: 'Poppins', sans-serif;">Movie Selection</h1>
+                    </div>
+                </div>
             </div>
 
-        </div>
+            <!-- Movie carousel -->
 
-        <div class="row g-4">
-
-            @foreach($movie_show as $movie)
-
-            <div class="col-6 col-md-4 col-lg-3 custom-col-5">
-
-                <div class="movie-card movie-item"
-                    data-name="{{ strtolower($movie->movie_name) }}">
-
-                    <img
-                        src="{{ asset('storage/img/movie_poster/' . $movie->poster) }}"
-                        alt="{{ $movie->movie_name }}">
-
-                    <div class="movie-overlay">
-
-                        <div class="movie-name">
-                            {{ $movie->movie_name }}
-                        </div>
-
-                        <div class="movie-meta">
-
-                            ⭐ {{ $movie->rating }}
-                            &nbsp; • &nbsp;
-
-                            {{ $movie->length }} phút
-                            &nbsp; • &nbsp;
-
-                            {{ $movie->country }}
-
-                        </div>
-
-                        <div class="movie-actions">
-
-                            <button class="btn-card btn-play">
-                                <i class="fa-solid fa-play"></i>
-                                Xem ngay
-                            </button>
-
-                            <button class="btn-card btn-detail">
-                                <i class="fa-solid fa-circle-info"></i>
-                                Chi tiết
-                            </button>
-
-                        </div>
-
-                    </div>
+            <section class="p-0">
+                <div class="slider col-12">
+                    @foreach($movie_show as $movie)
+                            <div class="mx-3">
+                                <div class="card border-0 rounded-0 ">
+                                    <div class="d-flex bg-opacity-25 justify-content-center align-items-end">
+                                        <a href="">
+                                            <img 
+                                                src="{{ asset('storage/img/movie_thumbnail/' . $movie->thumbnail) }}" 
+                                                alt=""
+                                                class="movie-thumb"
+                                            >
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                    @endforeach
 
                 </div>
+            </section>
+        </section>
 
+        <!-- Top Movie -->
+
+        <section class="top_movie">
+            <div class="row justify-content-center mt-5">
+                <div class="col-lg-7 col-md-8">
+                    <div class="text-center">
+                        <h1 class="text-light"
+                            style="font-size: 2.5vmax; font-family: 'Poppins', sans-serif;">
+                            Top Movie
+                        </h1>
+                    </div>
+                </div>
             </div>
 
-            @endforeach
-
-        </div>
-
-    </section>
-
-    <section class="section">
-
-        <div class="section-header">
-
-            <h2 class="section-title">
-                <i class="fa-solid fa-fire-flame-curved"></i>
-                Top Movie
-            </h2>
-
-            <div class="section-sub">
-                Những bộ phim được yêu thích và có lượt xem cao nhất trên hệ thống.
-            </div>
-
-        </div>
-
-        <div class="row g-4">
+        <div class="row mt-3">
 
             @foreach($top_movies as $index => $movie)
 
-            <div class="col-6 col-md-4 col-lg-3 custom-col-5">
+                <div class="col-6 col-lg-3 mb-5">
 
-                <div class="top-card movie-item"
-                    data-name="{{ strtolower($movie->movie_name) }}">
+                    <div class="card image-container h-100">
 
-                    <div class="top-rank">
-                        {{ $index + 1 }}
-                    </div>
+                        <div class="background-image">
 
-                    <img
-                        src="{{ asset('storage/img/movie_poster/' . $movie->poster) }}"
-                        alt="{{ $movie->movie_name }}">
-
-                    <div class="movie-overlay">
-
-                        <div class="top-name">
-                            {{ $movie->movie_name }}
-                        </div>
-
-                        <div class="movie-meta">
-                            ⭐ {{ $movie->rating }}
-                            &nbsp; • &nbsp;
-                            {{ $movie->length }} phút
-                        </div>
-
-                        <div class="movie-actions">
-
-                            <button class="btn-card btn-play">
-                                <i class="fa-solid fa-play"></i>
-                                Xem ngay
-                            </button>
-
-                            <button class="btn-card btn-detail">
-                                <i class="fa-solid fa-circle-info"></i>
-                                Chi tiết
-                            </button>
+                            <div class="overlay-content">
+                                <h1>{{ $index + 1 }}</h1>
+                            </div>
 
                         </div>
+
+                        <a href="">
+
+                            <img
+                                src="{{ asset('storage/img/movie_poster/' . $movie->poster) }}"
+                                alt="{{ $movie->movie_name }}"
+                                class="overlay-image">
+
+                        </a>
 
                     </div>
 
                 </div>
-
-            </div>
 
             @endforeach
 
@@ -809,84 +271,39 @@
 
     </section>
 
-    <section class="section">
-
-        <div class="section-header">
-
-            <h2 class="section-title">
-                <i class="fa-solid fa-clapperboard"></i>
-                Phim sắp chiếu
-            </h2>
-
-            <div class="section-sub">
-                Các bom tấn chuẩn bị ra mắt với nhiều nội dung hấp dẫn được mong chờ.
-            </div>
-
-        </div>
-
-        <div class="row g-4">
-
-            @foreach($upcoming_movies as $movie)
-
-            <div class="col-6 col-md-4 col-lg-3 custom-col-5">
-
-                <div class="upcoming-card movie-item"
-                    data-name="{{ strtolower($movie->movie_name) }}">
-
-                    <img
-                        src="{{ asset('storage/img/movie_thumbnail/' . $movie->thumbnail) }}"
-                        alt="{{ $movie->movie_name }}">
-
-                    <div class="upcoming-content">
-
-                        <h5 class="fw-bold">
-                            {{ $movie->movie_name }}
-                        </h5>
-
-                        <div class="text-secondary mt-2">
-                            {{ Str::limit($movie->synopsis, 70) }}
-                        </div>
-
-                        <div class="release-date">
-                            <i class="fa-regular fa-calendar"></i>
-
-                            {{ \Carbon\Carbon::parse($movie->release_date)->format('d/m/Y') }}
-                        </div>
-
+        <!-- incomming -->
+   
+        <section class="incomming px-5">
+            <div class="row justify-content-center mt-5">
+                <div class="col-lg-7 col-md-8">
+                    <div class="text-center">
+                        <h1 class="text-light " style="font-size: 2.5vmax; font-family: 'Poppins', sans-serif;">Upcomming Movie</h1>
                     </div>
-
                 </div>
-
             </div>
+            
+            <div class="row mt-3 mb-5">
+                @foreach($upcoming_movies as $movie)
+                        <div class="col-3 mb-5">
+                            <div class="card" style="width: 23vmax;">
+                                    <a href="">
+                                        <img src="{{ asset('storage/img/movie_thumbnail/' . $movie->thumbnail) }}" class="card-img-top object-fit-cover " style ="opacity:0.9; border-radius :1vmax" alt="...">
+                                    </a>
+                            </div>
+                        </div>
+                @endforeach
+            </div>          
 
-            @endforeach
+        </section>
 
-        </div>
+    </div>
+@endsection 
+@push('scripts')
+    
 
-    </section>
+    <script src="{{ asset('js/home_slider.js') }}"></script>
+    <script src="{{ asset('js/intro.js') }}"></script>
 
-</div>
+@endpush
 
-@endsection
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-
-        const slider = document.querySelector('.hero-slider');
-        const slides = document.querySelectorAll('.hero-slide');
-
-        if (!slider || slides.length <= 1) return;
-
-        let index = 0;
-
-        setInterval(() => {
-
-            index = (index + 1) % slides.length;
-
-            slider.style.transform =
-                `translate3d(-${index * 100}%,0,0)`;
-
-        }, 5000);
-
-    });
-</script>

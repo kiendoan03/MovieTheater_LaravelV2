@@ -5,11 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'NetFnix')</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Poppins:wght@300;400;500;600&display=swap"
+
+    <link rel="icon" href="/img/page_logo/download-removebg-preview.png">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;900&display=swap"
         rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <!-- Slick Carousel -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ asset('css/scroll/hideScrollBar.css') }}">
     <style>
         * {
             font-family: 'Poppins', sans-serif;
@@ -278,7 +290,14 @@
         }
     </style>
     @stack('styles')
+    <script>
+        if (!sessionStorage.getItem('introPlayed')) {
+            document.documentElement.classList.add('preload-intro');
+        }
+    </script>
 </head>
+
+
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
@@ -317,7 +336,8 @@
                         @endphp
                         <button class="nav-icon user-menu-toggle" type="button" title="{{ $authUser->email }}"
                             style="position:relative; padding:0; width:36px; height:36px; border-radius:50%; overflow:hidden; background:transparent; border:2px solid rgba(255,31,69,.4);">
-                            <img src="{{ $navAvatar }}" alt="" style="width:100%;height:100%;object-fit:cover;">
+                            <img src="{{ $navAvatar }}" alt=""
+                                style="width:100%;height:100%;object-fit:cover;">
                             <span
                                 style="
                                 position:absolute; bottom:1px; right:1px;
@@ -329,7 +349,9 @@
                         <div class="user-dropdown" id="userDropdown">
                             <div class="ud-header">
                                 <div class="ud-avatar" style="overflow:hidden; padding:0;">
-                                    <img src="{{ $navAvatar }}" alt="" style="width:100%;height:100%;object-fit:cover;"></div>
+                                    <img src="{{ $navAvatar }}" alt=""
+                                        style="width:100%;height:100%;object-fit:cover;">
+                                </div>
                                 <div>
                                     <div class="ud-name">{{ $authUser->customer?->name ?? 'Thành viên' }}</div>
                                     <div class="ud-email">{{ $authUser->email }}</div>
@@ -384,19 +406,12 @@
             searchInput.blur();
         }
     });
+</script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/js/all.min.js "></script>
+<script src="/bootstrapLib/bootstrap.bundle.min.js"></script>
 
-    // User dropdown
-    const userMenuToggle = document.querySelector('.user-menu-toggle');
-    const userDropdown = document.getElementById('userDropdown');
-    if (userMenuToggle && userDropdown) {
-        userMenuToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            userDropdown.classList.toggle('show');
-        });
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.user-menu-wrap')) {
-                userDropdown.classList.remove('show');
-            }
-        });
-    }
-</script> @stack('scripts')
+<script src="{{ asset('js/screenProps/setBrowserSize.js') }}"></script>
+
+@stack('scripts')

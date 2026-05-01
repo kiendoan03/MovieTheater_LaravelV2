@@ -608,7 +608,19 @@
                         @enderror
                     </div>
 
-                    <div class="col-md-12"> <label class="sw-label">Link trailer YouTube</label> <input type="url" name="movie_trailer" class="sw-input" placeholder="https://www.youtube.com/watch?v=xxxx" value="{{ old('movie_trailer') }}"> </div>
+                    <div class="col-md-12">
+                        <label class="sw-label">Trailer phim</label>
+
+                       <input type="file"
+                            name="movie_trailer"
+                            class="sw-input"
+                            accept="video/*"
+                            onchange="previewTrailer(event)">
+
+                        @error('movie_trailer')
+                        <span class="sw-error">{{ $message }}</span>
+                        @enderror
+                    </div>
 
                 </div>
 
@@ -688,8 +700,39 @@
                         </div>
 
                     </div>
+                    {{-- TRAILER --}}
+                        <div class="col-md-12">
 
-                </div>
+                            <div class="movie-preview">
+
+                                <video
+                                    id="trailerPreview"
+                                    controls
+                                    style="
+                                        width: 100%;
+                                        max-width: 700px;
+                                        aspect-ratio: 16 / 9;
+                                        border-radius: 10px;
+                                        background: #000;
+                                        object-fit: cover;
+                                    ">
+                                </video>
+
+                                <div class="movie-preview-info">
+
+                                    <div class="movie-preview-title">
+                                        Trailer
+                                    </div>
+
+                                    <div class="movie-preview-meta">
+                                        Preview trailer phim
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
 
             </div>
 
@@ -736,7 +779,21 @@
         },
         placeholder: 'Chọn quốc gia'
     });
+    function previewTrailer(event) {
 
+    const file = event.target.files[0];
+
+        if (file) {
+
+            const video =
+                document.getElementById('trailerPreview');
+
+            video.src =
+                URL.createObjectURL(file);
+
+            video.load();
+        }
+    }
     function previewImage(event, id) {
 
         const file = event.target.files[0];

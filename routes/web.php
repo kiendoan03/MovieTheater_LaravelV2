@@ -180,7 +180,7 @@ Route::middleware(['jwt.cookie', 'role:customer'])->group(function () {
 // Customer web routes
 // ==========================================
 Route::prefix('/')->group(function () {
-    Route::get('/', [MovieController::class, 'show'])->name('index');
+    Route::get('/', [MovieController::class, 'show'])->name('home');
     Route::get('/search', [MovieController::class, 'search'])->name('movies.search');
     Route::get('/{movie_actor}/actor', [ActorController::class, 'show'])->name('actor');
     Route::get('/{movie_director}/director', [DirectorController::class, 'show'])->name('director');

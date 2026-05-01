@@ -1,0 +1,11 @@
+body::-webkit-scrollbar{
+    display: none;
+}
+
+body{
+    overflow-x: hidden;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}

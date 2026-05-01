@@ -1,24 +1,19 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="\bootstrapLib\bootstrap.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="icon" href="/img/page_logo/download-removebg-preview.png">
-    <title>Director Profile</title>
-    <style>
+@extends('layouts.client')
+
+@section('title', 'Director Profile')
+
+@push('styles')
+<style>
         :root {
-            --bg:        #07080f;
-            --surface:   #0e1018;
-            --card:      #121520;
-            --border:    rgba(255,255,255,0.07);
-            --accent:    #e8c46a;
-            --accent2:   #c0392b;
-            --text:      #e8eaf2;
-            --muted:     #6b7080;
+            --bg:        #0b0b0f;
+            --surface:   #13131a;
+            --card:      #13131a;
+            --border:    rgba(255,255,255,0.08);
+            --accent:    #ff1f45;
+            --accent2:   #ff1f45;
+            --primary:   #ff1f45;
+            --text:      #ffffff;
+            --muted:     #b9b9c7;
             --radius:    18px;
         }
 
@@ -34,7 +29,7 @@
         /* ── Cinematic top strip ── */
         .page-strip {
             height: 3px;
-            background: linear-gradient(90deg, var(--accent2), var(--accent), var(--accent2));
+            background: linear-gradient(90deg, #ff1f45, #ff728d, #ff1f45);
         }
 
         /* ── Main wrapper ── */
@@ -67,7 +62,7 @@
 
         .profile-banner {
             height: 90px;
-            background: linear-gradient(135deg, #1a0a00 0%, #2a1500 50%, #0a0a1a 100%);
+            background: linear-gradient(135deg, rgba(255, 31, 69, .15) 0%, rgba(255, 31, 69, .08) 50%, #0b0b0f 100%);
             position: relative;
         }
         .profile-banner::after {
@@ -90,15 +85,16 @@
         .avatar-wrap {
             margin-top: 22px;
             margin-bottom: 16px;
+            text-align: center;
         }
         .profile-avatar {
-            width: 88px;
-            height: 88px;
+            width: 160px;
+            height: 160px;
             border-radius: 14px;
             object-fit: cover;
             border: 3px solid var(--bg);
             box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-            display: block;
+            display: inline-block;
         }
 
         .director-name {
@@ -114,7 +110,7 @@
             font-weight: 500;
             letter-spacing: 0.12em;
             text-transform: uppercase;
-            color: var(--accent);
+            color: #ff728d;
             margin-bottom: 20px;
         }
 
@@ -131,8 +127,8 @@
             margin-bottom: 20px;
         }
         .btn-pill {
-            border: 1px solid var(--border);
-            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255,255,255,0.08);
             color: var(--text);
             padding: 8px 16px;
             border-radius: 999px;
@@ -143,26 +139,32 @@
             gap: 7px;
             cursor: pointer;
             text-decoration: none;
-            transition: all 0.2s;
+            transition: all 0.25s;
         }
         .btn-pill:hover {
-            background: rgba(232, 196, 106, 0.12);
-            border-color: rgba(232, 196, 106, 0.35);
-            color: var(--accent);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, .15);
+            color: var(--text);
+            box-shadow: 0 15px 35px rgba(255, 255, 255, .15);
+            transform: translateY(-3px);
         }
         .btn-pill.primary {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: #000;
+            background: linear-gradient(135deg, var(--primary), #ff365b);
+            border-color: var(--primary);
+            color: #fff;
             font-weight: 600;
+            box-shadow: 0 10px 25px rgba(255, 31, 69, .3);
         }
-        .btn-pill.primary:hover { opacity: 0.88; }
+        .btn-pill.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(255, 31, 69, .45);
+        }
 
         .info-label {
             font-size: 0.72rem;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: var(--muted);
+            color: #b9b9c7;
             font-weight: 500;
             margin-bottom: 12px;
         }
@@ -175,7 +177,7 @@
         }
         .info-table tr:last-child td { border-bottom: none; }
         .info-table td:first-child {
-            color: var(--muted);
+            color: #b9b9c7;
             width: 110px;
             padding-right: 12px;
             white-space: nowrap;
@@ -206,9 +208,9 @@
         .count-badge {
             display: inline-flex;
             align-items: center;
-            background: rgba(232,196,106,0.12);
-            color: var(--accent);
-            border: 1px solid rgba(232,196,106,0.25);
+            background: rgba(255, 31, 69, .15);
+            color: #ff728d;
+            border: 1px solid rgba(255, 31, 69, .35);
             border-radius: 999px;
             font-size: 0.78rem;
             font-weight: 600;
@@ -216,25 +218,24 @@
             letter-spacing: 0.05em;
             flex-shrink: 0;
         }
-        .filter-row { display: flex; gap: 8px; }
 
         /* Bio */
         .bio-block {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-left: 3px solid var(--accent);
+            border-left: 3px solid #ff1f45;
             border-radius: var(--radius);
             padding: 20px 24px;
             margin-bottom: 28px;
             font-size: 0.92rem;
             line-height: 1.85;
-            color: #9aa1b5;
+            color: #a8a8a8;
         }
         .bio-block .bio-title {
             font-size: 0.72rem;
             letter-spacing: 0.12em;
             text-transform: uppercase;
-            color: var(--accent);
+            color: #ff728d;
             font-weight: 600;
             margin-bottom: 10px;
         }
@@ -248,7 +249,7 @@
 
         .movie-card {
             background: var(--card);
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255, 255, 255, .06);
             border-radius: var(--radius);
             overflow: hidden;
             transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
@@ -258,8 +259,8 @@
         }
         .movie-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            border-color: rgba(232,196,106,0.2);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(255, 31, 69, .15);
+            border-color: rgba(255, 31, 69, .2);
         }
         .movie-thumb-wrap {
             position: relative;
@@ -287,10 +288,10 @@
         .movie-card:hover .movie-overlay { opacity: 1; }
         .overlay-play {
             width: 36px; height: 36px;
-            background: var(--accent);
+            background: #ff1f45;
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            color: #000;
+            color: #fff;
             font-size: 0.9rem;
         }
 
@@ -308,7 +309,7 @@
         }
         .movie-meta {
             font-size: 0.78rem;
-            color: var(--muted);
+            color: #a8a8a8;
             line-height: 1.5;
         }
         .movie-year {
@@ -324,7 +325,7 @@
             grid-column: 1/-1;
             text-align: center;
             padding: 60px 20px;
-            color: var(--muted);
+            color: #b9b9c7;
         }
         .empty-state i { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.3; }
 
@@ -343,8 +344,9 @@
             .movie-grid { grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); }
         }
     </style>
-</head>
-<body>
+@endpush
+
+@section('content')
 
 <div class="page-strip"></div>
 
@@ -415,107 +417,10 @@
                         <span class="count-badge">{{ $movie_director->where('end_date', '>=', now())->count() }}</span>
                     </span>
                 </div>
-                <div class="filter-row">
-                    <a href="#" class="btn-pill">Tất cả</a>
-                    <a href="#" class="btn-pill">Mới nhất</a>
-                </div>
             </div>
 
             <div class="movie-grid">
                 @foreach($movie_director->where('end_date', '>=', now()) as $movie)
-                    <a href="#" class="movie-card">
-                        <div class="movie-thumb-wrap">
-                            <img
-                                src="{{ asset(\Illuminate\Support\Facades\Storage::url('img/movie_poster/') . $movie->poster) }}"
-                                alt="{{ $movie->movie_name }}"
-                                class="movie-thumb"
-                            >
-                            <div class="movie-overlay">
-                                <div class="overlay-play"><i class="fa-solid fa-play"></i></div>
-                            </div>
-                        </div>
-                        <div class="movie-body">
-                            <div class="movie-name">{{ $movie->movie_name }}</div>
-                            <div class="movie-meta">
-                                <span class="movie-year">{{ $movie->release_year ?? '—' }}</span><br>
-                                {{ $movie->category->category_name ?? 'Không rõ' }}
-                            </div>
-                        </div>
-                    </a>
-                    <a href="#" class="movie-card">
-                        <div class="movie-thumb-wrap">
-                            <img
-                                src="{{ asset(\Illuminate\Support\Facades\Storage::url('img/movie_poster/') . $movie->poster) }}"
-                                alt="{{ $movie->movie_name }}"
-                                class="movie-thumb"
-                            >
-                            <div class="movie-overlay">
-                                <div class="overlay-play"><i class="fa-solid fa-play"></i></div>
-                            </div>
-                        </div>
-                        <div class="movie-body">
-                            <div class="movie-name">{{ $movie->movie_name }}</div>
-                            <div class="movie-meta">
-                                <span class="movie-year">{{ $movie->release_year ?? '—' }}</span><br>
-                                {{ $movie->category->category_name ?? 'Không rõ' }}
-                            </div>
-                        </div>
-                    </a>
-                    <a href="#" class="movie-card">
-                        <div class="movie-thumb-wrap">
-                            <img
-                                src="{{ asset(\Illuminate\Support\Facades\Storage::url('img/movie_poster/') . $movie->poster) }}"
-                                alt="{{ $movie->movie_name }}"
-                                class="movie-thumb"
-                            >
-                            <div class="movie-overlay">
-                                <div class="overlay-play"><i class="fa-solid fa-play"></i></div>
-                            </div>
-                        </div>
-                        <div class="movie-body">
-                            <div class="movie-name">{{ $movie->movie_name }}</div>
-                            <div class="movie-meta">
-                                <span class="movie-year">{{ $movie->release_year ?? '—' }}</span><br>
-                                {{ $movie->category->category_name ?? 'Không rõ' }}
-                            </div>
-                        </div>
-                    </a><a href="#" class="movie-card">
-                        <div class="movie-thumb-wrap">
-                            <img
-                                src="{{ asset(\Illuminate\Support\Facades\Storage::url('img/movie_poster/') . $movie->poster) }}"
-                                alt="{{ $movie->movie_name }}"
-                                class="movie-thumb"
-                            >
-                            <div class="movie-overlay">
-                                <div class="overlay-play"><i class="fa-solid fa-play"></i></div>
-                            </div>
-                        </div>
-                        <div class="movie-body">
-                            <div class="movie-name">{{ $movie->movie_name }}</div>
-                            <div class="movie-meta">
-                                <span class="movie-year">{{ $movie->release_year ?? '—' }}</span><br>
-                                {{ $movie->category->category_name ?? 'Không rõ' }}
-                            </div>
-                        </div>
-                    </a><a href="#" class="movie-card">
-                        <div class="movie-thumb-wrap">
-                            <img
-                                src="{{ asset(\Illuminate\Support\Facades\Storage::url('img/movie_poster/') . $movie->poster) }}"
-                                alt="{{ $movie->movie_name }}"
-                                class="movie-thumb"
-                            >
-                            <div class="movie-overlay">
-                                <div class="overlay-play"><i class="fa-solid fa-play"></i></div>
-                            </div>
-                        </div>
-                        <div class="movie-body">
-                            <div class="movie-name">{{ $movie->movie_name }}</div>
-                            <div class="movie-meta">
-                                <span class="movie-year">{{ $movie->release_year ?? '—' }}</span><br>
-                                {{ $movie->category->category_name ?? 'Không rõ' }}
-                            </div>
-                        </div>
-                    </a>
                     <a href="#" class="movie-card">
                         <div class="movie-thumb-wrap">
                             <img
@@ -548,7 +453,9 @@
     </div>
 </div>
 
+@endsection
+
+@push('scripts')
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="/bootstrapLib/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@endpush
