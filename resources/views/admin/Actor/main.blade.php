@@ -1,8 +1,7 @@
 @extends('layouts.management')
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <div class="cw">
   <div class="container-fluid px-3 px-md-5">
@@ -22,8 +21,8 @@
       <table class="table-custom" id="actorsTable">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Thông tin diễn viên</th>
+            <th>STT</th>
+            <th>Tên diễn viên</th>
             <th>Ảnh diễn viên</th>
             <th class="text-center" width="16">Thao tác</th>
           </tr>
@@ -32,7 +31,7 @@
           @foreach($actors as $actor)
           <tr>
             <td class="mono-id">
-              #{{ str_pad($actor->id, 3, '0', STR_PAD_LEFT) }}
+              {{ $loop->iteration  + ($actors->currentPage() - 1) * $actors->perPage() }}
             </td>
             <td>
               <span class="room-main">{{ $actor->name }}</span>
@@ -44,7 +43,7 @@
             <td class="text-center">
               <div class="btn-group-actions btn-group-actions-right">
                 <a href="{{ route('admin.actors.edit', $actor) }}" class="btn-circle" title="Chỉnh sửa">
-                  <i class="fa-solid fa-pen-to-square"></i>
+                  ✏️
                 </a>
                 <form action="{{ route('admin.actors.destroy', $actor) }}" method="POST" onsubmit="return confirm('Xác nhận xóa diễn viên này?')">
                   @csrf
@@ -59,6 +58,14 @@
           @endforeach
         </tbody>
       </table>
+      
+      @if($actors->hasPages())
+        <div class="sw-pagination">
+          @foreach($actors->links()->elements[0] as $page => $url)
+            <a href="{{ $url }}" class="page-link {{ $actors->currentPage() == $page ? 'active' : '' }}">{{ $page }}</a>
+          @endforeach
+        </div>
+      @endif
 
       @if($actors->isEmpty())
         <div class="empty-state">
@@ -70,26 +77,4 @@
 
   </div>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
-<script>
-  $(document).ready(function() {
-    $('#actorsTable').DataTable({
-      "language": {
-        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/vi.json"
-      },
-      "pageLength": 10,
-      "responsive": true,
-      "columnDefs": [
-        {
-          "targets": -1,
-          "orderable": false
-        }
-      ]
-    });
-  });
-</script>
-
 @endsection
