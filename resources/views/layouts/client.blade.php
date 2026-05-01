@@ -302,7 +302,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
         <div class="container">
-            <a class="navbar-brand brand-logo" href="{{ route('index') }}"> NETFNIX </a>
+            <a class="navbar-brand brand-logo" href="{{ route('home') }}"> NETFNIX </a>
             <div class="d-flex align-items-center gap-3">
                 {{-- Search --}}
                 <div class="search-box">
