@@ -207,7 +207,7 @@
                     <a href="{{ route('admin.accounts.staff.index') }}" class="nav-link" data-id="staffs"><i
                             class="fa-solid fa-user-shield"></i>
                         Staffs</a>
-                    <a href="#" class="nav-link" data-id="customers"><i class="fa-solid fa-users"></i>
+                    <a href="{{ route('admin.accounts.customer.index') }}" class="nav-link" data-id="customers"><i class="fa-solid fa-users"></i>
                         Customers</a>
                     <a href="{{ route('admin.categories.index') }}" class="nav-link" data-id="genre"><i
                             class="fa-solid fa-tags"></i> Film Genre</a>

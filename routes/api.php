@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ActorController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
@@ -41,6 +42,10 @@ Route::prefix('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/send-otp', [OTPController::class, 'sendOTP']);
     Route::post('/verify-otp', [OTPController::class, 'verifyOTP']);
+    // Quên mật khẩu
+    Route::post('/forgot-password/send-otp', [OTPController::class, 'sendForgotPasswordOTP']);
+    Route::post('/forgot-password/verify-otp', [OTPController::class, 'verifyForgotPasswordOTP']);
+    Route::post('/forgot-password/reset', [AccountController::class, 'resetPassword']);
 });
 
 // ==========================================
@@ -60,7 +65,7 @@ Route::apiResource('seats', SeatController::class)->only(['index', 'show']);
 // ==========================================
 // CỤM 2: PROTECTED ROUTES (Bắt buộc phải Đăng Nhập)
 // ==========================================
-Route::middleware(['jwt.cookie', 'auth:api'])->group(function () {
+Route::middleware(['jwt.cookie', 'silent.refresh', 'auth:api'])->group(function () {
 
     // --- ZONE A: Dành cho TẤT CẢ User (Customer, Staff, Admin đều làm được) ---
     // Đặt vé, xem vé của mình...
