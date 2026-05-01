@@ -241,7 +241,6 @@
             @foreach($top_movies as $index => $movie)
 
                 <div class="col-6 col-lg-3 mb-5">
-
                     <div class="card image-container h-100">
 
                         <div class="background-image">
@@ -252,7 +251,7 @@
 
                         </div>
 
-                        <a href="">
+                        <a href="{{route('detail',$movies[$index])}}">
 
                             <img
                                 src="{{ asset('storage/img/movie_poster/' . $movie->poster) }}"
@@ -262,7 +261,6 @@
                         </a>
 
                     </div>
-
                 </div>
 
             @endforeach
@@ -284,6 +282,7 @@
             
             <div class="row mt-3 mb-5">
                 @foreach($upcoming_movies as $movie)
+                <a href="{{ route('detail', $movie) }}" class="movie-name">
                         <div class="col-3 mb-5">
                             <div class="card" style="width: 23vmax;">
                                     <a href="">
@@ -291,6 +290,7 @@
                                     </a>
                             </div>
                         </div>
+</a>
                 @endforeach
             </div>          
 

@@ -1,12 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="\bootstrapLib\bootstrap.min.css">
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"> -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+@extends('layouts.client')
+
+@section('title', 'Chi tiết phim')
+
+@push('styles')
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="icon" href="/img/page_logo/download-removebg-preview.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,54 +16,12 @@
     <link rel="stylesheet" href="/public/css/admin.css">
     <link rel="stylesheet" href="/public/css/app.css">
     <link rel="stylesheet" href="/public/css/intro.css">
-    <title>Netfnix</title>
-</head>
+@endpush
 
+@section('content')
 <body class="" style="background-color: black;">
 
     <div class="container-fluid p-0">
-
-    <header class="row d-flex  p-3  justify-content-between" style="background-color:none; position:fixed ; width: 100% ; z-index:99">
-            <section class="col-3">
-                <a href="{{route('index')}}">
-                    <img class="col-4" src="/img/page_logo/NetFnix Full logo.png" alt="">
-                </a>
-            </section>
-
-            <section class="col-3 d-flex justify-content-end pe-3">
-
-                <div class=" position-relative border border-0 me-2 rounded-circle text-center" style="height: 3vmax; width: 3vmax; background-color: #ffffff48;">
-                    <i class="fa-regular fa-bell position-absolute top-50 start-50 translate-middle" style="font-size: 1.2vmax;color: #ffffff"></i>
-                </div>
-
-                <div class="position-relative border border-0 me-2 rounded-circle text-center" style="height: 3vmax; width: 3vmax; background-color: #ffffff48;">
-                    <a href="#">
-                        <i class="fa-solid fa-magnifying-glass position-absolute top-50 start-50 translate-middle" style="font-size: 1.2vmax;color: #ffffff"></i>                    
-                    </a>
-                </div>
-
-                @if(isset($user))
-                    <div class="dropdown" >
-                        <img class="col-12 border  " style="border-radius: 50%;object-fit: cover; overflow: hidden; height: 3vmax; width: 3vmax;" src="{{asset(\Illuminate\Support\Facades\Storage::url('img/user/').$user -> customer_avatar)}}" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" height="" alt="">
-                        <ul class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuButton1"> 
-                            <li><a class="dropdown-item bg-dark text-light" href="{{route('user',$user -> id)}}">Profile</a></li>
-                            <li><a class="dropdown-item bg-dark text-light" href="#">Admin site</a></li>
-                            <li><a class="dropdown-item bg-dark text-light" href="#">Logout</a></li>
-                        </ul>
-                    </div>
-                @else
-                    <div class="dropdown">
-                        <img class="col-12 border  " style="border-radius: 50%;object-fit: cover; overflow: hidden;height: 3vmax; width: 3vmax;" src="{{asset(\Illuminate\Support\Facades\Storage::url('img/netfnix/download-removebg-preview.png'))}}" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" height="" alt="">
-                            <ul class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuButton1"> 
-                                <li><a class="dropdown-item bg-dark text-light" href="#">Admin site</a></li>
-                                <li><a class="dropdown-item bg-dark text-light" href="#">Login</a></li>
-                            </ul>
-                    </div>  
-                @endif
-            </section>
-
-        </header>
-
         <!-- Overview -->
 
         <section id="movie__overview" class="row position:relative">
@@ -272,7 +229,14 @@
 
     </div>
 
-    <script>
+
+
+</body>
+@endsection 
+@push('scripts')
+    
+
+        <script>
         function turnOnSound() {
             var trailer = document.getElementById('trailerVideo');
             trailer.muted = !trailer.muted;
@@ -295,6 +259,6 @@ function selectSchedule(scheduleId) {
 }
 </script>
 
-</body>
+@endpush
 
-</html>
+

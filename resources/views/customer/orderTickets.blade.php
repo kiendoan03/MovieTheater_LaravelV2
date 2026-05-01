@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="\bootstrapLib\bootstrap.min.css">
+
+
+@extends('layouts.client')
+
+@section('title', 'Đặt ghế')
+
+@push('styles')
+<link rel="stylesheet" href="\bootstrapLib\bootstrap.min.css">
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"> -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -17,18 +19,8 @@
     <link rel="stylesheet" href="/public/css/admin.css">
     <link rel="stylesheet" href="/public/css/app.css">
     <link rel="stylesheet" href="/public/css/intro.css">
-    <title>Netfnix</title>
-</head>
 
-<body style="background-color: black">
-<div>
- <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="reverb-key" content="{{ config('reverb.app_key') }}">
-    <meta name="reverb-host" content="{{ config('reverb.host') }}">
-    <meta name="reverb-port" content="{{ config('reverb.port') }}">
-    <meta name="reverb-scheme" content="{{ config('reverb.scheme') }}">
-
-    <style>
+        <style>
         @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
         :root {
@@ -203,6 +195,16 @@
         .info-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
         .info-value { font-size: 14px; font-weight: 500; color: var(--text); }
     </style>
+@endpush
+
+@section('content')
+<body style="background-color: black">
+<div>
+ <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="reverb-key" content="{{ config('reverb.app_key') }}">
+    <meta name="reverb-host" content="{{ config('reverb.host') }}">
+    <meta name="reverb-port" content="{{ config('reverb.port') }}">
+    <meta name="reverb-scheme" content="{{ config('reverb.scheme') }}">
 
     <div class="cw">
         <div class="container-fluid px-4">
@@ -381,6 +383,16 @@
         </div>
     </div>
 
+
+</div>
+</body>
+   @endsection 
+    
+    
+
+
+@push('scripts')
+    <script src="/bootstrapLib/bootstrap.bundle.min.js"></script>
   <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.16.1/dist/echo.iife.js"></script>
   <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
@@ -1121,22 +1133,6 @@
             return !!(type && type.is_couple); 
         }
     </script>
-</div>
-   
-    
-    <script src="/bootstrapLib/bootstrap.bundle.min.js"></script>
 
-    <!-- <script>
-        function reloadPage() {
-            location.reload();
-        }
-
-        setInterval(reloadPage, 3000);
-    </script> -->
-
-</body>
-
-</html>
-
-
+@endpush
 
