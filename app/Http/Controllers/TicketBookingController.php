@@ -180,9 +180,10 @@ class TicketBookingController extends Controller
         );
 
         // Cập nhật status và staff_id
+        // updated_at sẽ tự động được cập nhật khi gọi update()
         $booking->update([
             'status' => $request->status,
-            'staff_id' => $staffId = $request->status == BookingStatus::Available->value ? null : $staffId, // Nếu set lại thành Available thì xóa staff_id
+            'staff_id' => $request->status == BookingStatus::Available->value ? null : $staffId,
         ]);
 
         // Broadcast event để update realtime
@@ -297,7 +298,7 @@ class TicketBookingController extends Controller
             'staff_id' => $staffId,
         ]);
 
-        // Cập nhật bookings
+        // Cập nhật bookings (updated_at sẽ tự động được cập nhật)
         Booking::where('schedule_id', $request->schedule_id)
             ->whereIn('seat_id', $request->seat_ids)
             ->update([
@@ -439,14 +440,55 @@ class TicketBookingController extends Controller
                 ]);
                 broadcast(new \App\Events\PaymentCompleted($ticket));
                 return response()->json(['status' => 'completed', 'ticket' => $ticket]);
-            }
-
-            if ($transactionStatus === 'CANCELLED') {
-                return response()->json(['status' => 'cancelled']);
+            } else if ($transactionStatus === 'CANCELLED' || $transactionStatus === 'EXPIRED') {
+                // Xử lý thanh toán thất bại: reset seat về available, xóa ticket
+                $this->handlePaymentFailed($ticket);
+                return response()->json(['status' => $transactionStatus === 'CANCELLED' ? 'cancelled' : 'expired']);
+            } else {
+                return response()->json(['status' => 'pending']);
             }
         }
 
         return response()->json(['status' => 'pending']);
+    }
+
+    /**
+     * Xử lý khi thanh toán thất bại (hủy, hết hạn)
+     * - Update seat status về available (0)
+     * - staffId = NULL
+     * - ticketId = NULL
+     * - Xóa ticket đã tạo
+     */
+    private function handlePaymentFailed(Ticket $ticket): void
+    {
+        // Lấy tất cả bookings của ticket trước khi xóa ticket_id
+        $bookings = Booking::where('ticket_id', $ticket->id)->get();
+
+        // Update tất cả bookings về available và xóa ticket_id, staff_id, customer_id
+        Booking::where('ticket_id', $ticket->id)->update([
+            'status' => BookingStatus::Available->value,
+            'ticket_id' => null,
+            'staff_id' => null,
+            'customer_id' => null,
+        ]);
+
+        // Broadcast event để cập nhật realtime
+        foreach ($bookings as $booking) {
+            broadcast(new \App\Events\SeatStatusChanged(
+                $booking->schedule_id,
+                $booking->seat_id,
+                BookingStatus::Available->value,
+                null
+            ));
+        }
+
+        // Xóa ticket đã tạo
+        $ticket->delete();
+
+        Log::info('Payment failed: Seats reset to available, ticket deleted', [
+            'ticket_code' => $ticket->code,
+            'seat_count' => $bookings->count(),
+        ]);
     }
 
     /**

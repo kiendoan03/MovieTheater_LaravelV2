@@ -1004,6 +1004,12 @@
                         clearInterval(pollInterval);
                         bootstrap.Modal.getInstance(document.getElementById('payosModal'))?.hide();
                         alert('Thanh toán đã bị hủy. Vui lòng thử lại.');
+                    } else if (data.status === 'expired') {
+                        clearInterval(pollInterval);
+                        bootstrap.Modal.getInstance(document.getElementById('payosModal'))?.hide();
+                        alert('Phiên thanh toán đã hết hạn. Vui lòng thử lại.');
+                    } else {
+                        console.log('⏳ Payment status:', data.status);
                     }
                 })
                 .catch(error => console.error('✗ Poll error:', error));
