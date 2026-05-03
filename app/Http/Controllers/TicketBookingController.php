@@ -264,7 +264,7 @@ class TicketBookingController extends Controller
             ]);
 
         // Broadcast event để update realtime
-       broadcast(new \App\Events\PaymentCompleted($ticket));
+    //    broadcast(new \App\Events\PaymentCompleted($ticket));
         // ))->toOthers();
 
         return response()->json([
