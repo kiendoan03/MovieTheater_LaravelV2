@@ -263,6 +263,10 @@ class TicketBookingController extends Controller
                 'staff_id' => $staffId,
             ]);
 
+        // Broadcast event để update realtime
+       broadcast(new \App\Events\PaymentCompleted($ticket));
+        // ))->toOthers();
+
         return response()->json([
             'message' => 'Tạo vé thành công',
             'ticket' => $ticket,
