@@ -451,6 +451,32 @@
             border-color: var(--border-h);
             color: var(--text);
         }
+
+        /* ── Avatar drop zone ── */
+        .admin-drop-zone {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            border: 2px dashed rgba(232, 201, 106, .25);
+            border-radius: 12px;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: border-color .2s, background .2s;
+            text-align: center;
+            background: rgba(232, 201, 106, .03);
+        }
+        .admin-drop-zone:hover, .admin-drop-zone.drag-over {
+            border-color: rgba(232, 201, 106, .6);
+            background: rgba(232, 201, 106, .06);
+        }
+        .admin-drop-zone.has-file { border-color: rgba(34,197,94,.5); background: rgba(34,197,94,.04); }
+        .drop-main-a { font-size: 13px; color: var(--text); }
+        .drop-main-a u { color: var(--accent); }
+        .drop-sub-a { font-size: 11px; color: var(--muted); }
+        .drop-fname-a { font-size: 12px; color: #4ade80; font-family: 'JetBrains Mono', monospace; margin-top: 4px; word-break: break-all; }
+        .staff-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
     </style>
 
     <div class="cw">
@@ -495,8 +521,12 @@
 
                     {{-- Staff identity chip --}}
                     <div class="staff-identity">
-                        <div class="staff-avatar">
-                            <i class="fa-solid fa-user"></i>
+                        <div class="staff-avatar" id="staffAvatarWrap">
+                            @if ($staff->staff?->avatar)
+                                <img src="{{ asset('storage/img/avatars/' . $staff->staff->avatar) }}" alt="">
+                            @else
+                                <img src="{{ asset('images/default-avatar.png') }}" alt="">
+                            @endif
                         </div>
                         <div class="staff-identity-info">
                             <div class="staff-identity-name">{{ $staff->staff?->name ?? '—' }}</div>
@@ -507,7 +537,7 @@
                         </div>
                     </div>
 
-                    <form method="POST" action="{{ route('admin.accounts.staff.update', $staff) }}" novalidate>
+                    <form method="POST" action="{{ route('admin.accounts.staff.update', $staff) }}" enctype="multipart/form-data" novalidate>
                         @csrf
                         @method('PUT')
 
@@ -588,6 +618,20 @@
                             </div>
                         </div>
 
+                        <div class="mb-3">
+                            <label class="form-label-s">Ảnh đại diện <span style="color:var(--muted);font-size:10px;">(tuỳ chọn)</span></label>
+                            <label for="staffAvatarFile" class="admin-drop-zone" id="staffDropZone">
+                                <i class="fa-solid fa-cloud-arrow-up" style="font-size:20px;color:var(--accent);margin-bottom:6px;"></i>
+                                <span class="drop-main-a">Kéo thả ảnh hoặc <u>chọn file</u></span>
+                                <span class="drop-sub-a">JPG, PNG, GIF, WebP · Tối đa 2MB</span>
+                                <span class="drop-fname-a" id="staffDropFname"></span>
+                            </label>
+                            <input type="file" id="staffAvatarFile" name="avatar" accept="image/*" style="display:none;">
+                            @error('avatar')
+                                <div class="err-msg show">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         <div class="btn-actions">
                             <a href="{{ route('admin.accounts.staff.index') }}" class="btn-cancel">
                                 <i class="fa-solid fa-xmark"></i> Huỷ
@@ -606,3 +650,38 @@
     </div>
 
 @endsection
+
+@push('scripts')
+<script>
+(function () {
+    const fi   = document.getElementById('staffAvatarFile');
+    const dz   = document.getElementById('staffDropZone');
+    const fn   = document.getElementById('staffDropFname');
+    const prev = document.getElementById('staffAvatarWrap');
+
+    function applyPreview(file) {
+        if (!file || !file.type.startsWith('image/')) return;
+        fn.textContent = file.name;
+        dz.classList.add('has-file');
+        const reader = new FileReader();
+        reader.onload = e => {
+            let img = prev.querySelector('img');
+            const icon = prev.querySelector('i');
+            if (icon) icon.remove();
+            if (!img) { img = document.createElement('img'); prev.appendChild(img); }
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    fi.addEventListener('change', () => applyPreview(fi.files[0]));
+    dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+    dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+    dz.addEventListener('drop', e => {
+        e.preventDefault(); dz.classList.remove('drag-over');
+        const file = e.dataTransfer.files[0];
+        if (file) { fi.files = e.dataTransfer.files; applyPreview(file); }
+    });
+})();
+</script>
+@endpush

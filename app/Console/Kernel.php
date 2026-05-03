@@ -14,6 +14,8 @@ class Kernel extends ConsoleKernel
     {
         // Chạy mỗi phút để kiểm tra các đặt ghế quá hạn (5 phút)
         $schedule->command('bookings:cancel-expired --minutes=5')->everyMinute();
+        // Dọn refresh token hết hạn / đã revoke mỗi đêm lúc 3:00 AM
+        $schedule->command('tokens:clean-expired')->dailyAt('03:00');
     }
 
     /**

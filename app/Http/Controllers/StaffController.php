@@ -7,6 +7,7 @@ use App\Models\Account;
 use App\Models\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class StaffController extends Controller
 {
@@ -18,7 +19,7 @@ class StaffController extends Controller
         $staffs = Account::with('staff')
             ->where('role', UserRole::Staff)
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('admin.Account.index-staff', compact('staffs'));
     }
@@ -66,11 +67,19 @@ class StaffController extends Controller
     }
 
     /**
-     * Xem thông tin chi tiết nhân viên (không dùng trong web).
+     * Xem chi tiết nhân viên + lịch sử vé bán (Admin panel).
+     * $id = Account ID
      */
-    public function show(Staff $staff)
+    public function show($id)
     {
-        //
+        $staff = Account::with([
+            'staff',
+            'staff.tickets.bookings.seat.seatType',
+            'staff.tickets.bookings.schedule.movie',
+            'staff.tickets.bookings.schedule.room',
+        ])->findOrFail($id);
+
+        return view('admin.Account.show-staff', compact('staff'));
     }
 
     /**
@@ -91,17 +100,32 @@ class StaffController extends Controller
         $account = Account::findOrFail($id);
 
         $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'phonenumber' => 'required|string|max:20',
-            'address' => 'nullable|string|max:500',
+            'name'          => 'required|string|max:255',
+            'phonenumber'   => 'required|string|max:20',
+            'address'       => 'nullable|string|max:500',
             'date_of_birth' => 'required|date',
+            'avatar'        => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $isActive = $request->boolean('is_active');
         $account->update(['is_active' => $isActive]);
 
         if ($account->staff) {
-            $account->staff->update(array_merge($data, ['is_active' => $isActive]));
+            $avatarPath = $account->staff->avatar;
+
+            if ($request->hasFile('avatar')) {
+                if ($avatarPath) {
+                    Storage::delete('public/img/avatars/' . $avatarPath);
+                }
+                $filename   = time() . '_avatar_' . $request->file('avatar')->getClientOriginalName();
+                Storage::putFileAs('public/img/avatars', $request->file('avatar'), $filename);
+                $avatarPath = $filename;
+            }
+
+            $account->staff->update(array_merge(
+                collect($data)->except('avatar')->toArray(),
+                ['avatar' => $avatarPath, 'is_active' => $isActive]
+            ));
         }
 
         return redirect()->back()->with('success', 'Cập nhật thông tin nhân viên thành công.');

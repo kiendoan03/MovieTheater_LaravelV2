@@ -18,6 +18,7 @@ class Customer extends Model
         'avatar',
         'date_of_birth',
         'account_id',
+        'is_active',
     ];
 
     // Relationships

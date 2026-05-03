@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ActorController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
@@ -12,6 +13,8 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\RoomTypeController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SeatTypeController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\TicketBookingController;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +38,11 @@ Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('regi
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/logout', [AuthController::class, 'logout']);
 
+// Quên mật khẩu (3 bước: email → OTP → đặt lại)
+Route::get('/forgot-password', fn () => view('admin.Auth.forgot-password'))->name('forgot-password');
+Route::get('/forgot-password/otp', fn () => view('admin.Auth.forgot-password-otp'))->name('forgot-password.otp');
+Route::get('/forgot-password/reset', fn () => view('admin.Auth.forgot-password-reset'))->name('forgot-password.reset');
+
 // ==========================================
 // Admin Web Routes — Yêu cầu đăng nhập + role admin
 // ==========================================
@@ -55,9 +63,18 @@ Route::middleware(['jwt.cookie', 'role:admin'])->group(function () {
         Route::get('/', [StaffController::class, 'index'])->name('staff.index');
         Route::get('/create', [StaffController::class, 'create'])->name('staff.create');
         Route::post('/create', [StaffController::class, 'store'])->name('staff.store');
+        Route::get('/{id}', [StaffController::class, 'show'])->name('staff.show');
         Route::get('/{id}/edit', [StaffController::class, 'edit'])->name('staff.edit');
         Route::put('/{id}/edit', [StaffController::class, 'update'])->name('staff.update');
         Route::delete('/{id}/delete', [StaffController::class, 'destroy'])->name('staff.destroy');
+    });
+
+    Route::prefix('Admin/Customer')->name('admin.accounts.')->group(function () {
+        Route::get('/', [CustomerController::class, 'index'])->name('customer.index');
+        Route::get('/{id}', [CustomerController::class, 'show'])->name('customer.show');
+        Route::get('/{id}/edit', [CustomerController::class, 'edit'])->name('customer.edit');
+        Route::put('/{id}/edit', [CustomerController::class, 'update'])->name('customer.update');
+        Route::delete('/{id}/delete', [CustomerController::class, 'destroy'])->name('customer.destroy');
     });
 
     Route::prefix('Admin/Category')->name('admin.')->group(function () {
@@ -150,7 +167,12 @@ Route::middleware(['jwt.cookie', 'role:staff,admin'])->group(function () {
 
 // cho khách cần auth
 Route::middleware(['jwt.cookie', 'role:customer'])->group(function () {
-    Route::prefix('customer')->name('customer.')->group(function () {});
+    Route::prefix('customer')->name('customer.')->group(function () {
+        // Profile cá nhân
+        Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
+    });
 
 });
 
@@ -158,7 +180,7 @@ Route::middleware(['jwt.cookie', 'role:customer'])->group(function () {
 // Customer web routes
 // ==========================================
 Route::prefix('/')->group(function () {
-    Route::get('/', [MovieController::class, 'show'])->name('index');
+    Route::get('/', [MovieController::class, 'show'])->name('home');
     Route::get('/search', [MovieController::class, 'search'])->name('movies.search');
     Route::get('/{movie_actor}/actor', [ActorController::class, 'show'])->name('actor');
     Route::get('/{movie_director}/director', [DirectorController::class, 'show'])->name('director');
@@ -168,3 +190,9 @@ Route::prefix('/')->group(function () {
 // PayOs Webhook (Public - không cần auth, đã exclude CSRF)
 // ==========================================
 Route::post('/webhook/payos', [PayOsWebhookController::class, 'handle']);
+
+// Change password
+Route::middleware(['jwt.cookie'])->group(function () {
+    Route::get('/change-password', [AccountController::class, 'changePasswordForm'])->name('change-password');
+    Route::post('/change-password', [AccountController::class, 'changePassword'])->name('change-password');
+});

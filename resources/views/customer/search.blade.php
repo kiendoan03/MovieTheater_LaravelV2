@@ -97,313 +97,6 @@
         box-shadow: 0 18px 35px rgba(255, 31, 69, .38);
     }
 
-    /* ===== CARD ===== */
-
-    .movie-card {
-        position: relative;
-
-        overflow: hidden;
-
-        border-radius: 20px;
-
-        background:
-            linear-gradient(180deg,
-                rgba(255, 255, 255, .02),
-                rgba(255, 255, 255, .01));
-
-        border: 1px solid rgba(255, 255, 255, .06);
-
-        height: 330px;
-
-        transition: .35s;
-
-        z-index: 1;
-
-        box-shadow:
-            0 10px 25px rgba(0, 0, 0, .35),
-            inset 0 1px 0 rgba(255, 255, 255, .03);
-    }
-
-    .movie-card::before {
-        content: "";
-
-        position: absolute;
-        inset: 0;
-
-        border-radius: 20px;
-
-        padding: 1px;
-
-        background:
-            linear-gradient(135deg,
-                rgba(255, 255, 255, .18),
-                rgba(255, 255, 255, .02));
-
-        -webkit-mask:
-            linear-gradient(#fff 0 0) content-box,
-            linear-gradient(#fff 0 0);
-
-        -webkit-mask-composite: xor;
-
-        mask-composite: exclude;
-
-        opacity: 0;
-
-        transition: .35s;
-
-        z-index: 3;
-
-        pointer-events: none;
-    }
-
-    .movie-card:hover::before {
-        opacity: 1;
-    }
-
-    .movie-card:hover {
-        transform: translateY(-6px);
-
-        box-shadow:
-            0 20px 45px rgba(0, 0, 0, .5),
-            0 0 25px rgba(255, 31, 69, .15);
-    }
-
-    .movie-card img {
-        width: 100%;
-        height: 100%;
-
-        object-fit: cover;
-
-        display: block;
-
-        transition: .55s;
-
-        pointer-events: none;
-
-        user-select: none;
-    }
-
-    .movie-card:hover img {
-        transform: scale(1.08);
-    }
-
-    .movie-overlay {
-        position: absolute;
-        inset: 0;
-
-        z-index: 5;
-
-        background:
-            linear-gradient(to top,
-                rgba(0, 0, 0, .98) 8%,
-                rgba(0, 0, 0, .55) 40%,
-                rgba(0, 0, 0, .1) 100%);
-
-        padding: 16px;
-
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-    }
-
-    .movie-name {
-        font-size: 16px;
-
-        font-weight: 700;
-
-        line-height: 1.35;
-
-        font-family: 'Montserrat', sans-serif;
-
-        transition: .3s;
-
-        margin-bottom: 8px;
-
-        color: #fff;
-    }
-
-    .movie-card:hover .movie-name {
-        color: #ff4f72;
-    }
-
-    .movie-meta {
-        color: #d4d4d8;
-
-        font-size: 11px;
-
-        margin-bottom: 12px;
-
-        line-height: 1.6;
-    }
-
-    .movie-actions {
-        display: flex;
-
-        justify-content: center;
-
-        align-items: center;
-
-        gap: 10px;
-
-        width: 100%;
-    }
-
-    .btn-play,
-    .btn-detail {
-        border: none;
-
-        border-radius: 999px;
-
-        padding: 8px 12px;
-
-        font-size: 11px;
-
-        font-weight: 600;
-
-        transition: .25s;
-
-        flex: 1;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        gap: 6px;
-
-        text-align: center;
-
-        min-width: 0;
-    }
-
-    .btn-play {
-        background:
-            linear-gradient(135deg,
-                #ff1f45,
-                #ff4d6d);
-
-        color: #fff;
-
-        box-shadow:
-            0 10px 20px rgba(255, 31, 69, .35);
-    }
-
-    .btn-play:hover {
-        transform: translateY(-2px);
-
-        box-shadow:
-            0 14px 26px rgba(255, 31, 69, .5);
-    }
-
-    .btn-detail {
-        background:
-            linear-gradient(135deg,
-                rgba(255, 255, 255, .08),
-                rgba(255, 255, 255, .15));
-
-        color: #fff;
-
-        box-shadow:
-            0 8px 18px rgba(255, 255, 255, .08);
-    }
-
-    .btn-detail:hover {
-        transform: translateY(-2px);
-
-        background: rgba(255, 255, 255, .20);
-
-        box-shadow:
-            0 15px 35px rgba(255, 255, 255, .18);
-    }
-
-    /* ===== 5 CARD / ROW ===== */
-
-    .custom-col-5 {
-        flex: 0 0 20%;
-        max-width: 20%;
-        padding: 0 10px;
-    }
-
-    .empty-box {
-        text-align: center;
-        padding: 90px 20px;
-        border-radius: 28px;
-        background: rgba(255, 255, 255, .03);
-        border: 1px solid rgba(255, 255, 255, .06);
-        color: #9f9f9f;
-    }
-
-    .sw-pagination {
-        display: flex;
-
-        justify-content: center;
-        align-items: center;
-
-        gap: 8px;
-
-        margin-top: 50px;
-
-        flex-wrap: wrap;
-    }
-
-    .sw-pagination .page-link {
-        min-width: 42px;
-        height: 42px;
-
-        padding: 0 14px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        border-radius: 14px;
-
-        text-decoration: none;
-
-        font-size: 13px;
-        font-weight: 600;
-
-        color: #d4d4d8;
-
-        background: rgba(255, 255, 255, .04);
-
-        border: 1px solid rgba(255, 255, 255, .08);
-
-        backdrop-filter: blur(12px);
-
-        transition: .25s;
-    }
-
-    .sw-pagination .page-link:hover {
-        transform: translateY(-2px);
-
-        color: #fff;
-
-        border-color: rgba(255, 31, 69, .35);
-
-        box-shadow:
-            0 10px 20px rgba(255, 31, 69, .18);
-    }
-
-    .sw-pagination .page-link.active {
-        color: #fff;
-
-        border-color: transparent;
-
-        background:
-            linear-gradient(135deg,
-                #ff1f45,
-                #ff4d6d);
-
-        box-shadow:
-            0 12px 24px rgba(255, 31, 69, .35);
-    }
-
-    .sw-pagination .opacity-50 {
-        opacity: .45;
-
-        pointer-events: none;
-    }
-
     .genre-wrapper {
         position: relative;
         z-index: 9999;
@@ -503,79 +196,132 @@
         background: rgba(255, 31, 69, .18);
         color: #ff6f8d;
     }
-
-    .movie-card,
-    .movie-overlay,
-    .movie-name,
-    .movie-meta,
-    .movie-actions,
-    .search-title,
-    .search-sub,
-    .empty-box {
-        cursor: default;
+    .movie-box {
+    transition: .35s;
+    width: 100%;
     }
 
-    @media(max-width:1200px) {
-
-        .custom-col-5 {
-            flex: 0 0 25%;
-            max-width: 25%;
-        }
-
-        .movie-card {
-            height: 300px;
-        }
+    .movie-img {
+        width: 100%;
+        height: 180px;
+        border-radius: 10px;
+        object-fit: cover;
+        opacity: .9;
+        box-shadow:
+            #fff 0px 5px 15px;
+        transition:
+            transform .35s ease,
+            box-shadow .35s ease,
+            opacity .35s ease;
     }
 
-    @media(max-width:992px) {
+    .movie-box:hover .movie-img {
 
-        .search-title {
-            font-size: 32px;
-        }
+        transform:
+            scale(1.05)
+            translateY(-5px);
 
-        .custom-col-5 {
-            flex: 0 0 33.3333%;
-            max-width: 33.3333%;
-        }
+        opacity: 1;
 
-        .movie-card {
-            height: 290px;
-        }
+        box-shadow:
+            0 10px 30px rgba(255,255,255,.35),
+            0 0 25px rgba(255,255,255,.15);
     }
+
+    .movie-content {
+        padding-top: 12px;
+    }
+
+    .movie-name {
+        font-size: .9rem;
+        color: #f5f5f5;
+        font-weight: 500;
+        letter-spacing: .2px;
+        }
 
     @media(max-width:768px) {
 
-        .search-filter {
-            padding: 22px;
-        }
+    .movie-img {
+        height: 160px;
+    }
 
-        .search-title {
-            font-size: 28px;
-        }
-
-        .custom-col-5 {
-            flex: 0 0 50%;
-            max-width: 50%;
-        }
-
-        .movie-card {
-            height: 270px;
-        }
-
-        .movie-name {
-            font-size: 14px;
-        }
-
-        .btn-play,
-        .btn-detail {
-            padding: 7px 10px;
-            font-size: 10px;
-        }
-
-        .movie-meta {
-            font-size: 10px;
+    .movie-name {
+        font-size: .95rem;
         }
     }
+    
+    .sw-pagination {
+        display: flex;
+
+        justify-content: center;
+        align-items: center;
+
+        gap: 8px;
+
+        margin-top: 50px;
+
+        flex-wrap: wrap;
+    }
+
+    .sw-pagination .page-link {
+        min-width: 42px;
+        height: 42px;
+
+        padding: 0 14px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 14px;
+
+        text-decoration: none;
+
+        font-size: 13px;
+        font-weight: 600;
+
+        color: #d4d4d8;
+
+        background: rgba(255, 255, 255, .04);
+
+        border: 1px solid rgba(255, 255, 255, .08);
+
+        backdrop-filter: blur(12px);
+
+        transition: .25s;
+    }
+
+    .sw-pagination .page-link:hover {
+        transform: translateY(-2px);
+
+        color: #fff;
+
+        border-color: rgba(255, 31, 69, .35);
+
+        box-shadow:
+            0 10px 20px rgba(255, 31, 69, .18);
+    }
+
+    .sw-pagination .page-link.active {
+        color: #fff;
+
+        border-color: transparent;
+
+        background:
+            linear-gradient(135deg,
+                #ff1f45,
+                #ff4d6d);
+
+        box-shadow:
+            0 12px 24px rgba(255, 31, 69, .35);
+    }
+
+    .sw-pagination .opacity-50 {
+        opacity: .45;
+
+        pointer-events: none;
+    }
+
 </style>
 
 @endpush
@@ -717,55 +463,26 @@
 
     </div>
 
-    <div class="row g-4">
+<section>
+    <div class="row gx-5 gy-5 mt-5">
 
         @forelse($movies as $movie)
 
-        <div class="col-6 col-md-4 col-lg-3 custom-col-5">
-            <div class="movie-card">
+        <div class="col-3 mb-5">
 
-                <img
-                    src="{{ asset('storage/img/movie_poster/' . $movie->poster) }}"
-                    alt="{{ $movie->movie_name }}">
+            <div class="movie-box">
 
-                <div class="movie-overlay">
+                <a href="">
+                    <img
+                        src="{{ asset('storage/img/movie_thumbnail/' . $movie->thumbnail) }}"
+                        class="movie-img"
+                        alt="">
+                </a>
 
-                    <div class="movie-name">
+                <div class="movie-content">
+                    <span class="movie-name">
                         {{ $movie->movie_name }}
-                    </div>
-
-                    <div class="movie-meta">
-
-                        ⭐ {{ $movie->rating }}
-
-                        &nbsp; • &nbsp;
-
-                        {{ $movie->length }} phút
-
-                        &nbsp; • &nbsp;
-
-                        {{ $movie->country }}
-
-                    </div>
-
-                    <div class="movie-actions">
-
-                        <button class="btn-play">
-
-                            <i class="fa-solid fa-play"></i>
-                            Xem ngay
-
-                        </button>
-
-                        <button class="btn-detail">
-
-                            <i class="fa-solid fa-circle-info"></i>
-                            Chi tiết
-
-                        </button>
-
-                    </div>
-
+                    </span>
                 </div>
 
             </div>
@@ -793,6 +510,9 @@
         @endforelse
 
     </div>
+</section>
+
+
     {{-- PAGINATION --}}
     @if($movies->hasPages())
 
@@ -943,33 +663,6 @@
         });
     });
 
-    updatePlaceholder();
-    genreSearch.value = '';
-
-    /* CARET HANDLING (giữ nguyên logic nhưng gọn) */
-    genreSearch.addEventListener('focus', () => {
-        genreSearch.style.caretColor = 'auto';
-    });
-
-    genreSearch.addEventListener('blur', () => {
-        genreSearch.style.caretColor = 'transparent';
-    });
-
-    /* GỘP 2 document click handler → 1 handler duy nhất */
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.genre-wrapper')) {
-            genreDropdown.classList.remove('active');
-            genreSearch.blur();
-            return;
-        }
-
-        const isInput = e.target.closest('input, textarea, [contenteditable]');
-        if (isInput) {
-            e.target.focus({
-                preventScroll: true
-            });
-        }
-    });
 </script>
 
 @endpush
