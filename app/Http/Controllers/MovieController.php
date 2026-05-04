@@ -191,13 +191,12 @@ class MovieController extends Controller
         $movie_show = Movie::whereDate('release_date', '<=', now())
             ->whereDate('end_date', '>=', now())
             ->orderBy('release_date', 'desc')
-            ->take(10)
             ->get();
 
         // phim sắp chiếu
         $upcoming_movies = Movie::whereDate('release_date', '>', now())
             ->orderBy('release_date', 'asc')
-            ->take(8)
+            ->take(6)
             ->get();
 
         // TOP phim
@@ -215,6 +214,19 @@ class MovieController extends Controller
             'top_movies' => $top_movies,
         ]);
     }
+    public function loadMoreUpcoming(Request $request)
+    {
+        $offset = $request->offset ?? 0;
+
+        $movies = Movie::whereDate('release_date', '>', now())
+            ->orderBy('release_date', 'asc')
+            ->skip($offset)
+            ->take(6)
+            ->get();
+
+        return response()->json($movies);
+    }
+    
     public function edit(Movie $movie)
     {
         $actors = Actor::orderBy('name')->get();
