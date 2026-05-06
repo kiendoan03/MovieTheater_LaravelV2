@@ -282,25 +282,37 @@
                 </div>
             </div>
             
-            <div class="row mt-3 mb-5">
+            <div id="upcoming-list" class="row mt-3 mb-5 g-4">
                 @foreach($upcoming_movies as $movie)
-                        <div class="col-3 mb-5">
-                            <div class="card" style="width: 23vmax;">
-                                    <a href="">
-                                        <img src="{{ asset('storage/img/movie_thumbnail/' . $movie->thumbnail) }}" class="card-img-top object-fit-cover " style ="opacity:0.9; border-radius :1vmax" alt="...">
-                                    </a>
+
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="card upcoming-card">
+                            <div class="thumb-wrapper">
+                                <img 
+                                    src="{{ Str::startsWith($movie->thumbnail, 'http') 
+                                        ? $movie->thumbnail 
+                                        : asset('storage/img/movie_thumbnail/' . $movie->thumbnail) 
+                                    }}">
                             </div>
                         </div>
+                    </div>
+
                 @endforeach
-            </div>          
+            </div>  
+            <div class="text-center mb-5">
+                <button id="loadMoreBtn" class="btn btn-danger">Xem thêm</button>
+                <p id="noMoreText" class="text-light mt-3" style="display:none;">
+                    Không còn bộ phim nào sắp được công chiếu
+                </p>
+            </div>
 
         </section>
 
     </div>
 @endsection 
 @push('scripts')
-    
 
+    <script src="{{ asset('js/load_more_upcoming_movies.js') }}"></script>
     <script src="{{ asset('js/home_slider.js') }}"></script>
     <script src="{{ asset('js/intro.js') }}"></script>
 
