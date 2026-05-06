@@ -179,14 +179,22 @@
             </a>
 
             <div class="dropdown">
-                <img class="user-avatar" src="https://ui-avatars.com/api/?name=Admin&background=1a1e28&color=e8c96a"
+                @php
+                    $authUser = auth('api')->user();
+                    $avatarName = $authUser ? ucfirst($authUser->role->name) : 'User';
+                @endphp
+                <img class="user-avatar"
+                    src="https://ui-avatars.com/api/?name={{ urlencode($avatarName) }}&background=1a1e28&color=e8c96a"
                     data-bs-toggle="dropdown">
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#"><i class="fa-regular fa-user me-2"></i> Profile</a></li>
+                    <li><a class="dropdown-item" href="{{ route('admin.profile') }}"><i
+                                class="fa-regular fa-user me-2"></i> Thông tin cá nhân</a></li>
+                    <li><a class="dropdown-item" href="{{ route('change-password') }}"><i
+                                class="fa-solid fa-key me-2"></i> Đổi mật khẩu</a></li>
                     <li>
                         <hr class="dropdown-divider border-secondary">
                     </li>
-                    <li><a class="dropdown-item text-danger" href="/logout"><i
+                    <li><a class="dropdown-item text-danger" href="{{ route('logout') }}"><i
                                 class="fa-solid fa-arrow-right-from-bracket me-2"></i> Logout</a></li>
                 </ul>
             </div>
@@ -198,35 +206,38 @@
             <div class="col-lg-3 d-none d-lg-block">
                 <div id="sidebar">
                     <div class="nav-label">Core</div>
-                    <a href="#" class="nav-link" data-id="dashboard"><i class="fa-solid fa-chart-pie"></i>
-                        Dashboard</a>
                     <a href="{{ route('admin.ticket-booking.index') }}" class="nav-link" data-id="ticket-booking"><i
                             class="fa-solid fa-ticket"></i> Ticket Booking</a>
 
-                    <div class="nav-label">Management</div>
-                    <a href="{{ route('admin.accounts.staff.index') }}" class="nav-link" data-id="staffs"><i
-                            class="fa-solid fa-user-shield"></i>
-                        Staffs</a>
-                    <a href="{{ route('admin.accounts.customer.index') }}" class="nav-link" data-id="customers"><i class="fa-solid fa-users"></i>
-                        Customers</a>
-                    <a href="{{ route('admin.categories.index') }}" class="nav-link" data-id="genre"><i
-                            class="fa-solid fa-tags"></i> Film Genre</a>
-                    <a href="{{ route('admin.movies.index') }}" class="nav-link" data-id="movies"><i
-                            class="fa-solid fa-film"></i> Movies</a>
-                    <a href="{{ route('admin.rooms.index') }}" class="nav-link" data-id="rooms"><i
-                            class="fa-solid fa-door-open"></i> Rooms</a>
-                    <a href="{{ route('admin.schedules.index') }}" class="nav-link" data-id="schedules"><i
-                            class="fa-solid fa-calendar-days"></i> Schedules</a>
+                    @if (auth('api')->user() && auth('api')->user()->role === \App\Enums\UserRole::Admin)
+                        <a href="#" class="nav-link" data-id="dashboard"><i class="fa-solid fa-chart-pie"></i>
+                            Dashboard</a>
+                        <div class="nav-label">Management</div>
+                        <a href="{{ route('admin.accounts.staff.index') }}" class="nav-link" data-id="staffs"><i
+                                class="fa-solid fa-user-shield"></i>
+                            Staffs</a>
+                        <a href="{{ route('admin.accounts.customer.index') }}" class="nav-link" data-id="customers"><i
+                                class="fa-solid fa-users"></i>
+                            Customers</a>
+                        <a href="{{ route('admin.categories.index') }}" class="nav-link" data-id="genre"><i
+                                class="fa-solid fa-tags"></i> Film Genre</a>
+                        <a href="{{ route('admin.movies.index') }}" class="nav-link" data-id="movies"><i
+                                class="fa-solid fa-film"></i> Movies</a>
+                        <a href="{{ route('admin.rooms.index') }}" class="nav-link" data-id="rooms"><i
+                                class="fa-solid fa-door-open"></i> Rooms</a>
+                        <a href="{{ route('admin.schedules.index') }}" class="nav-link" data-id="schedules"><i
+                                class="fa-solid fa-calendar-days"></i> Schedules</a>
 
-                    <div class="nav-label">Data</div>
-                    <a href="{{ route('admin.room_types.index') }}" class="nav-link" data-id="room-types"><i
-                            class="fa-solid fa-door-closed"></i> Room Types</a>
-                    <a href="{{ route('admin.seat_types.index') }}" class="nav-link" data-id="seat-types"><i
-                            class="fa-solid fa-chair"></i> Seat Types</a>
-                    <a href="{{ route('admin.actors.index') }}" class="nav-link" data-id="actors"><i
-                            class="fa-solid fa-masks-theater"></i> Actors</a>
-                    <a href="{{ route('admin.directors.index') }}" class="nav-link" data-id="directors"><i
-                            class="fa-solid fa-clapperboard"></i> Directors</a>
+                        <div class="nav-label">Data</div>
+                        <a href="{{ route('admin.room_types.index') }}" class="nav-link" data-id="room-types"><i
+                                class="fa-solid fa-door-closed"></i> Room Types</a>
+                        <a href="{{ route('admin.seat_types.index') }}" class="nav-link" data-id="seat-types"><i
+                                class="fa-solid fa-chair"></i> Seat Types</a>
+                        <a href="{{ route('admin.actors.index') }}" class="nav-link" data-id="actors"><i
+                                class="fa-solid fa-masks-theater"></i> Actors</a>
+                        <a href="{{ route('admin.directors.index') }}" class="nav-link" data-id="directors"><i
+                                class="fa-solid fa-clapperboard"></i> Directors</a>
+                    @endif
                 </div>
             </div>
 

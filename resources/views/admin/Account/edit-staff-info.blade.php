@@ -489,9 +489,7 @@
 
                 <div class="staff-card">
 
-                    <div class="admin-badge">
-                        <i class="fa-solid fa-shield-halved"></i> Admin Panel
-                    </div>
+
 
                     <div class="brand-logo"><i class="fa-solid fa-clapperboard"></i> &nbsp;NETFNIX Cinema</div>
                     <h2 class="brand-title">Chỉnh sửa nhân viên</h2>
