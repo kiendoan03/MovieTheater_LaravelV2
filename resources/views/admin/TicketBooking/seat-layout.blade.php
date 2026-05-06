@@ -486,6 +486,7 @@
                 seatsWrapper.className = 'row-seats-wrapper';
 
                 const seatsInRow = rowMap.get(rowNum).sort((a, b) => a.column - b.column);
+                let seatNumber = 0;
 
                 seatsInRow.forEach((seat, idx) => { 
                     // Lối đi
@@ -497,7 +498,7 @@
                     }
 
                     // ── Couple seat: chèn gap trước mỗi ghế chẵn (đầu cặp mới) ──
-                    if (isCoupleType(seat.type_id) && seat.column % 2 === 1 && idx > 0) {
+                    else if (isCoupleType(seat.type_id) && seat.column % 2 === 1 && idx > 0) {
                         // Tìm seat trước (không phải aisle) để kiểm tra có phải cặp kế tiếp không
                         const prevSeat = seatsInRow[idx - 1];
                         if (prevSeat && prevSeat.type_id && isCoupleType(prevSeat.type_id)) {
@@ -506,16 +507,19 @@
                             seatsWrapper.appendChild(gap);
                         }
                     }
-
+ 
+                    else{
+                        seatNumber++;
+                    }
                     // Ghế thường
                     const seatEl = document.createElement('div');
                     seatEl.className = 'seat';
                     seatEl.id = `seat-${seat.id}`;
 
-                    const label = String.fromCharCode(64 + seat.row) + seat.column;
+                    const label = String.fromCharCode(64 + seat.row) + (!isCoupleType(seat.type_id) ? `${seatNumber}` : seat.column);
                     seatEl.textContent = label;
                     seatEl.title = `${label} · ${seat.type_name} · ${formatCurrency(seat.price)}`;
-
+                    seat.label = label; // Gán label cho đối tượng ghế để dễ truy cập sau này
                     const color = seat.color || '#6b7280';
 
                     // Booking status
@@ -697,7 +701,8 @@
         function _toggleSingleSeat(seat) {
             const seatEl = document.getElementById(`seat-${seat.id}`);
             const color  = seat.color || '#6b7280';
-            const label  = String.fromCharCode(64 + seat.row) + seat.column;
+            // const label  = String.fromCharCode(64 + seat.row) + seat.column;
+            const label  = seat.label || (String.fromCharCode(64 + seat.row) + seat.column);
 
             if (selectedSeats.has(seat.id)) {
                 selectedSeats.delete(seat.id);
@@ -743,19 +748,24 @@
             const list = document.getElementById('selectedSeats');
             
             console.log(`📋 SELECTED SEATS (${selectedSeats.size}):`, 
-                Array.from(selectedSeats.values()).map(s => `${getRowLabel(s.row)}${s.column}`).join(', ') || 'None'
+                // Array.from(selectedSeats.values()).map(s => `${getRowLabel(s.row)}${s.column}`).join(', ') || 'None'
+                Array.from(selectedSeats.values()).map(s => s.label).join(', ') || 'None'
             );
             
             if (selectedSeats.size === 0) {
                 list.innerHTML = '<small style="color:var(--muted);">Chưa chọn ghế nào</small>';
             } else {
+                // const badges = Array.from(selectedSeats.values())
+                //     .sort((a, b) => {
+                //         const aPos = getRowLabel(a.row) + String(a.column).padStart(2, '0');
+                //         const bPos = getRowLabel(b.row) + String(b.column).padStart(2, '0');
+                //         return aPos.localeCompare(bPos);
+                //     })
+                //     .map(s => `<span class="seat-badge">${getRowLabel(s.row)}${s.column}</span>`)
+                //     .join('');
                 const badges = Array.from(selectedSeats.values())
-                    .sort((a, b) => {
-                        const aPos = getRowLabel(a.row) + String(a.column).padStart(2, '0');
-                        const bPos = getRowLabel(b.row) + String(b.column).padStart(2, '0');
-                        return aPos.localeCompare(bPos);
-                    })
-                    .map(s => `<span class="seat-badge">${getRowLabel(s.row)}${s.column}</span>`)
+                    .sort((a, b) => a.label.localeCompare(b.label))
+                    .map(s => `<span class="seat-badge">${s.label}</span>`)
                     .join('');
                 list.innerHTML = badges;
             }
@@ -797,7 +807,8 @@
             allSeats.set(seatId, seat);
 
             const color = seat.color || '#6b7280';
-            const label = String.fromCharCode(64 + seat.row) + seat.column;
+            // const label = String.fromCharCode(64 + seat.row) + seat.column;
+            const label = seat.label || (String.fromCharCode(64 + seat.row) + seat.column);
             const isOccupied = newStatus === 2 || (newStatus === 1 && staffId !== currentStaffId);
             const isMine     = newStatus === 1 && staffId === currentStaffId;
 
@@ -848,7 +859,8 @@
 
             const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
             const seatIds = Array.from(selectedSeats.keys());
-            const seatNames = Array.from(selectedSeats.values()).map(s => `${getRowLabel(s.row)}${s.column}`).join(', ');
+            // const seatNames = Array.from(selectedSeats.values()).map(s => `${getRowLabel(s.row)}${s.column}`).join(', ');
+            const seatNames = Array.from(selectedSeats.values()).map(s => s.label).join(', ');
             const totalPrice = Array.from(selectedSeats.values()).reduce((sum, s) => sum + s.price, 0);
 
             console.log(`💳 PAYMENT PROCESS:`, {
@@ -1004,6 +1016,12 @@
                         clearInterval(pollInterval);
                         bootstrap.Modal.getInstance(document.getElementById('payosModal'))?.hide();
                         alert('Thanh toán đã bị hủy. Vui lòng thử lại.');
+                    } else if (data.status === 'expired') {
+                        clearInterval(pollInterval);
+                        bootstrap.Modal.getInstance(document.getElementById('payosModal'))?.hide();
+                        alert('Phiên thanh toán đã hết hạn. Vui lòng thử lại.');
+                    } else {
+                        console.log('⏳ Payment status:', data.status);
                     }
                 })
                 .catch(error => console.error('✗ Poll error:', error));
@@ -1023,9 +1041,19 @@
                 return response.json();
             })
             .then(data => {
+                data.bookings.forEach(b => {
+                    const selected = selectedSeats.get(b.seat.id);
+
+                    if (selected && selected.label) {
+                        b.seat.label = selected.label;
+                    } else {
+                        // fallback (trường hợp reload / realtime)
+                        b.seat.label = String.fromCharCode(64 + b.seat.row) + b.seat.column;
+                    }
+                });
                 showTicketModal(data);
                 selectedSeats.clear();
-                loadSeats();
+                setTimeout(loadSeats, 200);
             })
             .catch(error => {
                 console.error('✗ Error:', error);
@@ -1036,9 +1064,12 @@
         function showTicketModal(data) {
             const ticket = data.ticket;
             const bookings = data.bookings;
+            // let seatsHtml = bookings.map(b =>
+            //     `<span class="seat-badge">${getRowLabel(b.seat.row)}${b.seat.column}</span>`
+            // ).join('');
 
             let seatsHtml = bookings.map(b =>
-                `<span class="seat-badge">${getRowLabel(b.seat.row)}${b.seat.column}</span>`
+                `<span class="seat-badge">${b.seat.label}</span>`
             ).join('');
 
             const html = `
