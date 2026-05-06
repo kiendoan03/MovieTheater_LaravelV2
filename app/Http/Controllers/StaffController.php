@@ -39,7 +39,6 @@ class StaffController extends Controller
     {
         $data = $request->validate([
             'email' => 'required|email|unique:accounts,email',
-            'password' => 'required|string|min:6|confirmed',
             'name' => 'required|string|max:255',
             'phonenumber' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:500',
@@ -49,8 +48,9 @@ class StaffController extends Controller
         DB::transaction(function () use ($data) {
             $account = Account::create([
                 'email' => $data['email'],
-                'password' => $data['password'],
+                'password' => 'Abc@123456', // Mật khẩu mặc định như thông báo ở View
                 'role' => UserRole::Staff,
+                'is_active' => true,
             ]);
 
             Staff::create([
@@ -100,11 +100,11 @@ class StaffController extends Controller
         $account = Account::findOrFail($id);
 
         $data = $request->validate([
-            'name'          => 'required|string|max:255',
-            'phonenumber'   => 'required|string|max:20',
-            'address'       => 'nullable|string|max:500',
+            'name' => 'required|string|max:255',
+            'phonenumber' => 'required|string|max:20',
+            'address' => 'nullable|string|max:500',
             'date_of_birth' => 'required|date',
-            'avatar'        => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $isActive = $request->boolean('is_active');
@@ -115,9 +115,9 @@ class StaffController extends Controller
 
             if ($request->hasFile('avatar')) {
                 if ($avatarPath) {
-                    Storage::delete('public/img/avatars/' . $avatarPath);
+                    Storage::delete('public/img/avatars/'.$avatarPath);
                 }
-                $filename   = time() . '_avatar_' . $request->file('avatar')->getClientOriginalName();
+                $filename = time().'_avatar_'.$request->file('avatar')->getClientOriginalName();
                 Storage::putFileAs('public/img/avatars', $request->file('avatar'), $filename);
                 $avatarPath = $filename;
             }
