@@ -27,16 +27,16 @@ class TicketBookingCustomerController extends Controller
      */
     public function index()
     {
-        $now = Carbon::now();
+        // $now = Carbon::now();
 
-        // Lấy phim có lịch chiếu hiện tại hoặc tương lai
-        $movies = Movie::whereHas('schedules', function ($query) use ($now) {
-            $query->where('start_time', '>=', $now);
-        })
-            ->orderBy('movie_name')
-            ->get();
+        // // Lấy phim có lịch chiếu hiện tại hoặc tương lai
+        // $movies = Movie::whereHas('schedules', function ($query) use ($now) {
+        //     $query->where('start_time', '>=', $now);
+        // })
+        //     ->orderBy('movie_name')
+        //     ->get();
 
-        return view('admin.TicketBooking.movies-list', compact('movies'));
+        // return view('admin.TicketBooking.movies-list', compact('movies'));
     }
 
     /**
@@ -144,6 +144,7 @@ class TicketBookingCustomerController extends Controller
         return response()->json([
             'schedule_id' => $schedule->id,
             'movie_name' => $schedule->movie->movie_name,
+            'poster' => $schedule->movie->poster,
             'start_time' => $schedule->start_time->format('H:i'),
             'room_name' => $schedule->room->room_name,
             'seats' => $seats,
@@ -163,7 +164,7 @@ class TicketBookingCustomerController extends Controller
 
         $user = auth('api')->user();
         $customerId = $user?->customer?->id ?? $user?->id;
-
+        
         if (! $customerId) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
@@ -186,7 +187,7 @@ class TicketBookingCustomerController extends Controller
         ]);
 
         // Broadcast event để update realtime
-        broadcast(new \App\Events\SeatStatusChanged(
+        broadcast(new \App\Events\SeatStatusChangedCustomer(
             $request->schedule_id,
             $request->seat_id,
             $request->status,
@@ -250,7 +251,7 @@ class TicketBookingCustomerController extends Controller
             'code' => 'TK'.time().random_int(1000, 9999),
             'final_price' => $total,
             'customer_id' => $customerId,
-            'customer_id' => null, // Không có customer (đặt tại quầy)
+            // 'customer_id' => null, // Không có customer (đặt tại quầy)
         ]);
 
         // Update bookings
@@ -271,71 +272,70 @@ class TicketBookingCustomerController extends Controller
     /**
      * Khởi tạo thanh toán qua PayOs
      */
-    public function initPaymentPayOs(Request $request)
-    {
-        $request->validate([
-            'schedule_id' => 'required|exists:schedules,id',
-            'seat_ids' => 'required|array',
-            'seat_ids.*' => 'exists:seats,id',
-        ]);
+public function initPaymentPayOs(Request $request)
+{
+    $request->validate([
+        'schedule_id' => 'required|exists:schedules,id',
+        'seat_ids'    => 'required|array',
+        'seat_ids.*'  => 'exists:seats,id',
+    ]);
 
-        // Support both staff guard (session) and api guard (JWT)
-        $customerId = $this->resolveCustomerId();
-        if (! $customerId) {
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
+    // ✅ Không bắt buộc login — khách vãng lai vẫn đặt được
+    $customerId = $this->resolveCustomerId(); // null nếu chưa login, không chặn
 
-        // Tính tổng tiền
-        $total = Seat::whereIn('seats.id', $request->seat_ids)
-            ->join('seat_types', 'seats.type_id', '=', 'seat_types.id')
-            ->sum('seat_types.price');
+    $total = Seat::whereIn('seats.id', $request->seat_ids)
+        ->join('seat_types', 'seats.type_id', '=', 'seat_types.id')
+        ->sum('seat_types.price');
 
-        // Tạo ticket (chưa thanh toán)
-        $ticket = Ticket::create([
-            'code' => 'TK'.time().random_int(1000, 9999),
-            'final_price' => $total,
+    $ticket = Ticket::create([
+        'code'        => 'TK' . time() . random_int(1000, 9999),
+        'final_price' => $total,
+        'customer_id' => $customerId, // null nếu khách vãng lai — OK
+    ]);
+
+    // ✅ Tạo booking records trước khi update (phòng trường hợp chưa có)
+    foreach ($request->seat_ids as $seatId) {
+        Booking::firstOrCreate(
+            ['schedule_id' => $request->schedule_id, 'seat_id' => $seatId],
+            ['status' => BookingStatus::Available->value]
+        );
+    }
+
+    Booking::where('schedule_id', $request->schedule_id)
+        ->whereIn('seat_id', $request->seat_ids)
+        ->update([
+            'ticket_id'   => $ticket->id,
+            'status'      => BookingStatus::Booked->value,
             'customer_id' => $customerId,
         ]);
 
-        // Cập nhật bookings
-        Booking::where('schedule_id', $request->schedule_id)
-            ->whereIn('seat_id', $request->seat_ids)
-            ->update([
-                'ticket_id' => $ticket->id,
-                'status' => BookingStatus::Booked->value,
-                'customer_id' => $customerId,
-            ]);
+    // ✅ Đổi returnUrl về route của customer
+    $returnUrl = route('customer.payment-status', ['ticketCode' => $ticket->code]);
 
-        // Gọi PayOs API để tạo QR code
-        // Dùng ticket.code làm order code
-        $returnUrl = route('admin.ticket-booking.payment-status', ['ticketCode' => $ticket->code]);
+    $qrResponse = $this->payOsService->createQRCode(
+        $ticket->code,
+        (int) $total,
+        "Mua vé xem phim - {$ticket->code}",
+        $returnUrl
+    );
 
-        $qrResponse = $this->payOsService->createQRCode(
-            $ticket->code,  // Code từ ticket
-            (int) $total,
-            "Mua vé xem phim - {$ticket->code}",
-            $returnUrl
-        );
-
-        if (! isset($qrResponse['success']) || ! $qrResponse['success']) {
-            // Xóa ticket nếu tạo QR thất bại
-            $ticket->delete();
-
-            return response()->json([
-                'message' => 'Lỗi khi tạo mã QR',
-                'error' => $qrResponse['message'] ?? 'Unknown error',
-            ], 400);
-        }
-
+    if (!isset($qrResponse['success']) || !$qrResponse['success']) {
+        $ticket->delete();
         return response()->json([
-            'ticket_code' => $ticket->code,
-            'ticket_id' => $ticket->id,
-            'amount' => (int) $total,
-            'qr_data' => $qrResponse['data'] ?? null,
-            'checkout_url' => $qrResponse['data']['checkoutUrl'] ?? null,
-            'message' => 'QR code tạo thành công',
-        ]);
+            'message' => 'Lỗi khi tạo mã QR',
+            'error'   => $qrResponse['message'] ?? 'Unknown error',
+        ], 400);
     }
+
+    return response()->json([
+        'ticket_code'  => $ticket->code,
+        'ticket_id'    => $ticket->id,
+        'amount'       => (int) $total,
+        'qr_data'      => $qrResponse['data'] ?? null,
+        'checkout_url' => $qrResponse['data']['checkoutUrl'] ?? null,
+        'message'      => 'QR code tạo thành công',
+    ]);
+}
 
     /**
      * Lấy vé đã tạo
@@ -452,11 +452,31 @@ class TicketBookingCustomerController extends Controller
     /**
      * Web route: Hiển thị trang kết quả thanh toán
      */
+    // public function paymentStatus($ticketCode)
+    // {
+    //     $ticket = Ticket::where('code', $ticketCode)->firstOrFail();
+
+    //     return view('admin.TicketBooking.payment-status', compact('ticket'));
+    // }
+
     public function paymentStatus($ticketCode)
     {
-        $ticket = Ticket::where('code', $ticketCode)->firstOrFail();
+        // 1. Lấy thông tin vé kèm theo các ghế (bookings) đã đặt
+        $ticket = Ticket::with('bookings')->where('code', $ticketCode)->firstOrFail();
 
-        return view('admin.TicketBooking.payment-status', compact('ticket'));
+        // Kiểm tra xem vé có dữ liệu booking hay không để tránh lỗi
+        if ($ticket->bookings->isEmpty()) {
+            return redirect('/')->with('error', 'Không tìm thấy dữ liệu ghế cho vé này.');
+        }
+
+        // 2. Lấy schedule_id từ booking đầu tiên của vé
+        $scheduleId = $ticket->bookings->first()->schedule_id;
+
+        // 3. Flash một session để thông báo cho màn hình orderTickets bật Modal thành công
+        session()->flash('payment_success_ticket', $ticketCode);
+
+        // 4. Gọi lại hàm seatLayoutCustomer để nó xử lý và load view 'customer.orderTickets'
+        return $this->seatLayoutCustomer($scheduleId);
     }
 
     private function resolveCustomerId(): ?int

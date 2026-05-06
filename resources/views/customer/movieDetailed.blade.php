@@ -212,9 +212,9 @@
                                     <h4 class="card-title mb-3">{{ $schedule->date }}</h4>
                                     <p class="card-text fs-5"><b>Start time:</b> {{ $schedule->start_time }}</p>
                                     <p class="card-text fs-5"><b>End time:</b> {{ $schedule->end_time }}</p>
-                                    <a href="{{ route('seat-layout-customer', $schedule->schedule_id) }}" 
-                                    class="btn btn-danger mt-3 py-3 px-5 border border-0 rounded-pill">
-                                    Booking ticket
+                                    <a href="{{ route('customer.seat-layout-customer', $schedule->schedule_id) }}" 
+                                        class="btn btn-danger mt-3 py-3 px-5 border border-0 rounded-pill">
+                                        Booking ticket
                                     </a>
                                 </div>
                             </div>
@@ -248,11 +248,10 @@
         }
     </script>
 
-    <script src="{{asset(\Illuminate\Support\Facades\Storage::url('js/screenProps/setBrowserSize.js'))}}"></script>
-    <script src="{{asset(\Illuminate\Support\Facades\Storage::url('js/screenProps/scrollHalf.js'))}}"></script>
-    <script src="{{asset(\Illuminate\Support\Facades\Storage::url('js/screenProps/disableScroll.js'))}}"></script>
-    <script src="/bootstrapLib/bootstrap.bundle.min.js"></script>
-
+    <!-- <script src="{{ asset('js/screenProps/setBrowserSize.js') }}"></script>
+    <script src="{{ asset('js/screenProps/scrollHalf.js') }}"></script>
+    <script src="{{ asset('js/screenProps/disableScroll.js') }}"></script> -->
+    <script src="/bootstrapLib/bootstrap.bundle.min.js"></script> 
     <script>
 function selectSchedule(scheduleId) {
     window.location.href = `/seat-layout/${scheduleId}`;
