@@ -136,7 +136,7 @@
         margin-top: .75rem;
         display: flex;
         gap: 14px;
-        align-items: flex-start;
+        align-items: center;
     }
 
     .movie-preview img {
@@ -146,7 +146,15 @@
         object-fit: cover;
         background: #0f1117;
     }
-
+    #thumbnailPreview {
+        width: 160px;
+        aspect-ratio: 16 / 9;
+        height: auto;
+        object-fit: cover;
+        border-radius: 8px;
+        flex-shrink: 0; 
+    }
+    
     .movie-preview-info {
         flex: 1;
     }
@@ -338,6 +346,7 @@
         resize: none;
         min-height: 120px;
     }
+    
 </style>
 
 <div class="sw">
@@ -627,7 +636,7 @@
                 <div class="row mt-4 g-4">
 
                     {{-- POSTER --}}
-                    <div class="col-md-4">
+                    <div class="col-md-3">
 
                         <div class="movie-preview">
 
@@ -652,7 +661,7 @@
                     </div>
 
                     {{-- LOGO --}}
-                    <div class="col-md-4">
+                    <div class="col-md-3">
 
                         <div class="movie-preview">
 
@@ -677,28 +686,18 @@
                     </div>
 
                     {{-- THUMBNAIL --}}
-                    <div class="col-md-4">
-
-                        <div class="movie-preview">
-
-                            <img
+                    <div class="col-md-6">
+                        <div class="movie-preview ">
+                            <img 
                                 id="thumbnailPreview"
-                                src="https://placehold.co/300x450?text=Thumbnail">
+                                src="https://placehold.co/400x225?text=Thumbnail"
+                                class="thumb-preview">
 
                             <div class="movie-preview-info">
-
-                                <div class="movie-preview-title">
-                                    Thumbnail
-                                </div>
-
-                                <div class="movie-preview-meta">
-                                    Preview thumbnail phim
-                                </div>
-
+                                <div class="movie-preview-title">Thumbnail</div>
+                                <div class="movie-preview-meta">Preview thumbnail phim</div>
                             </div>
-
                         </div>
-
                     </div>
                     {{-- TRAILER --}}
                         <div class="col-md-12">

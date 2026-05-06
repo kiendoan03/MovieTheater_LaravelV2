@@ -24,9 +24,11 @@ let offset = 6;
                         : '/storage/img/movie_thumbnail/' + movie.thumbnail;
 
                     html += `
-                        <div class="col-3 mb-5">
-                            <div class="card" style="width: 23vmax;">
-                                <img src="${img}" class="card-img-top">
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <div class="card upcoming-card">
+                                <div class="thumb-wrapper">
+                                    <img src="${img}">
+                                </div>
                             </div>
                         </div>
                     `;
