@@ -212,8 +212,8 @@
                             class="fa-solid fa-ticket"></i> Ticket Booking</a>
 
                     @if (auth('api')->user() && auth('api')->user()->role === \App\Enums\UserRole::Admin)
-                        <a href="#" class="nav-link" data-id="dashboard"><i class="fa-solid fa-chart-pie"></i>
-                            Dashboard</a>
+                        <!-- <a href="{{ route('admin.dashboard') }}" class="nav-link" data-id="dashboard"><i class="fa-solid fa-chart-pie"></i>
+                            Dashboard</a> -->
                         <div class="nav-label">Management</div>
                         <a href="{{ route('admin.accounts.staff.index') }}" class="nav-link" data-id="staffs"><i
                                 class="fa-solid fa-user-shield"></i>
