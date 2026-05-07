@@ -419,6 +419,7 @@
         let allSeats = new Map();
         let seatTypes = new Map();
         let echo = null;
+        let paymentWindow = null; // Thêm dòng này để lưu tham chiếu tab thanh toán
 
         document.addEventListener('DOMContentLoaded', function() {
             console.clear();
@@ -1005,6 +1006,7 @@ const label  = seat.label || (String.fromCharCode(64 + seat.row) + seat.column);
                 alert('Lỗi khởi tạo thanh toán: ' + error.message);
             });
         }
+        
 
         function showPayOsModal(paymentData) {
             const modal = new bootstrap.Modal(document.getElementById('payosModal'));
@@ -1012,14 +1014,15 @@ const label  = seat.label || (String.fromCharCode(64 + seat.row) + seat.column);
             const checkoutUrl = paymentData.checkout_url;
 
             if (checkoutUrl) {
-                qrContainer.innerHTML = `
-                    <div style="text-align:center;">
-                        <p style="color:var(--text); margin-bottom:1.5rem;">Quét mã QR bằng ứng dụng ngân hàng để thanh toán</p>
-                        <a href="${checkoutUrl}" target="_blank" class="btn-checkout" style="display:inline-block; text-decoration:none;">
-                            <i class="fas fa-external-link-alt"></i> Thanh toán trực tuyến
-                        </a>
-                    </div>
-                `;
+// MỚI
+qrContainer.innerHTML = `
+    <div style="text-align:center;">
+        <p style="color:var(--text); margin-bottom:1.5rem;">Quét mã QR bằng ứng dụng ngân hàng để thanh toán</p>
+        <button onclick="openPaymentTab('${checkoutUrl}')" class="btn-checkout" style="display:inline-block; border:none;">
+            <i class="fas fa-external-link-alt"></i> Thanh toán trực tuyến
+        </button>
+    </div>
+`;
             }
 
             modal.show();
@@ -1037,6 +1040,10 @@ const label  = seat.label || (String.fromCharCode(64 + seat.row) + seat.column);
                 echo.channel(`ticket.${paymentData.ticket_code}`)
                     .listen('.payment.completed', (event) => {
                         console.log('✓ Payment completed');
+
+                        if (paymentWindow && !paymentWindow.closed) {
+                paymentWindow.close();
+            }
                         bootstrap.Modal.getInstance(document.getElementById('payosModal'))?.hide();
                         getTicketInfo(paymentData.ticket_code);
                     });
@@ -1055,10 +1062,16 @@ const label  = seat.label || (String.fromCharCode(64 + seat.row) + seat.column);
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'completed') {
-                        clearInterval(pollInterval);
-                        bootstrap.Modal.getInstance(document.getElementById('payosModal'))?.hide();
-                        getTicketInfo(ticketCode);
-                    } else if (data.status === 'failed') {
+                clearInterval(pollInterval);
+                
+                // THÊM DÒNG NÀY: Tự động đóng tab Hình 3
+                if (paymentWindow && !paymentWindow.closed) {
+                    paymentWindow.close();
+                }
+
+                bootstrap.Modal.getInstance(document.getElementById('payosModal'))?.hide();
+                getTicketInfo(ticketCode);
+            } else if (data.status === 'failed') {
                         clearInterval(pollInterval);
                         bootstrap.Modal.getInstance(document.getElementById('payosModal'))?.hide();
                         alert('Thanh toán thất bại. Vui lòng thử lại.');
@@ -1176,13 +1189,13 @@ const label  = seat.label || (String.fromCharCode(64 + seat.row) + seat.column);
             return !!(type && type.is_couple); 
         }
 
-        @if(session('payment_success_ticket'))
-            document.addEventListener('DOMContentLoaded', function() {
-                const successTicketCode = '{{ session('payment_success_ticket') }}';
-                // Tự động gọi API lấy thông tin vé và hiển thị Success Modal
-                getTicketInfo(successTicketCode);
-            });
-        @endif
+        // @if(session('payment_success_ticket'))
+        //     document.addEventListener('DOMContentLoaded', function() {
+        //         const successTicketCode = '{{ session('payment_success_ticket') }}';
+        //         // Tự động gọi API lấy thông tin vé và hiển thị Success Modal
+        //         getTicketInfo(successTicketCode);
+        //     });
+        // @endif
 
 
         // Bỏ chọn tất cả ghế khi người dùng rời khỏi trang hoặc reload
@@ -1207,6 +1220,12 @@ const label  = seat.label || (String.fromCharCode(64 + seat.row) + seat.column);
                 });
             }
         });
+
+
+        function openPaymentTab(url) {
+    // Mở tab và lưu lại đối tượng window để có quyền đóng nó sau này
+    paymentWindow = window.open(url, '_blank');
+}
     </script>
 
 @endpush

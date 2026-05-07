@@ -12,6 +12,8 @@ use App\Services\PayOsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use App\Mail\TicketMail; // Thêm dòng này
+use Illuminate\Support\Facades\Mail; // Thêm dòng này
 
 class TicketBookingCustomerController extends Controller
 {
@@ -310,7 +312,7 @@ public function initPaymentPayOs(Request $request)
         ]);
 
     // ✅ Đổi returnUrl về route của customer
-    $returnUrl = route('customer.payment-status', ['ticketCode' => $ticket->code]);
+    $returnUrl = route('customer.customer.payment-status', ['ticketCode' => $ticket->code]);
 
     $qrResponse = $this->payOsService->createQRCode(
         $ticket->code,
@@ -437,6 +439,36 @@ public function initPaymentPayOs(Request $request)
                 Booking::where('ticket_id', $ticket->id)->update([
                     'status' => BookingStatus::Reserved->value,
                 ]);
+
+                // ==========================================
+                // BẮT ĐẦU: LOGIC GỬI EMAIL THÔNG BÁO VÉ
+                // ==========================================
+                
+                // 1. Tải trước các dữ liệu liên quan để truyền vào view Email
+                $ticket->load([
+                    'customer', // Để lấy email khách hàng
+                    'bookings.schedule.movie',
+                    'bookings.schedule.room',
+                    'bookings.seat.seatType'
+                ]);
+
+                // 2. Lấy email của khách (Tùy thuộc vào Database của bạn, có thể là $ticket->customer->email hoặc $ticket->customer->account->email)
+                        $user = auth('api')->user();
+                        $customerEmail = $user?->customer?->email ?? $user?->email;
+
+                if ($customerEmail) {
+                    try {
+                        Mail::to($customerEmail)->send(new TicketMail($ticket));
+                        Log::info("Đã gửi email vé {$ticket->code} thành công cho {$customerEmail}");
+                    } catch (\Exception $e) {
+                        Log::error("Lỗi gửi email vé {$ticket->code}: " . $e->getMessage());
+                    }
+                }
+                
+                // ==========================================
+                // KẾT THÚC: LOGIC GỬI EMAIL THÔNG BÁO VÉ
+                // ==========================================
+
                 broadcast(new \App\Events\PaymentCompleted($ticket));
                 return response()->json(['status' => 'completed', 'ticket' => $ticket]);
             }
@@ -452,32 +484,9 @@ public function initPaymentPayOs(Request $request)
     /**
      * Web route: Hiển thị trang kết quả thanh toán
      */
-    // public function paymentStatus($ticketCode)
-    // {
-    //     $ticket = Ticket::where('code', $ticketCode)->firstOrFail();
 
-    //     return view('admin.TicketBooking.payment-status', compact('ticket'));
-    // }
 
-    public function paymentStatus($ticketCode)
-    {
-        // 1. Lấy thông tin vé kèm theo các ghế (bookings) đã đặt
-        $ticket = Ticket::with('bookings')->where('code', $ticketCode)->firstOrFail();
 
-        // Kiểm tra xem vé có dữ liệu booking hay không để tránh lỗi
-        if ($ticket->bookings->isEmpty()) {
-            return redirect('/')->with('error', 'Không tìm thấy dữ liệu ghế cho vé này.');
-        }
-
-        // 2. Lấy schedule_id từ booking đầu tiên của vé
-        $scheduleId = $ticket->bookings->first()->schedule_id;
-
-        // 3. Flash một session để thông báo cho màn hình orderTickets bật Modal thành công
-        session()->flash('payment_success_ticket', $ticketCode);
-
-        // 4. Gọi lại hàm seatLayoutCustomer để nó xử lý và load view 'customer.orderTickets'
-        return $this->seatLayoutCustomer($scheduleId);
-    }
 
     private function resolveCustomerId(): ?int
     {
