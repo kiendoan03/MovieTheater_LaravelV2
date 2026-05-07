@@ -480,9 +480,11 @@
         <div class="container-fluid px-3 px-md-5">
             <div class="page-wrap">
 
+                @if(auth('api')->user() && auth('api')->user()->role === \App\Enums\UserRole::Admin)
                 <a href="{{ route('admin.accounts.staff.index') }}" class="btn-back">
                     <i class="fa-solid fa-arrow-left"></i> Danh sách nhân viên
                 </a>
+                @endif
 
                 @php
                     $stf     = $staff->staff;
@@ -545,9 +547,11 @@
                                 <i class="fa-solid fa-circle" style="font-size:7px;"></i> Vô hiệu
                             </span>
                         @endif
+                        @if(auth('api')->user() && auth('api')->user()->role === \App\Enums\UserRole::Admin)
                         <a href="{{ route('admin.accounts.staff.edit', $staff->id) }}" class="btn-edit-profile">
                             <i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa
                         </a>
+                        @endif
                     </div>
                 </div>
 
