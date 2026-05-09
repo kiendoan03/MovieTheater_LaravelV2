@@ -16,9 +16,18 @@ class SeatTypeFactory extends Factory
      */
     public function definition(): array
     {
+        $type = $this->faker->randomElement(['Standard', 'VIP', 'Premium', 'Couple']);
         return [
-            'type' => $this->faker->randomElement(['Standard', 'VIP', 'Premium']),
+            'type' => $type,
             'price' => $this->faker->randomElement([50000, 75000, 100000, 150000]),
+            'color' => match ($type) {
+                'Standard' => '#3b82f6',
+                'VIP' => '#f59e0b',
+                'Premium' => '#8b5cf6',
+                'Couple' => '#ec4899',
+                default => '#ffffff'
+            },
+            'is_couple' => $type === 'Couple',
         ];
     }
 }

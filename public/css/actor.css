@@ -1,0 +1,77 @@
+/* =======================================
+        Slider
+        ====================================*/
+
+.slick-slider button {
+    position: absolute;
+    top: 35%;
+    outline: "none";
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 35px;
+    background-color: transparent;
+    color: white;
+    z-index: 99;
+}
+
+.slick-slider .slick-prev {
+    left: -30px;
+    font-size: 0;
+}
+
+.slick-slider .slick-prev::before {
+    font-family: "Font Awesome 5 Free";
+    content: "\f053";
+    display: inline-block;
+    padding-right: 3px;
+    vertical-align: middle;
+    font-weight: 900;
+    line-height: 1;
+    font-size: 3vmax;
+}
+
+.slick-slider .slick-next {
+    right: -25px;
+    font-size: 0;
+}
+
+.slick-slider .slick-next::after {
+    font-family: "Font Awesome 5 Free";
+    content: "\f054";
+    display: inline-block;
+    padding-right: 3px;
+    vertical-align: middle;
+    font-weight: 900;
+    line-height: 1;
+    font-size: 3vmax;
+}
+
+.slick-slider img {
+    width: 20vmax;
+    height: 100%;
+    object-fit: cover;
+    object-position: 0% 0%;
+    border-radius: 5%;
+    /* box-shadow: #fff 0px 5px 15px; */
+}
+
+.slick-slide {
+    padding: 40px 0px;
+    position: relative;
+    height: auto !important;
+    opacity: 1;
+    transition: all 600ms ease-in-out;
+}
+
+.slick-slide .xyz {
+    opacity: 0;
+}
+
+.slick-current .xyz {
+    opacity: 1;
+}
+
+.card {
+    background-color: transparent;
+}

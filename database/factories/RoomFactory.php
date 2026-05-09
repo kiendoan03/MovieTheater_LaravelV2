@@ -20,7 +20,7 @@ class RoomFactory extends Factory
         return [
             'room_name' => 'Room ' . $this->faker->unique()->numberBetween(1, 100),
             'type_id' => RoomType::inRandomOrder()->first()->id,
-            'capacity' => $this->faker->randomElement([50, 75, 100, 150, 200]),
+            'capacity' => $this->faker->randomElement([50, 70, 100, 150, 200]),
         ];
     }
 }

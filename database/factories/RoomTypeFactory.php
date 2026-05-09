@@ -20,7 +20,7 @@ class RoomTypeFactory extends Factory
         
         return [
             'type' => $this->faker->randomElement($types),
-            'capacity' => $this->faker->randomElement([50, 75, 100, 150, 200]),
+            'capacity' => $this->faker->randomElement([50, 70, 100, 150, 200]),
         ];
     }
 }

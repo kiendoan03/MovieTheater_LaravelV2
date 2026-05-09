@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-         $this->call([
+        $this->call([
             RoomTypeSeeder::class,
             RoomSeeder::class,
             SeatTypeSeeder::class,
@@ -31,10 +31,14 @@ class DatabaseSeeder extends Seeder
 
             ScheduleSeeder::class,
 
-            CustomerSeeder::class,
-            StaffSeeder::class,
+            AccountSeeder::class,   // admin cố định
+            CustomerSeeder::class,  // tự tạo account customer qua factory
+            StaffSeeder::class,     // tự tạo account staff qua factory
 
+            TicketSeeder::class,    // tự tạo ticket qua factory
             BookingSeeder::class,
+
+            RefreshTokenSeeder::class, // sau cùng, khi đã có đủ accounts
         ]);
     }
 }

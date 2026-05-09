@@ -17,12 +17,14 @@ class ScheduleFactory extends Factory
      */
     public function definition(): array
     {
-        $startDate = $this->faker->dateTimeBetween('now', '+30 days');
-        $startTime = $this->faker->randomElement(['08:00', '11:00', '14:00', '17:00', '20:00', '23:00']);
-        $endTime = $this->faker->randomElement(['10:30', '13:30', '16:30', '19:30', '22:30', '01:30']);
+        // $startDate = $this->faker->dateTimeBetween('now', '+30 days');
+        // $startTime = $this->faker->randomElement(['08:00', '11:00', '14:00', '17:00', '20:00', '23:00']);
+        // $endTime = $this->faker->randomElement(['10:30', '13:30', '16:30', '19:30', '22:30', '01:30']);
+        $startTime = $this->faker->dateTimeBetween('now', '+30 days');
+        $endTime = (clone $startTime)->modify('+2 hours 30 minutes');
         
         return [
-            'date' => $startDate->format('Y-m-d'),
+            // 'date' => $startDate->format('Y-m-d'),
             'start_time' => $startTime,
             'end_time' => $endTime,
             'room_id' => Room::inRandomOrder()->first()->id,

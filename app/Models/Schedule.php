@@ -10,11 +10,15 @@ class Schedule extends Model
     use HasFactory;
 
     protected $fillable = [
-        'date',
         'start_time',
         'end_time',
         'room_id',
         'movie_id',
+    ];
+
+    protected $casts = [
+        'start_time' => 'datetime',
+        'end_time' => 'datetime',
     ];
 
     // Relationships

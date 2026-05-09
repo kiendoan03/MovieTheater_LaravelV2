@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
-            $table->time('start_time');
-            $table->time('end_time');
+            // $table->date('date');
+            $table->datetime('start_time');
+            $table->datetime('end_time');
             $table->unsignedBigInteger('room_id');
             $table->unsignedBigInteger('movie_id');
             $table->timestamps();

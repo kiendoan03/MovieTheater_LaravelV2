@@ -1,5 +1,23 @@
 <?php
 
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\ActorController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DirectorController;
+use App\Http\Controllers\MovieController;
+use App\Http\Controllers\PayOSController;
+use App\Http\Controllers\PayOsWebhookController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoomController;
+use App\Http\Controllers\RoomTypeController;
+use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\SeatTypeController;
+use App\Http\Controllers\StaffController;
+use App\Http\Controllers\TicketBookingController;
+use App\Http\Controllers\TicketBookingCustomerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +31,196 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+// ==========================================
+// Auth Routes - dùng chung cho mọi người
+// ==========================================
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/logout', [AuthController::class, 'logout']);
+
+// Quên mật khẩu (3 bước: email → OTP → đặt lại)
+Route::get('/forgot-password', fn () => view('admin.Auth.forgot-password'))->name('forgot-password');
+Route::get('/forgot-password/otp', fn () => view('admin.Auth.forgot-password-otp'))->name('forgot-password.otp');
+Route::get('/forgot-password/reset', fn () => view('admin.Auth.forgot-password-reset'))->name('forgot-password.reset');
+
+// ==========================================
+// Admin Web Routes — Yêu cầu đăng nhập + role admin
+// ==========================================
+// Route::prefix('/Admin/Dashboard')->name('admin.')->group(function () {
+//     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+// });
+// Route::get('/payos', [PayOSController::class, 'index'])->name('payos.index');
+// Route::post('/payos/login', [PayOSController::class, 'login'])->name('payos.login');
+// Route::get('/payos/statistics', [PayOSController::class, 'statistics'])->name('payos.statistics');
+
+// ==========================================
+// Shared Routes — Staff & Admin đều truy cập được
+// ==========================================
+Route::middleware(['jwt.cookie', 'role:staff,admin'])->group(function () {
+    // Dashboard
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/profile', [ProfileController::class, 'showStaffProfile'])->name('profile');
+    });
+
+    // Ticket Booking (Đặt vé tại quầy)
+    Route::prefix('Admin/TicketBooking')->name('admin.ticket-booking.')->group(function () {
+        Route::get('/', [TicketBookingController::class, 'index'])->name('index');
+        Route::get('/schedules/{movieId}', [TicketBookingController::class, 'schedules'])->name('schedules');
+        Route::get('/seat-layout/{scheduleId}', [TicketBookingController::class, 'seatLayout'])->name('seat-layout');
+        Route::get('/payment-status/{ticketCode}', [TicketBookingController::class, 'paymentStatus'])->name('payment-status');
+    });
+});
+
+// ==========================================
+// Admin-only Routes — Chỉ admin mới truy cập được
+// ==========================================
+Route::middleware(['jwt.cookie', 'role:admin'])->group(function () {
+    Route::prefix('Admin/Staff')->name('admin.accounts.')->group(function () {
+        Route::get('/', [StaffController::class, 'index'])->name('staff.index');
+        Route::get('/create', [StaffController::class, 'create'])->name('staff.create');
+        Route::post('/create', [StaffController::class, 'store'])->name('staff.store');
+        Route::get('/{id}', [StaffController::class, 'show'])->name('staff.show');
+        Route::get('/{id}/edit', [StaffController::class, 'edit'])->name('staff.edit');
+        Route::put('/{id}/edit', [StaffController::class, 'update'])->name('staff.update');
+        Route::delete('/{id}/delete', [StaffController::class, 'destroy'])->name('staff.destroy');
+    });
+
+    Route::prefix('Admin/Customer')->name('admin.accounts.')->group(function () {
+        Route::get('/', [CustomerController::class, 'index'])->name('customer.index');
+        Route::get('/{id}', [CustomerController::class, 'show'])->name('customer.show');
+        Route::get('/{id}/edit', [CustomerController::class, 'edit'])->name('customer.edit');
+        Route::put('/{id}/edit', [CustomerController::class, 'update'])->name('customer.update');
+        Route::delete('/{id}/delete', [CustomerController::class, 'destroy'])->name('customer.destroy');
+    });
+
+    Route::prefix('Admin/Category')->name('admin.')->group(function () {
+        Route::get('/', [CategoryController::class, 'index'])->name('categories.index');
+        Route::get('/create', [CategoryController::class, 'create'])->name('categories.create');
+        Route::post('/create', [CategoryController::class, 'store'])->name('categories.store');
+        Route::get('/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+        Route::put('/{category}/edit', [CategoryController::class, 'update'])->name('categories.update');
+        Route::delete('/{category}/delete', [CategoryController::class, 'destroy'])->name('categories.destroy');
+    });
+
+    Route::prefix('Admin/Actor')->name('admin.')->group(function () {
+        Route::get('/', [ActorController::class, 'index'])->name('actors.index');
+        Route::get('/create', [ActorController::class, 'create'])->name('actors.create');
+        Route::post('/create', [ActorController::class, 'store'])->name('actors.store');
+        Route::get('/{actor}/edit', [ActorController::class, 'edit'])->name('actors.edit');
+        Route::put('/{actor}/edit', [ActorController::class, 'update'])->name('actors.update');
+        Route::delete('/{actor}/delete', [ActorController::class, 'destroy'])->name('actors.destroy');
+    });
+
+    Route::prefix('Admin/Director')->name('admin.')->group(function () {
+        Route::get('/', [DirectorController::class, 'index'])->name('directors.index');
+        Route::get('/create', [DirectorController::class, 'create'])->name('directors.create');
+        Route::post('/create', [DirectorController::class, 'store'])->name('directors.store');
+        Route::get('/{director}/edit', [DirectorController::class, 'edit'])->name('directors.edit');
+        Route::put('/{director}/edit', [DirectorController::class, 'update'])->name('directors.update');
+        Route::delete('/{director}/delete', [DirectorController::class, 'destroy'])->name('directors.destroy');
+    });
+
+    Route::prefix('Admin/Room')->name('admin.')->group(function () {
+        Route::get('/', [RoomController::class, 'index'])->name('rooms.index');
+        Route::get('/create', [RoomController::class, 'create'])->name('rooms.create');
+        Route::post('/create', [RoomController::class, 'store'])->name('rooms.store');
+        Route::get('/{room}', [RoomController::class, 'show'])->name('rooms.show');
+        Route::get('/{room}/edit', [RoomController::class, 'edit'])->name('rooms.edit');
+        Route::put('/{room}/edit', [RoomController::class, 'update'])->name('rooms.update');
+        Route::delete('/{room}/delete', [RoomController::class, 'destroy'])->name('rooms.destroy');
+    });
+
+    Route::prefix('Admin/RoomType')->name('admin.')->group(function () {
+        Route::get('/', [RoomTypeController::class, 'index'])->name('room_types.index');
+        Route::get('/create', [RoomTypeController::class, 'create'])->name('room_types.create');
+        Route::post('/create', [RoomTypeController::class, 'store'])->name('room_types.store');
+        Route::get('/{roomType}/edit', [RoomTypeController::class, 'edit'])->name('room_types.edit');
+        Route::put('/{roomType}/edit', [RoomTypeController::class, 'update'])->name('room_types.update');
+        Route::delete('/{roomType}/delete', [RoomTypeController::class, 'destroy'])->name('room_types.destroy');
+    });
+
+    Route::prefix('Admin/SeatType')->name('admin.')->group(function () {
+        Route::get('/', [SeatTypeController::class, 'index'])->name('seat_types.index');
+        Route::get('/create', [SeatTypeController::class, 'create'])->name('seat_types.create');
+        Route::post('/create', [SeatTypeController::class, 'store'])->name('seat_types.store');
+        Route::get('/{seatType}/edit', [SeatTypeController::class, 'edit'])->name('seat_types.edit');
+        Route::put('/{seatType}/edit', [SeatTypeController::class, 'update'])->name('seat_types.update');
+        Route::delete('/{seatType}/delete', [SeatTypeController::class, 'destroy'])->name('seat_types.destroy');
+    });
+
+    Route::prefix('Admin/Schedule')->name('admin.')->group(function () {
+        Route::get('/', [ScheduleController::class, 'index'])->name('schedules.index');
+        Route::get('/create', [ScheduleController::class, 'create'])->name('schedules.create');
+        Route::post('/create', [ScheduleController::class, 'store'])->name('schedules.store');
+        Route::get('/{schedule}/edit', [ScheduleController::class, 'edit'])->name('schedules.edit');
+        Route::put('/{schedule}/edit', [ScheduleController::class, 'update'])->name('schedules.update');
+        Route::delete('/{schedule}/delete', [ScheduleController::class, 'destroy'])->name('schedules.destroy');
+        Route::get('/by-room', [ScheduleController::class, 'byRoom'])->name('schedules.by-room');
+    });
+
+    Route::prefix('Admin/Movie')->name('admin.')->group(function () {
+        Route::get('/', [MovieController::class, 'index'])->name('movies.index');
+        Route::get('/create', [MovieController::class, 'create'])->name('movies.create');
+        Route::post('/create', [MovieController::class, 'store'])->name('movies.store');
+        Route::get('/{movie}', [MovieController::class, 'show'])->name('movies.show');
+        Route::get('/{movie}/edit', [MovieController::class, 'edit'])->name('movies.edit');
+        Route::put('/{movie}/edit', [MovieController::class, 'update'])->name('movies.update');
+        Route::delete('/{movie}/delete', [MovieController::class, 'destroy'])->name('movies.destroy');
+    });
+}); // end admin-only middleware group
+
+// cho khách cần auth
+// Route::middleware(['jwt.cookie', 'role:customer'])->group(function () {
+//     Route::prefix('customer')->name('customer.')->group(function () {
+//         // Profile cá nhân
+//         Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+//         Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+//         Route::put('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
+//     });
+
+// });
+Route::middleware(['jwt.cookie', 'role:customer'])->group(function () {
+    Route::prefix('/')->name('customer.')->group(function () {
+        // Profile cá nhân
+        Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
+        Route::get('/seat-layout/{scheduleId}', [TicketBookingCustomerController::class, 'seatLayoutCustomer'])->name('seat-layout-customer');
+        Route::get('/payment-status/{ticketCode}', [TicketBookingCustomerController::class, 'paymentStatus'])->name('customer.payment-status');
+    });
+
+});
+
+// ==========================================
+// Customer web routes
+// ==========================================
+Route::prefix('/')->group(function () {
+    Route::get('/', [MovieController::class, 'show'])->name('home');
+    Route::get('/search', [MovieController::class, 'search'])->name('movies.search');
+    Route::get('/{movie}/detail', [App\Http\Controllers\MovieController::class, 'detail'])->name('detail');
+    Route::get('/{movie_actor}/actor', [ActorController::class, 'show'])->name('actor');
+    Route::get('/{movie_director}/director', [DirectorController::class, 'show'])->name('director');
+});
+
+Route::prefix('api/ticket-booking')->group(function () {
+    // ✅ Đúng tên: schedule-seats (không phải seats)
+    Route::get('/schedule-seats/{scheduleId}', [TicketBookingCustomerController::class, 'getScheduleSeats']);
+    Route::post('/update-seat-status', [TicketBookingCustomerController::class, 'updateSeatStatus']);
+    Route::post('/create-ticket-cash', [TicketBookingCustomerController::class, 'createTicketCash']);
+    Route::post('/init-payment-payos', [TicketBookingCustomerController::class, 'initPaymentPayOs']);
+    Route::get('/check-payment-status/{ticketCode}', [TicketBookingCustomerController::class, 'checkPaymentStatus']);
+    Route::get('/ticket/{ticketCode}', [TicketBookingCustomerController::class, 'getTicket']);
+});
+
+// ==========================================
+// PayOs Webhook (Public - không cần auth, đã exclude CSRF)
+// ==========================================
+Route::post('/webhook/payos', [PayOsWebhookController::class, 'handle']);
+
+// Change password
+Route::middleware(['jwt.cookie'])->group(function () {
+    Route::get('/change-password', [AccountController::class, 'changePasswordForm'])->name('change-password');
+    Route::post('/change-password', [AccountController::class, 'changePassword'])->name('change-password.update');
 });

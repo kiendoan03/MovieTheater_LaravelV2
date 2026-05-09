@@ -25,6 +25,11 @@ class Movie extends Model
         'trailer',
     ];
 
+    protected $casts = [
+        'release_date' => 'date',
+        'end_date' => 'date',
+    ];
+
     // Relationships
     public function schedules()
     {

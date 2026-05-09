@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Customer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +20,7 @@ class TicketFactory extends Factory
         return [
             'code' => strtoupper($this->faker->bothify('TKT-####-????')),
             'final_price' => $this->faker->randomElement([50000, 75000, 100000, 150000, 200000]),
-            'customer_id' => null,
+            'customer_id' => Customer::inRandomOrder()->first()->id,
             'staff_id' => null,
         ];
     }

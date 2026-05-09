@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\BookingStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,6 +17,10 @@ class Booking extends Model
         'status',
         'customer_id',
         'staff_id',
+    ];
+
+    protected $casts = [
+        'status' => BookingStatus::class,
     ];
 
     // Relationships

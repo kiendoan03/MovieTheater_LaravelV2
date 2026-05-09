@@ -12,6 +12,8 @@ class EncryptCookies extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        //
+        // không encrypt 2 token
+        'access_token',
+        'refresh_token',
     ];
 }

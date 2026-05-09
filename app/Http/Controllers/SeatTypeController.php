@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SeatType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class SeatTypeController extends Controller
 {
@@ -12,7 +13,11 @@ class SeatTypeController extends Controller
      */
     public function index()
     {
-        //
+        $seatTypes = SeatType::paginate(10);
+
+        return view('admin.SeatType.main', [
+            'seatTypes' => $seatTypes,
+        ]);
     }
 
     /**
@@ -20,7 +25,7 @@ class SeatTypeController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.SeatType.create');
     }
 
     /**
@@ -28,7 +33,30 @@ class SeatTypeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'type' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'color' => 'required|string',
+            'is_couple' => 'nullable|boolean',
+        ]);
+
+        $array = [];
+
+        $array = Arr::add($array, 'type', $request->type);
+        $array = Arr::add($array, 'price', $request->price);
+        $array = Arr::add($array, 'color', $request->color);
+
+        // checkbox
+        $array = Arr::add(
+            $array,
+            'is_couple',
+            $request->has('is_couple')
+        );
+
+        SeatType::create($array);
+
+        return redirect()->route('admin.seat_types.index')
+            ->with('success', 'Seat type added successfully!');
     }
 
     /**
@@ -44,7 +72,9 @@ class SeatTypeController extends Controller
      */
     public function edit(SeatType $seatType)
     {
-        //
+        return view('admin.SeatType.edit', [
+            'seatType' => $seatType,
+        ]);
     }
 
     /**
@@ -52,7 +82,30 @@ class SeatTypeController extends Controller
      */
     public function update(Request $request, SeatType $seatType)
     {
-        //
+        $request->validate([
+            'type' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'color' => 'required|string',
+            'is_couple' => 'nullable|boolean',
+        ]);
+
+        $array = [];
+
+        $array = Arr::add($array, 'type', $request->type);
+        $array = Arr::add($array, 'price', $request->price);
+        $array = Arr::add($array, 'color', $request->color);
+
+        // checkbox
+        $array = Arr::add(
+            $array,
+            'is_couple',
+            $request->has('is_couple')
+        );
+
+        $seatType->update($array);
+
+        return redirect()->route('admin.seat_types.index')
+            ->with('success', 'Seat type updated successfully!');
     }
 
     /**
@@ -60,6 +113,9 @@ class SeatTypeController extends Controller
      */
     public function destroy(SeatType $seatType)
     {
-        //
+        $seatType->delete();
+
+        return redirect()->route('admin.seat_types.index')
+            ->with('success', 'Seat type deleted successfully!');
     }
 }

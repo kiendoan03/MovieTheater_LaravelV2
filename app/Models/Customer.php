@@ -13,17 +13,12 @@ class Customer extends Model
 
     protected $fillable = [
         'name',
-        'email',
         'phonenumber',
         'address',
-        'username',
-        'password',
         'avatar',
         'date_of_birth',
-    ];
-
-    protected $hidden = [
-        'password',
+        'account_id',
+        'is_active',
     ];
 
     // Relationships
@@ -35,5 +30,10 @@ class Customer extends Model
     public function bookings()
     {
         return $this->hasMany(Booking::class);
+    }
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class, 'account_id', 'id');
     }
 }
