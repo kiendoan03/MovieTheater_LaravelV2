@@ -17,6 +17,7 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SeatTypeController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\TicketBookingController;
+use App\Http\Controllers\TicketBookingCustomerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -171,12 +172,23 @@ Route::middleware(['jwt.cookie', 'role:admin'])->group(function () {
 }); // end admin-only middleware group
 
 // cho khách cần auth
+// Route::middleware(['jwt.cookie', 'role:customer'])->group(function () {
+//     Route::prefix('customer')->name('customer.')->group(function () {
+//         // Profile cá nhân
+//         Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+//         Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+//         Route::put('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
+//     });
+
+// });
 Route::middleware(['jwt.cookie', 'role:customer'])->group(function () {
-    Route::prefix('customer')->name('customer.')->group(function () {
+    Route::prefix('/')->name('customer.')->group(function () {
         // Profile cá nhân
         Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
         Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::put('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
+        Route::get('/seat-layout/{scheduleId}', [TicketBookingCustomerController::class, 'seatLayoutCustomer'])->name('seat-layout-customer');
+        Route::get('/payment-status/{ticketCode}', [TicketBookingCustomerController::class, 'paymentStatus'])->name('customer.payment-status');
     });
 
 });
@@ -187,8 +199,19 @@ Route::middleware(['jwt.cookie', 'role:customer'])->group(function () {
 Route::prefix('/')->group(function () {
     Route::get('/', [MovieController::class, 'show'])->name('home');
     Route::get('/search', [MovieController::class, 'search'])->name('movies.search');
+    Route::get('/{movie}/detail', [App\Http\Controllers\MovieController::class, 'detail'])->name('detail');
     Route::get('/{movie_actor}/actor', [ActorController::class, 'show'])->name('actor');
     Route::get('/{movie_director}/director', [DirectorController::class, 'show'])->name('director');
+});
+
+Route::prefix('api/ticket-booking')->group(function () {
+    // ✅ Đúng tên: schedule-seats (không phải seats)
+    Route::get('/schedule-seats/{scheduleId}', [TicketBookingCustomerController::class, 'getScheduleSeats']);
+    Route::post('/update-seat-status', [TicketBookingCustomerController::class, 'updateSeatStatus']);
+    Route::post('/create-ticket-cash', [TicketBookingCustomerController::class, 'createTicketCash']);
+    Route::post('/init-payment-payos', [TicketBookingCustomerController::class, 'initPaymentPayOs']);
+    Route::get('/check-payment-status/{ticketCode}', [TicketBookingCustomerController::class, 'checkPaymentStatus']);
+    Route::get('/ticket/{ticketCode}', [TicketBookingCustomerController::class, 'getTicket']);
 });
 
 // ==========================================
