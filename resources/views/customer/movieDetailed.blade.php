@@ -28,7 +28,13 @@
 
             <!-- Background Trailer -->
 
- 
+             <section class="p-0 top-0 start-0 bottom-0 end-0">
+                <div>
+                    <video style="object-fit: cover; backdrop-filter: brightness(60%);" class="full-screen-element col-12" id="trailerVideo" oncontextmenu="return false;" autoplay muted loop disablePictureInPicture>
+                        <source src = "{{asset(\Illuminate\Support\Facades\Storage::url('/movie_trailer/').$movie -> trailer)}}">
+                    </video>
+                </div>
+            </section>
 
             <!-- Movie Detail -->
             <section class="position-absolute start-0 end-0 fullscreen-height px-0 col-12" style="background: linear-gradient(to top, rgb(0, 0, 0), rgba(0, 0, 0, 0.444));">
@@ -119,8 +125,10 @@
 
             <!-- Back Button -->
             <div class="" style="margin-top: 5vmax;">
-                <span onclick="toOverviewPage()" class="border rounded-pill text-light text-center px-3 py-2 fs-5" style="cursor: pointer;">
-                    <i class="fa-solid fa-backward"></i>  Back 
+                <span class="border rounded-pill text-center px-3 py-2 fs-5" style="cursor: pointer;">
+                    <a href="{{ route('home') }}" class="text-white text-decoration-none">
+                        <i class="fa-solid fa-backward"></i> Back
+                    </a>
                 </span>
             </div>
 
@@ -199,9 +207,11 @@
         <section id="book__ticket" class="row full-height-ticket px-5 " >
 
                 <section class="mt-5 py-5" >
-                    <span onclick="toDetailedPage()" class="border rounded-pill text-light text-center px-3 py-2 fs-5 " style="cursor: pointer;">
-                        <i class="fa-solid fa-backward"></i>  Back 
-                    </span> 
+                                    <span class="border rounded-pill text-center px-3 py-2 fs-5" style="cursor: pointer;">
+                    <a href="{{ route('home') }}" class="text-white text-decoration-none">
+                        <i class="fa-solid fa-backward"></i> Back
+                    </a>
+                </span> 
                     <div class="col-10 d-flex flex-wrap mx-auto hide-scrollbar mt-3" style="height: 40vmax; overflow-x: hidden; overflow-y: scroll;">
                         @foreach($schedules as $schedule)
                             <div class="schedule-card mt-5 text-light col-5 me-5 mx-5 py-3 px-5" style="border-radius: 1vmax;" >
