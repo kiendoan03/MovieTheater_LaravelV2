@@ -284,7 +284,11 @@ function generateGrid() {
     nRows = parseInt(rowsInp.value) || 0;
     nCols = parseInt(colsInp.value) || 0;
     const defId = parseInt(document.getElementById('inp_def').value);
-
+    
+    if (nRows > 26) {
+        showToast("Số hàng bắt buộc phải nhỏ hơn hoặc bằng 26!");
+        return;
+    }
     if (nCols % 2 !== 0) {
         showToast("Số cột bắt buộc phải là số chẵn!");
         return;
@@ -371,7 +375,7 @@ function renderGrid() {
         // 2. Wrapper chứa cụm ghế (để căn giữa)
         const seatsWrapper = document.createElement('div');
         seatsWrapper.className = 'row-seats-wrapper';
-
+        let seatNumber = 0; // Biến đếm ghế để đánh số chính xác, bỏ qua lối đi
         for (let c = 0; c < gridData[r].length; c++) {
             const cell = gridData[r][c];
             const seatEl = document.createElement('div');
@@ -380,11 +384,12 @@ function renderGrid() {
             if (cell.type_id === null) {
                 seatEl.classList.add('is-aisle');
             } else {
+                seatNumber++;
                 const t = typeMap[cell.type_id];
                 seatEl.style.color = t.color;
                 seatEl.style.borderColor = t.color + '44';
                 seatEl.style.background = t.color + '15';
-                seatEl.textContent = String.fromCharCode(65 + r) + (c + 1);
+                seatEl.textContent = String.fromCharCode(65 + r) + (seatNumber);
             }
             seatEl.onclick = () => handleAction(r, c);
             seatsWrapper.appendChild(seatEl);

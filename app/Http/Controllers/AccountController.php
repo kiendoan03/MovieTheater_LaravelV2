@@ -41,7 +41,7 @@ class AccountController extends Controller
         return view('admin.Account.change-password');
     }
 
-    public function changePassword(Request $request, $id = null)
+    public function changePassword(Request $request)
     {
         $request->validate([
             'current_password' => ['required', 'string'],
@@ -53,12 +53,11 @@ class AccountController extends Controller
             'new_password.confirmed' => 'Xác nhận mật khẩu không khớp.',
         ]);
 
-        // Customer chỉ được đổi mật khẩu của chính mình
-        $accountId = (auth()->user()->role === UserRole::Customer)
-            ? auth()->id()
-            : ($id ?? auth()->id());
+        $account = auth('api')->user();
 
-        $account = Account::findOrFail($accountId);
+        if (! $account) {
+            return redirect()->route('login')->with('error', 'Vui lòng đăng nhập.');
+        }
 
         if (! Hash::check($request->current_password, $account->password)) {
             return back()

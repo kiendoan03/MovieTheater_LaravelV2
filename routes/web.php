@@ -4,19 +4,20 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ActorController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DirectorController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\PayOSController;
 use App\Http\Controllers\PayOsWebhookController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\RoomTypeController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SeatTypeController;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\TicketBookingController;
+use App\Http\Controllers\TicketBookingCustomerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,19 +47,36 @@ Route::get('/forgot-password/reset', fn () => view('admin.Auth.forgot-password-r
 // ==========================================
 // Admin Web Routes — Yêu cầu đăng nhập + role admin
 // ==========================================
-Route::prefix('/Admin/Dashboard')->name('admin.')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-});
+// Route::prefix('/Admin/Dashboard')->name('admin.')->group(function () {
+//     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+// });
 // Route::get('/payos', [PayOSController::class, 'index'])->name('payos.index');
 // Route::post('/payos/login', [PayOSController::class, 'login'])->name('payos.login');
 // Route::get('/payos/statistics', [PayOSController::class, 'statistics'])->name('payos.statistics');
 
-// Route::get('/Admin/Dashboard',[DashboardController::class, 'index'])->name('dashboard');
-Route::middleware(['jwt.cookie', 'role:admin'])->group(function () {
+// ==========================================
+// Shared Routes — Staff & Admin đều truy cập được
+// ==========================================
+Route::middleware(['jwt.cookie', 'role:staff,admin'])->group(function () {
+    // Dashboard
     Route::prefix('admin')->name('admin.')->group(function () {
-        Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/profile', [ProfileController::class, 'showStaffProfile'])->name('profile');
     });
 
+    // Ticket Booking (Đặt vé tại quầy)
+    Route::prefix('Admin/TicketBooking')->name('admin.ticket-booking.')->group(function () {
+        Route::get('/', [TicketBookingController::class, 'index'])->name('index');
+        Route::get('/schedules/{movieId}', [TicketBookingController::class, 'schedules'])->name('schedules');
+        Route::get('/seat-layout/{scheduleId}', [TicketBookingController::class, 'seatLayout'])->name('seat-layout');
+        Route::get('/payment-status/{ticketCode}', [TicketBookingController::class, 'paymentStatus'])->name('payment-status');
+    });
+});
+
+// ==========================================
+// Admin-only Routes — Chỉ admin mới truy cập được
+// ==========================================
+Route::middleware(['jwt.cookie', 'role:admin'])->group(function () {
     Route::prefix('Admin/Staff')->name('admin.accounts.')->group(function () {
         Route::get('/', [StaffController::class, 'index'])->name('staff.index');
         Route::get('/create', [StaffController::class, 'create'])->name('staff.create');
@@ -151,27 +169,26 @@ Route::middleware(['jwt.cookie', 'role:admin'])->group(function () {
         Route::put('/{movie}/edit', [MovieController::class, 'update'])->name('movies.update');
         Route::delete('/{movie}/delete', [MovieController::class, 'destroy'])->name('movies.destroy');
     });
-}); // end admin middleware group
-
-// ==========================================
-// Ticket Booking Routes (Đặt vé tại quầy - Staff & Admin)
-// ==========================================
-Route::middleware(['jwt.cookie', 'role:staff,admin'])->group(function () {
-    Route::prefix('Admin/TicketBooking')->name('admin.ticket-booking.')->group(function () {
-        Route::get('/', [TicketBookingController::class, 'index'])->name('index');
-        Route::get('/schedules/{movieId}', [TicketBookingController::class, 'schedules'])->name('schedules');
-        Route::get('/seat-layout/{scheduleId}', [TicketBookingController::class, 'seatLayout'])->name('seat-layout');
-        Route::get('/payment-status/{ticketCode}', [TicketBookingController::class, 'paymentStatus'])->name('payment-status');
-    });
-});
+}); // end admin-only middleware group
 
 // cho khách cần auth
+// Route::middleware(['jwt.cookie', 'role:customer'])->group(function () {
+//     Route::prefix('customer')->name('customer.')->group(function () {
+//         // Profile cá nhân
+//         Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+//         Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+//         Route::put('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
+//     });
+
+// });
 Route::middleware(['jwt.cookie', 'role:customer'])->group(function () {
-    Route::prefix('customer')->name('customer.')->group(function () {
+    Route::prefix('/')->name('customer.')->group(function () {
         // Profile cá nhân
         Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
         Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::put('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
+        Route::get('/seat-layout/{scheduleId}', [TicketBookingCustomerController::class, 'seatLayoutCustomer'])->name('seat-layout-customer');
+        Route::get('/payment-status/{ticketCode}', [TicketBookingCustomerController::class, 'paymentStatus'])->name('customer.payment-status');
     });
 
 });
@@ -183,8 +200,19 @@ Route::prefix('/')->group(function () {
     Route::get('/', [MovieController::class, 'show'])->name('home');
     Route::get('/load-more-upcoming', [MovieController::class, 'loadMoreUpcoming']);
     Route::get('/search', [MovieController::class, 'search'])->name('movies.search');
+    Route::get('/{movie}/detail', [App\Http\Controllers\MovieController::class, 'detail'])->name('detail');
     Route::get('/{movie_actor}/actor', [ActorController::class, 'show'])->name('actor');
     Route::get('/{movie_director}/director', [DirectorController::class, 'show'])->name('director');
+});
+
+Route::prefix('api/ticket-booking')->group(function () {
+    // ✅ Đúng tên: schedule-seats (không phải seats)
+    Route::get('/schedule-seats/{scheduleId}', [TicketBookingCustomerController::class, 'getScheduleSeats']);
+    Route::post('/update-seat-status', [TicketBookingCustomerController::class, 'updateSeatStatus']);
+    Route::post('/create-ticket-cash', [TicketBookingCustomerController::class, 'createTicketCash']);
+    Route::post('/init-payment-payos', [TicketBookingCustomerController::class, 'initPaymentPayOs']);
+    Route::get('/check-payment-status/{ticketCode}', [TicketBookingCustomerController::class, 'checkPaymentStatus']);
+    Route::get('/ticket/{ticketCode}', [TicketBookingCustomerController::class, 'getTicket']);
 });
 
 // ==========================================
@@ -195,5 +223,5 @@ Route::post('/webhook/payos', [PayOsWebhookController::class, 'handle']);
 // Change password
 Route::middleware(['jwt.cookie'])->group(function () {
     Route::get('/change-password', [AccountController::class, 'changePasswordForm'])->name('change-password');
-    Route::post('/change-password', [AccountController::class, 'changePassword'])->name('change-password');
+    Route::post('/change-password', [AccountController::class, 'changePassword'])->name('change-password.update');
 });

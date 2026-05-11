@@ -34,6 +34,32 @@ class ProfileController extends Controller
     }
 
     /**
+     * Trang hồ sơ cá nhân của Staff / Admin đang đăng nhập.
+     * GET /admin/profile
+     */
+    public function showStaffProfile()
+    {
+        /** @var Account $account */
+        $account = Auth::guard('api')->user();
+
+        if (! $account) {
+            return redirect()->route('login')->with('error', 'Vui lòng đăng nhập để xem hồ sơ.');
+        }
+
+        // Eager-load đầy đủ dữ liệu staff + ticket/booking
+        $account->load([
+            'staff',
+            'staff.tickets.bookings.seat.seatType',
+            'staff.tickets.bookings.schedule.movie',
+            'staff.tickets.bookings.schedule.room',
+        ]);
+
+        // Reuse show-staff view, truyền biến $staff = $account
+        $staff = $account;
+        return view('admin.Account.show-staff', compact('staff'));
+    }
+
+    /**
      * Form chỉnh sửa thông tin cá nhân.
      * GET /profile/edit
      */

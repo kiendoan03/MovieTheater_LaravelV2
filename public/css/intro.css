@@ -5,6 +5,7 @@ body {
     width: 100%;
     height: 100%;
 }
+
 html.preload-intro body {
     overflow: hidden;
 }
@@ -24,11 +25,21 @@ html.preload-intro #container {
     opacity: 1 !important;
     display: flex !important;
 }
+
 #container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    /* width: 100%;
+    height: 100%;
+    background-color: #000000;
+    overflow: hidden;
+    transition: 1s;
+} */
+
+
 
     width: 100%;
     height: 100%;
@@ -58,6 +69,7 @@ html.preload-intro #container {
     z-index: 999999;
     background: #000;
 } */
+
 
 #container netflixintro {
     display: block;
@@ -1192,4 +1204,7 @@ html.preload-intro #container {
     100% {
         background-color: rgba(228, 9, 19, 0);
     }
+
 }
+
+

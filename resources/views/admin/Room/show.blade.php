@@ -251,6 +251,7 @@ $actualSeatCount = $room->seats->where('type_id', '!==', null)->count();
                             @php
                                 // Lấy tất cả ghế của hàng hiện tại, sắp xếp theo cột
                                 $rowSeats = $room->seats->where('row', $r)->sortBy('column');
+                                $seatNumber = 0;
                             @endphp
 
                             @foreach($rowSeats as $seat)
@@ -262,11 +263,12 @@ $actualSeatCount = $room->seats->where('type_id', '!==', null)->count();
                                     @php 
                                         $st = $seat->seatType;
                                         $color = $st->color ?? '#6b7280'; 
+                                        $seatNumber++;
                                     @endphp
                                     <div class="seat" 
                                         style="background: {{ $color }}28; border-color: {{ $color }}; color: {{ $color }};"
                                         title="{{ chr(64 + $r) }}{{ $seat->column }} - {{ $st->type }}">
-                                        {{ chr(64 + $r) }}{{ $seat->column }}
+                                        {{ chr(64 + $r) }}{{ $seatNumber }}
                                     </div>
                                 @endif
                             @endforeach

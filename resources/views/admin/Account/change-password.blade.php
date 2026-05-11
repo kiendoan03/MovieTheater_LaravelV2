@@ -345,9 +345,7 @@
 
                 <div class="pw-card">
 
-                    <div class="admin-badge">
-                        <i class="fa-solid fa-shield-halved"></i> Admin Panel
-                    </div>
+
 
                     <div class="brand-logo"><i class="fa-solid fa-clapperboard"></i> &nbsp;NETFNIX Cinema</div>
                     <h2 class="brand-title">Đổi mật khẩu</h2>
@@ -375,10 +373,8 @@
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ route('admin.accounts.change-password.update') }}"
-                        id="changePasswordForm" novalidate>
+                    <form method="POST" action="{{ route('change-password.update') }}" id="changePasswordForm" novalidate>
                         @csrf
-                        @method('PUT')
 
                         {{-- Mật khẩu cũ --}}
                         <div class="mb-3">

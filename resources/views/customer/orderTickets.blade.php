@@ -1,13 +1,26 @@
-@extends('layouts.management')
 
-@section('content')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="reverb-key" content="{{ config('reverb.app_key') }}">
-    <meta name="reverb-host" content="{{ config('reverb.host') }}">
-    <meta name="reverb-port" content="{{ config('reverb.port') }}">
-    <meta name="reverb-scheme" content="{{ config('reverb.scheme') }}">
 
-    <style>
+
+@extends('layouts.client')
+
+@section('title', 'Đặt ghế')
+
+@push('styles')
+<link rel="stylesheet" href="\bootstrapLib\bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"> -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="icon" href="/img/page_logo/download-removebg-preview.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/public/css/scroll/hideScrollBar.css">
+    <link rel="stylesheet" href="/public/css/home.css">
+    <link rel="stylesheet" href="/public/css/admin.css">
+    <link rel="stylesheet" href="/public/css/app.css">
+    <link rel="stylesheet" href="/public/css/intro.css">
+
+        <style>
         @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
         :root {
@@ -182,10 +195,20 @@
         .info-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
         .info-value { font-size: 14px; font-weight: 500; color: var(--text); }
     </style>
+@endpush
+
+@section('content')
+<body style="background-color: black">
+<div>
+ <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="reverb-key" content="{{ config('reverb.app_key') }}">
+    <meta name="reverb-host" content="{{ config('reverb.host') }}">
+    <meta name="reverb-port" content="{{ config('reverb.port') }}">
+    <meta name="reverb-scheme" content="{{ config('reverb.scheme') }}">
 
     <div class="cw">
         <div class="container-fluid px-4">
-            <div class="cw-head">
+            <div class="cw-head mt-4">
                 <div>
                     <h2 class="mb-2">
                         <i class="fas fa-film"></i> {{ $schedule->movie->movie_name }}
@@ -198,99 +221,113 @@
                         <i class="fas fa-calendar"></i> {{ $schedule->start_time->format('d/m/Y') }}
                     </small>
                 </div>
-                <a href="javascript:history.back()" class="btn-back">
+                <a href="javascript:history.back()" class="btn-back mt-5">
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                     Quay lại
                 </a>
             </div>
 
-            {{-- 01 THÔNG TIN SUẤT CHIẾU --}}
-            <div class="cw-card">
-                <div class="cw-section-label">01 — Thông tin suất chiếu</div>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <span class="info-label">Phim</span>
-                        <span class="info-value">{{ $schedule->movie->movie_name }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Giờ chiếu</span>
-                        <span class="info-value">{{ $schedule->start_time->format('H:i') }} - {{ $schedule->end_time->format('H:i') }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Phòng</span>
-                        <span class="info-value">{{ $schedule->room->room_name }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Ngày</span>
-                        <span class="info-value">{{ $schedule->start_time->format('d/m/Y') }}</span>
-                    </div>
-                </div>
-            </div>
-
-            {{-- 02 SƠ ĐỒ GHẾ --}}
-            <div class="cw-card">
-                <div class="cw-section-label">02 — Sơ đồ vị trí ghế</div>
-
-                <div class="screen-area">
-                    <div class="screen-bar"></div>
-                    <div style="font-size:10px; color:var(--muted); margin-top:10px">MÀN HÌNH</div>
-                </div>
-
-                <div class="d-flex justify-content-center">
-                    <div class="seat-grid-inner" id="gridContainer">
-                        <!-- Rendered by JS -->
-                    </div>
-                </div>
-
-                <div class="legend" id="legendContainer">
-                    <!-- Rendered by JS -->
-                </div>
-            </div>
-
-            {{-- 03 CHỌN GHẾ & THANH TOÁN --}}
-            <div class="cw-card">
-                <div class="cw-section-label">03 — Chọn ghế & Thanh toán</div>
+ <!-- BỌC TẤT CẢ VÀO 1 ROW -->
+            <div class="row g-4">
                 
-                <div class="row g-4">
-                    <div class="col-md-4">
-                        <div class="cw-section-label" style="margin-bottom:1rem;">Loại ghế</div>
-                        <div id="seatTypesContainer">
+{{-- 01 THÔNG TIN SUẤT CHIẾU (POSTER PHIM) --}}
+                <div class="col-lg-4">
+                    <div class="cw-card h-100 d-flex flex-column">
+                        <div class="cw-section-label">01 — Phim đang chọn</div>
+                        
+                        <!-- Wrapper chứa ảnh để bo góc và đổ bóng -->
+                        <div class="poster-wrapper flex-grow-1 w-100 d-flex justify-content-center" style="border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.4);">
+                            <img src="{{asset('storage/img/movie_poster/' . $schedule->movie->poster)}}" 
+                                 alt="{{ $schedule->movie->movie_name }}" 
+                                 class="w-100"
+                                 style="object-fit: cover; height: 100%; min-height: 300px;">
+                        </div>
+
+                        <!-- Thêm 1 chút thông tin cơ bản dưới ảnh để người dùng không quên họ đang đặt suất nào -->
+                        <!-- <div class="mt-3 text-center">
+                            <h5 class="mb-1" style="font-weight: 600; font-family: 'Sora', sans-serif; color: var(--text);">
+                                {{ $schedule->movie->movie_name }}
+                            </h5>
+                            <small style="color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 11px;">
+                                <i class="fas fa-door-open"></i> {{ $schedule->room->room_name }} 
+                                <span class="mx-2">•</span> 
+                                <i class="fas fa-clock"></i> {{ $schedule->start_time->format('H:i') }} - {{ $schedule->start_time->format('d/m') }}
+                            </small>
+                        </div> -->
+                    </div>
+                </div>
+
+                {{-- 02 SƠ ĐỒ GHẾ --}}
+                <div class="col-lg-4">
+                    <div class="cw-card h-100">
+                        <div class="cw-section-label">02 — Sơ đồ vị trí ghế</div>
+
+                        <div class="screen-area" style="margin-top: 0.5rem;">
+                            <div class="screen-bar" style="width: 80%;"></div>
+                            <div style="font-size:10px; color:var(--muted); margin-top:10px">MÀN HÌNH</div>
+                        </div>
+
+                        <!-- Thêm overflow-x: auto để cuộn ngang nếu sơ đồ quá to -->
+                        <div class="d-flex justify-content-center" style="overflow-x: auto; padding-bottom: 10px;">
+                            <div class="seat-grid-inner" id="gridContainer">
+                                <!-- Rendered by JS -->
+                            </div>
+                        </div>
+
+                        <div class="legend" id="legendContainer">
                             <!-- Rendered by JS -->
                         </div>
                     </div>
-                    
-                    <div class="col-md-4">
-                        <div class="cw-section-label" style="margin-bottom:1rem;">Ghế đã chọn</div>
-                        <div class="selected-seats-box" id="selectedSeats">
-                            <small style="color:var(--muted);">Chưa chọn ghế nào</small>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-4">
-                        <div class="cw-section-label" style="margin-bottom:1rem;">Thanh toán</div>
+                </div>
+
+                {{-- 03 CHỌN GHẾ & THANH TOÁN --}}
+                <div class="col-lg-4">
+                    <div class="cw-card h-100 d-flex flex-column">
+                        <div class="cw-section-label">03 — Chọn ghế & Thanh toán</div>
                         
-                        <div class="payment-options mb-3">
-                            <label class="payment-option">
-                                <input type="radio" name="paymentMethod" value="cash" checked>
-                                <span>💰 Tiền mặt</span>
-                            </label>
-                            <label class="payment-option">
-                                <input type="radio" name="paymentMethod" value="transfer">
-                                <span>💳 PayOs</span>
-                            </label>
+                        <div class="d-flex flex-column gap-4 flex-grow-1">
+                            <!-- Loại ghế -->
+                            <div>
+                                <div class="cw-section-label" style="margin-bottom:1rem; font-size: 9px;">Loại ghế</div>
+                                <div id="seatTypesContainer">
+                                    <!-- Rendered by JS -->
+                                </div>
+                            </div>
+                            
+                            <!-- Ghế đã chọn -->
+                            <div>
+                                <div class="cw-section-label" style="margin-bottom:1rem; font-size: 9px;">Ghế đã chọn</div>
+                                <div class="selected-seats-box" id="selectedSeats">
+                                    <small style="color:var(--muted);">Chưa chọn ghế nào</small>
+                                </div>
+                            </div>
+                            
+                            <!-- Thanh toán (Đẩy xuống dưới cùng) -->
+                            <div class="mt-auto pt-3" style="border-top: 1px solid var(--border);">
+                                <div class="cw-section-label" style="margin-bottom:1rem; font-size: 9px;">Thanh toán</div>
+                                
+                                <div class="payment-options mb-3">
+                                    <label class="payment-option">
+                                        <input type="radio" name="paymentMethod" value="transfer" checked>
+                                        <span>💳 PayOs</span>
+                                    </label>
+                                </div>
+                                
+                                <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:1rem;">
+                                    <span style="font-size:12px; color:var(--muted); text-transform:uppercase;">Tổng cộng</span>
+                                    <div class="total-amount" id="totalAmount">0</div>
+                                </div>
+                                
+                                <button class="btn-checkout" id="checkoutBtn" onclick="processPayment()" disabled style="width:100%;">
+                                    <i class="fas fa-check-circle" style="margin-right:6px;"></i>Xác nhận đặt vé
+                                </button>
+                            </div>
                         </div>
-                        
-                        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:1rem;">
-                            <span style="font-size:12px; color:var(--muted); text-transform:uppercase;">Tổng cộng</span>
-                            <div class="total-amount" id="totalAmount">0</div>
-                        </div>
-                        
-                        <button class="btn-checkout" id="checkoutBtn" onclick="processPayment()" disabled style="width:100%;">
-                            <i class="fas fa-check-circle" style="margin-right:6px;"></i>Xác nhận đặt vé
-                        </button>
                     </div>
                 </div>
+
             </div>
+            <!-- KẾT THÚC ROW -->
         </div>
     </div>
 
@@ -350,33 +387,45 @@
                     <div id="ticketInfo"></div>
                 </div>
                 <div class="modal-footer">
-                    {{-- onclick="printTicket()" --}}
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
-                        <i class="fas fa-print"></i> In vé
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Đóng
                     </button>
-                    {{-- onclick="location.href='javascript:window.location.reload()'" --}}
                 </div>
             </div>
         </div>
     </div>
 
-  <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.16.1/dist/echo.iife.js"></script>
+
+</div>
+</body>
+   @endsection 
+    
+    
+
+
+@push('scripts')
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.16.1/dist/echo.iife.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
 
     <script>
-        const currentStaffId = {{ $currentStaffId ?? 'null' }};
+        const currentCustomerId = {{ $currentCustomerId ?? 'null' }};
         const scheduleId = {{ $schedule->id }};
         let selectedSeats = new Map();
         let allSeats = new Map();
         let seatTypes = new Map();
         let echo = null;
+        let paymentWindow = null; // Thêm dòng này để lưu tham chiếu tab thanh toán
 
         document.addEventListener('DOMContentLoaded', function() {
             console.clear();
             console.log('%c🎬 TICKET BOOKING DEBUG PANEL', 'color: #e8c96a; font-size: 16px; font-weight: bold;');
             console.log('%c=====================================', 'color: #e8c96a;');
-            console.log('📍 Current Staff ID:', currentStaffId);
+            console.log('📍 Current Customer ID:', currentCustomerId);
             console.log('📅 Schedule ID:', scheduleId);
             console.log('%c=====================================', 'color: #e8c96a;');
             
@@ -420,7 +469,7 @@
         }
 
         function loadSeats() {
-            console.log('📍 DEBUG: currentStaffId =', currentStaffId);
+            console.log('📍 DEBUG: currentCustomerId =', currentCustomerId);
             console.log('📍 DEBUG: scheduleId =', scheduleId);
             
             fetch(`/api/ticket-booking/schedule-seats/${scheduleId}`, {
@@ -486,8 +535,7 @@
                 seatsWrapper.className = 'row-seats-wrapper';
 
                 const seatsInRow = rowMap.get(rowNum).sort((a, b) => a.column - b.column);
-                let seatNumber = 0;
-
+let seatNumber = 0;
                 seatsInRow.forEach((seat, idx) => { 
                     // Lối đi
                     if (!seat.type_id) {
@@ -507,7 +555,6 @@
                             seatsWrapper.appendChild(gap);
                         }
                     }
- 
                     else{
                         seatNumber++;
                     }
@@ -524,8 +571,8 @@
 
                     // Booking status
                     const status = seat.status ?? 0;
-                    const isOccupied = status === 2 || (status === 1 && seat.staff_id !== currentStaffId);
-                    const isMine     = status === 1 && seat.staff_id === currentStaffId;
+                    const isOccupied = status === 2 || (status === 1 && seat.customer_id !== currentCustomerId);
+                    const isMine     = status === 1 && seat.customer_id === currentCustomerId;
 
                     if (isOccupied) {
                         seatEl.classList.add('booked-other');
@@ -684,7 +731,7 @@
             // Nếu là couple và partner available → toggle luôn
             if (partner) {
                 const partnerOccupied = partner.status === 2 ||
-                    (partner.status === 1 && partner.staff_id !== currentStaffId);
+                    (partner.status === 1 && partner.customer_id !== currentCustomerId);
 
                 if (!partnerOccupied) {
                     // Đồng bộ partner theo hướng đã xác định
@@ -702,8 +749,7 @@
             const seatEl = document.getElementById(`seat-${seat.id}`);
             const color  = seat.color || '#6b7280';
             // const label  = String.fromCharCode(64 + seat.row) + seat.column;
-            const label  = seat.label || (String.fromCharCode(64 + seat.row) + seat.column);
-
+const label  = seat.label || (String.fromCharCode(64 + seat.row) + seat.column);
             if (selectedSeats.has(seat.id)) {
                 selectedSeats.delete(seat.id);
                 seatEl.classList.remove('selected');
@@ -750,6 +796,7 @@
             console.log(`📋 SELECTED SEATS (${selectedSeats.size}):`, 
                 // Array.from(selectedSeats.values()).map(s => `${getRowLabel(s.row)}${s.column}`).join(', ') || 'None'
                 Array.from(selectedSeats.values()).map(s => s.label).join(', ') || 'None'
+
             );
             
             if (selectedSeats.size === 0) {
@@ -763,7 +810,9 @@
                 //     })
                 //     .map(s => `<span class="seat-badge">${getRowLabel(s.row)}${s.column}</span>`)
                 //     .join('');
-                const badges = Array.from(selectedSeats.values())
+                // list.innerHTML = badges;
+
+                                const badges = Array.from(selectedSeats.values())
                     .sort((a, b) => a.label.localeCompare(b.label))
                     .map(s => `<span class="seat-badge">${s.label}</span>`)
                     .join('');
@@ -787,7 +836,7 @@
                 echo.channel(`schedule.${scheduleId}`)
                     .listen('.seat.status.changed', (event) => {
                         console.log('  REALTIME EVENT received:', event);
-                        handleSeatStatusChange(event.seat_id, event.status, event.staff_id);
+                        handleSeatStatusChange(event.seat_id, event.status, event.customer_id);
                     });
                 console.log(`✓ Subscribed to realtime channel: schedule.${scheduleId}`);
             } catch (error) {
@@ -795,7 +844,7 @@
             }
         }
 
-        function handleSeatStatusChange(seatId, newStatus, staffId) {
+        function handleSeatStatusChange(seatId, newStatus, customerId) {
             const seatEl = document.getElementById(`seat-${seatId}`);
             if (!seatEl) return;
 
@@ -803,14 +852,15 @@
             if (!seat) return;
 
             seat.status   = newStatus;
-            seat.staff_id = staffId;
+            seat.customer_id = customerId;
             allSeats.set(seatId, seat);
 
             const color = seat.color || '#6b7280';
             // const label = String.fromCharCode(64 + seat.row) + seat.column;
             const label = seat.label || (String.fromCharCode(64 + seat.row) + seat.column);
-            const isOccupied = newStatus === 2 || (newStatus === 1 && staffId !== currentStaffId);
-            const isMine     = newStatus === 1 && staffId === currentStaffId;
+
+            const isOccupied = newStatus === 2 || (newStatus === 1 && customerId !== currentCustomerId);
+            const isMine     = newStatus === 1 && customerId === currentCustomerId;
 
             seatEl.classList.remove('available', 'selected', 'booked-other', 'empty');
             seatEl.textContent = label;
@@ -861,6 +911,7 @@
             const seatIds = Array.from(selectedSeats.keys());
             // const seatNames = Array.from(selectedSeats.values()).map(s => `${getRowLabel(s.row)}${s.column}`).join(', ');
             const seatNames = Array.from(selectedSeats.values()).map(s => s.label).join(', ');
+
             const totalPrice = Array.from(selectedSeats.values()).reduce((sum, s) => sum + s.price, 0);
 
             console.log(`💳 PAYMENT PROCESS:`, {
@@ -868,54 +919,54 @@
                 seats: seatNames,
                 seatIds: seatIds,
                 total: totalPrice,
-                staffId: currentStaffId
+                customerId: currentCustomerId
             });
 
             showLoading();
 
-            if (paymentMethod === 'cash') {
-                createTicketCash(seatIds);
-            } else {
+            if (paymentMethod === 'transfer') {
+            //     createTicketCash(seatIds);
+            // } else {
                 initPaymentPayOs(seatIds);
             }
         }
 
-        function createTicketCash(seatIds) {
-            console.log('💵 Creating cash ticket with seats:', seatIds);
+        // function createTicketCash(seatIds) {
+        //     console.log('💵 Creating cash ticket with seats:', seatIds);
             
-            fetch('/api/ticket-booking/create-ticket-cash', {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
-                },
-                body: JSON.stringify({
-                    schedule_id: scheduleId,
-                    seat_ids: seatIds,
-                })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(data => {
-                        throw new Error(data.message || 'Lỗi ' + response.status);
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('✅ Ticket created:', data.ticket);
-                hideLoading();
-                if (data.ticket) {
-                    getTicketInfo(data.ticket.code);
-                }
-            })
-            .catch(error => {
-                console.error('❌ Error:', error);
-                hideLoading();
-                alert('Lỗi: ' + error.message);
-            });
-        }
+        //     fetch('/api/ticket-booking/create-ticket-cash', {
+        //         method: 'POST',
+        //         credentials: 'include',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+        //         },
+        //         body: JSON.stringify({
+        //             schedule_id: scheduleId,
+        //             seat_ids: seatIds,
+        //         })
+        //     })
+        //     .then(response => {
+        //         if (!response.ok) {
+        //             return response.json().then(data => {
+        //                 throw new Error(data.message || 'Lỗi ' + response.status);
+        //             });
+        //         }
+        //         return response.json();
+        //     })
+        //     .then(data => {
+        //         console.log('✅ Ticket created:', data.ticket);
+        //         hideLoading();
+        //         if (data.ticket) {
+        //             getTicketInfo(data.ticket.code);
+        //         }
+        //     })
+        //     .catch(error => {
+        //         console.error('❌ Error:', error);
+        //         hideLoading();
+        //         alert('Lỗi: ' + error.message);
+        //     });
+        // }
 
         function initPaymentPayOs(seatIds) {
             console.log('🔗 Initiating PayOs payment with seats:', seatIds);
@@ -955,6 +1006,7 @@
                 alert('Lỗi khởi tạo thanh toán: ' + error.message);
             });
         }
+        
 
         function showPayOsModal(paymentData) {
             const modal = new bootstrap.Modal(document.getElementById('payosModal'));
@@ -962,14 +1014,15 @@
             const checkoutUrl = paymentData.checkout_url;
 
             if (checkoutUrl) {
-                qrContainer.innerHTML = `
-                    <div style="text-align:center;">
-                        <p style="color:var(--text); margin-bottom:1.5rem;">Quét mã QR bằng ứng dụng ngân hàng để thanh toán</p>
-                        <a href="${checkoutUrl}" target="_blank" class="btn-checkout" style="display:inline-block; text-decoration:none;">
-                            <i class="fas fa-external-link-alt"></i> Thanh toán trực tuyến
-                        </a>
-                    </div>
-                `;
+// MỚI
+qrContainer.innerHTML = `
+    <div style="text-align:center;">
+        <p style="color:var(--text); margin-bottom:1.5rem;">Quét mã QR bằng ứng dụng ngân hàng để thanh toán</p>
+        <button onclick="openPaymentTab('${checkoutUrl}')" class="btn-checkout" style="display:inline-block; border:none;">
+            <i class="fas fa-external-link-alt"></i> Thanh toán trực tuyến
+        </button>
+    </div>
+`;
             }
 
             modal.show();
@@ -987,6 +1040,10 @@
                 echo.channel(`ticket.${paymentData.ticket_code}`)
                     .listen('.payment.completed', (event) => {
                         console.log('✓ Payment completed');
+
+                        if (paymentWindow && !paymentWindow.closed) {
+                paymentWindow.close();
+            }
                         bootstrap.Modal.getInstance(document.getElementById('payosModal'))?.hide();
                         getTicketInfo(paymentData.ticket_code);
                     });
@@ -1005,10 +1062,16 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'completed') {
-                        clearInterval(pollInterval);
-                        bootstrap.Modal.getInstance(document.getElementById('payosModal'))?.hide();
-                        getTicketInfo(ticketCode);
-                    } else if (data.status === 'failed') {
+                clearInterval(pollInterval);
+                
+                // THÊM DÒNG NÀY: Tự động đóng tab Hình 3
+                if (paymentWindow && !paymentWindow.closed) {
+                    paymentWindow.close();
+                }
+
+                bootstrap.Modal.getInstance(document.getElementById('payosModal'))?.hide();
+                getTicketInfo(ticketCode);
+            } else if (data.status === 'failed') {
                         clearInterval(pollInterval);
                         bootstrap.Modal.getInstance(document.getElementById('payosModal'))?.hide();
                         alert('Thanh toán thất bại. Vui lòng thử lại.');
@@ -1016,13 +1079,13 @@
                         clearInterval(pollInterval);
                         bootstrap.Modal.getInstance(document.getElementById('payosModal'))?.hide();
                         alert('Thanh toán đã bị hủy. Vui lòng thử lại.');
-                    } else if (data.status === 'expired') {
+                                        } else if (data.status === 'expired') {
                         clearInterval(pollInterval);
                         bootstrap.Modal.getInstance(document.getElementById('payosModal'))?.hide();
                         alert('Phiên thanh toán đã hết hạn. Vui lòng thử lại.');
                     } else {
                         console.log('⏳ Payment status:', data.status);
-                    }
+}
                 })
                 .catch(error => console.error('✗ Poll error:', error));
             }, 3000);
@@ -1041,7 +1104,7 @@
                 return response.json();
             })
             .then(data => {
-                data.bookings.forEach(b => {
+                                data.bookings.forEach(b => {
                     const selected = selectedSeats.get(b.seat.id);
 
                     if (selected && selected.label) {
@@ -1053,7 +1116,9 @@
                 });
                 showTicketModal(data);
                 selectedSeats.clear();
+                // loadSeats();
                 setTimeout(loadSeats, 200);
+
             })
             .catch(error => {
                 console.error('✗ Error:', error);
@@ -1064,12 +1129,11 @@
         function showTicketModal(data) {
             const ticket = data.ticket;
             const bookings = data.bookings;
-            // let seatsHtml = bookings.map(b =>
-            //     `<span class="seat-badge">${getRowLabel(b.seat.row)}${b.seat.column}</span>`
-            // ).join('');
 
             let seatsHtml = bookings.map(b =>
+                // `<span class="seat-badge">${getRowLabel(b.seat.row)}${b.seat.column}</span>`
                 `<span class="seat-badge">${b.seat.label}</span>`
+
             ).join('');
 
             const html = `
@@ -1078,10 +1142,6 @@
                         <div>
                             <small style="color:var(--muted); text-transform:uppercase; font-size:10px;">Mã vé</small>
                             <div style="font-family:'JetBrains Mono'; font-weight:600; font-size:14px;">${ticket.code}</div>
-                        </div>
-                        <div>
-                            <small style="color:var(--muted); text-transform:uppercase; font-size:10px;">Nhân viên</small>
-                            <div style="font-weight:500; font-size:14px;">${ticket.staff?.name || 'N/A'}</div>
                         </div>
                     </div>
                     <div style="margin-bottom:1.5rem;">
@@ -1128,5 +1188,45 @@
             const type = seatTypes.get(typeId);
             return !!(type && type.is_couple); 
         }
+
+        // @if(session('payment_success_ticket'))
+        //     document.addEventListener('DOMContentLoaded', function() {
+        //         const successTicketCode = '{{ session('payment_success_ticket') }}';
+        //         // Tự động gọi API lấy thông tin vé và hiển thị Success Modal
+        //         getTicketInfo(successTicketCode);
+        //     });
+        // @endif
+
+
+        // Bỏ chọn tất cả ghế khi người dùng rời khỏi trang hoặc reload
+        window.addEventListener('beforeunload', function () {
+            if (selectedSeats.size > 0) {
+                const seatIds = Array.from(selectedSeats.keys());
+                
+                seatIds.forEach(seatId => {
+                    fetch('/api/ticket-booking/update-seat-status', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                        },
+                        body: JSON.stringify({
+                            schedule_id: scheduleId,
+                            seat_id: seatId,
+                            status: 0 // 0 = Available (Trả lại ghế)
+                        }),
+                        keepalive: true // Cờ quan trọng: Đảm bảo request vẫn chạy ngầm thành công dù trang đang bị đóng
+                    });
+                });
+            }
+        });
+
+
+        function openPaymentTab(url) {
+    // Mở tab và lưu lại đối tượng window để có quyền đóng nó sau này
+    paymentWindow = window.open(url, '_blank');
+}
     </script>
-@endsection
+
+@endpush
+
