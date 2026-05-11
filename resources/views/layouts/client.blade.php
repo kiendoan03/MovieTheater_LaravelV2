@@ -410,8 +410,5 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/js/all.min.js "></script>
-<script src="/bootstrapLib/bootstrap.bundle.min.js"></script>
-
-<script src="{{ asset('js/screenProps/setBrowserSize.js') }}"></script>
 
 @stack('scripts')
