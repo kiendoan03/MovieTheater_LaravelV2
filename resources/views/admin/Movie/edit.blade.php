@@ -136,7 +136,7 @@
         margin-top: .75rem;
         display: flex;
         gap: 14px;
-        align-items: flex-start;
+        align-items: center;
     }
 
     .movie-preview img {
@@ -146,7 +146,14 @@
         object-fit: cover;
         background: #0f1117;
     }
-
+    #thumbnailPreview {
+        width: 160px;
+        aspect-ratio: 16 / 9;
+        height: auto;
+        object-fit: cover;
+        border-radius: 8px;
+        flex-shrink: 0;
+    }
     .movie-preview-info {
         flex: 1;
     }
@@ -690,7 +697,7 @@
                 <div class="row mt-4 g-4">
 
                     {{-- POSTER --}}
-                    <div class="col-md-4">
+                    <div class="col-md-3">
 
                         <div class="movie-preview">
 
@@ -717,7 +724,7 @@
                     </div>
 
                     {{-- LOGO --}}
-                    <div class="col-md-4">
+                    <div class="col-md-3">
 
                         <div class="movie-preview">
 
@@ -744,7 +751,7 @@
                     </div>
 
                     {{-- THUMBNAIL --}}
-                    <div class="col-md-4">
+                    <div class="col-md-6">
 
                         <div class="movie-preview">
 
