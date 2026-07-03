@@ -1,5 +1,3 @@
-
-
 @extends('layouts.client')
 
 @section('title', 'Chi tiết phim')
@@ -24,91 +22,82 @@
     <div class="container-fluid p-0">
         <!-- Overview -->
 
-        <section id="movie__overview" class="row position:relative">
+        <section id="movie__overview" class="row" style="position: relative; min-height: 100vh;">
 
             <!-- Background Trailer -->
 
-             <section class="p-0 top-0 start-0 bottom-0 end-0">
+             <section class="position-absolute top-0 start-0 bottom-0 end-0 p-0" style="height: 100vh;">
                 <div>
-                    <video style="object-fit: cover;" class="full-screen-element col-12" id="trailerVideo" oncontextmenu="return false;" autoplay muted loop disablePictureInPicture>
+                    <video style="object-fit: cover; height: 100vh;" class="full-screen-element col-12" id="trailerVideo" oncontextmenu="return false;" autoplay muted loop disablePictureInPicture>
                         <source src="{{ asset('storage/video/movie_trailer/' . $movie->trailer) }}" type="video/mp4">
                     </video>
                 </div>
             </section>
 
             <!-- Movie Detail -->
-            <section class="position-absolute start-0 end-0 fullscreen-height px-0 col-12" style="background: transparent;">
+            <section class="position-absolute start-0 end-0 top-0 px-0 col-12 d-flex flex-column justify-content-between" style="background: transparent; height: 100vh; padding-top: 3vmax; padding-bottom: 5vmax;">
 
-                <!-- Information of movie -->
-
-                <div class="position-relative top-50 start-50 translate-middle col-12" style="margin-top: 220px;">
-
-                    <!-- Overview Tags -->
-                    <div class="row mt-5">
-                        <div class="col-12 d-flex justify-content-center">
-                            <div class="col-1 text-center">
-                                <span class="border text-light p-2 rounded-2">{{$movie -> age}}+</span>
-                            </div>
-                            <div class="col-1 text-center">
-                                <span class="text-light p-2">{{$movie -> release_date}}</span>
-                            </div>
-                            <div class="col-1 text-center">
-                                <span class="text-light p-2">{{$movie -> length}} Min</span>
-                            </div>
-                            <div class="col-1 text-center">
-                                <span class="text-light p-2">
-                                    @if($movie -> language == 0)
-                                        English - VietSub
-                                    @elseif($movie -> language == 1)
-                                        Vietnamese
-                                    @endif
-                                </span>
-                            </div>
+                <!-- Overview Tags (top) -->
+                <div class="row ps-5 ">
+                    <div class="col-12 d-flex justify-content-center  "style="margin-top: 50px;">
+                        <div class="text-center me-3">
+                            <span class="border text-light p-2 rounded-2">{{$movie -> age_restricted}}+</span>
                         </div>
-                    </div>
-
-                    <!-- Movie logo -->
-                    <div class="row">
-                        <div class="col-12 d-block">
-                            <img class="col-4 d-block my-5 mx-auto" style="width: 30vmax" src="{{asset('storage/img/movie_logo/' . $movie -> logo)}}" alt="">
+                        <div class="text-center me-3">
+                            <span class="text-light p-2">{{ $movie -> release_date->format('Y-m-d') }}</span>
                         </div>
-                    </div>
-
-                    <div class="row col-12 ps-5">
-                        <!-- Movie tags -->
-                        <div class="mb-4">
-                            @foreach($movie_cate as $cate)
-                                <span class="border me-2 text-light px-3 py-2 fs-5 rounded-2">{{ $cate->name }}</span>
-                            @endforeach
+                        <div class="text-center me-3">
+                            <span class="text-light p-2">{{$movie -> length}} Min</span>
                         </div>
-
-                        <div class="d-flex justify-content-between">
-                            <!-- Movie Detail -->
-                            <div class="col-5 mt-4">
-                                <span class="text-light fs-3 movie-title" style="font-family: 'Poppins', sans-serif;">
-                                    {{$movie -> movie_name}}
-                                </span>
-                            </div>
-
-                            <!-- Sound Button -->
-                            <div onclick="turnOnSound()" class="col-1">
-                                <div class="sound-button d-inline-block text-light position-relative top-50 start-50 translate-middle" style="font-size: 1.5em; cursor: pointer;">
-                                    <i class="fa-solid fa-volume-xmark"></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Option -->
-                        <div class="mt-4">
-                            <span class="border rounded-pill text-light text-center px-3 py-2 fs-5" onclick="toDetailedPage()" style="cursor: pointer;">
-                                <i class="fa-solid fa-circle-info me-1"></i>  More 
-                            </span>
-                            <span class="border rounded-pill text-light text-center mx-3 px-3 py-2 fs-5" onclick="toBookTickerPage()" style="cursor: pointer;">
-                                <i class="fa-solid fa-ticket" style="color: #ffffff;"></i>  Book Tickets 
+                        <div class="text-center me-3">
+                            <span class="text-light p-2">
+                                @if($movie -> language == 0)
+                                    English - VietSub
+                                @elseif($movie -> language == 1)
+                                    Vietnamese
+                                @endif
                             </span>
                         </div>
-
                     </div>
+                </div>
+
+                <!-- Category, Title, Description, Options (bottom) -->
+                <div class="row col-12 ps-5">
+                    <!-- Movie tags -->
+                    <div class="mb-3">
+                        @foreach($movie_cate as $cate)
+                            <span class="border me-2 text-light px-3 py-2 fs-5 rounded-2">{{ $cate->name }}</span>
+                        @endforeach
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <div class="col-7" style="margin-top: 10px;">
+                            <span class="text-light fs-3 movie-title" style="font-family: 'Poppins', sans-serif;">
+                                {{$movie -> movie_name}}
+                            </span>
+                            <p class="text-light mt-2 mb-0" style="max-width: 600px; opacity: 0.85; font-size: 1rem;">
+                                {{ \Illuminate\Support\Str::limit($movie -> description, 160) }}
+                            </p>
+                        </div>
+
+                        <!-- Sound Button -->
+                        <div onclick="turnOnSound()" class="col-1">
+                            <div class="sound-button d-inline-block text-light position-relative top-50 start-50 translate-middle" style="font-size: 1.5em; cursor: pointer;">
+                                <i class="fa-solid fa-volume-xmark"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Option -->
+                    <div class="mt-4">
+                        <span class="border rounded-pill text-light text-center px-3 py-2 fs-5" onclick="toDetailedPage()" style="cursor: pointer;">
+                            <i class="fa-solid fa-circle-info me-1"></i>  More 
+                        </span>
+                        <span class="border rounded-pill text-light text-center mx-3 px-3 py-2 fs-5" onclick="toBookTickerPage()" style="cursor: pointer;">
+                            <i class="fa-solid fa-ticket" style="color: #ffffff;"></i>  Book Tickets 
+                        </span>
+                    </div>
+
                 </div>
 
             </section>
@@ -129,32 +118,33 @@
             </div>
 
             <!-- Information about the movie -->
-            <section class="d-flex">
+            <section class="d-flex" style="margin-top: 10px;">
 
                 <!-- Movie text in4 -->
                 <div class="col-7 hide-scrollbar" style="height: 35vmax; overflow-x: hidden; overflow-y: scroll;">
 
                     <p class="text-light" style="font-size: 2.5vmax; font-family: 'Poppins', sans-serif;">{{$movie -> movie_name}}</p>
 
-                    <span class="border me-2 text-light px-3 py-2 fs-5 rounded-2">
+                    <p class="text-light mb-3">
+                        {{ $movie -> synopsis }}
+                    </p>
+
+                    <span class="border me-2 text-light px-3 py-2 fs-5 rounded-2" style="margin-top: 20px;">
                         
                         <span class="pe-2 fw-bold">IMDb </span>
 
                     <span class="border-start py-2 ps-2 text-light"> {{$movie -> rating}} / 5 </span>
                     </span>
 
-                    <span class="border rounded-pill text-light text-center mx-2 px-3 py-2 fs-5" onclick="toBookTickerPage()" style="cursor: pointer;">
+                    <span class="border rounded-pill text-light text-center mx-2 px-3 py-2 fs-5" onclick="toBookTickerPage()" style="cursor: pointer;margin-top: 20px;">
                             <i class="fa-solid fa-ticket" style="color: #ffffff;"></i>  Book Tickets 
                     </span>
-                    <p class="text-light mt-4">
-                        {{$movie -> description}}
-                    </p>
 
                     <!-- Actor and Director -->
                     <section>
 
                         <!-- Actors -->
-                        <div>
+                        <div style="margin-top: 20px;">
                             <span class="text-light" style="font-size: 1.7vmax;"> Actors </span>
                             
 
@@ -265,5 +255,3 @@ function selectSchedule(scheduleId) {
 </script>
 
 @endpush
-
-

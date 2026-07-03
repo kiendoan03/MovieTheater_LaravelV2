@@ -623,16 +623,6 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="sw-label">Logo</label>
-
-                        <input type="file"
-                            name="movie_logo"
-                            class="sw-input"
-                            accept="image/*"
-                            onchange="previewImage(event, 'logoPreview')">
-                    </div>
-
-                    <div class="col-md-6">
                         <label class="sw-label">Thumbnail</label>
 
                         <input type="file"
@@ -663,7 +653,7 @@
                 <div class="row mt-4 g-4">
 
                     {{-- POSTER --}}
-                    <div class="col-md-3">
+                    <div class="col-md-6">
 
                         <div class="movie-preview">
 
@@ -689,32 +679,6 @@
 
                     </div>
 
-                    {{-- LOGO --}}
-                    <div class="col-md-3">
-
-                        <div class="movie-preview">
-
-                            <img
-                                id="logoPreview"
-                                src="{{ $movie->logo
-                    ? asset('storage/img/movie_logo/' . $movie->logo)
-                    : 'https://placehold.co/300x450?text=Logo' }}">
-
-                            <div class="movie-preview-info">
-
-                                <div class="movie-preview-title">
-                                    Logo
-                                </div>
-
-                                <div class="movie-preview-meta">
-                                    Logo hiện tại
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
 
                     {{-- THUMBNAIL --}}
                     <div class="col-md-6">
