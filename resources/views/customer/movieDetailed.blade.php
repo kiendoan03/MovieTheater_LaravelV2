@@ -30,18 +30,18 @@
 
              <section class="p-0 top-0 start-0 bottom-0 end-0">
                 <div>
-                    <video style="object-fit: cover; backdrop-filter: brightness(60%);" class="full-screen-element col-12" id="trailerVideo" oncontextmenu="return false;" autoplay muted loop disablePictureInPicture>
-                        <source src = "{{asset(\Illuminate\Support\Facades\Storage::url('/movie_trailer/').$movie -> trailer)}}">
+                    <video style="object-fit: cover;" class="full-screen-element col-12" id="trailerVideo" oncontextmenu="return false;" autoplay muted loop disablePictureInPicture>
+                        <source src="{{ asset('storage/video/movie_trailer/' . $movie->trailer) }}" type="video/mp4">
                     </video>
                 </div>
             </section>
 
             <!-- Movie Detail -->
-            <section class="position-absolute start-0 end-0 fullscreen-height px-0 col-12" style="background: linear-gradient(to top, rgb(0, 0, 0), rgba(0, 0, 0, 0.444));">
+            <section class="position-absolute start-0 end-0 fullscreen-height px-0 col-12" style="background: transparent;">
 
                 <!-- Information of movie -->
 
-                <div class="position-relative top-50 start-50 translate-middle col-12">
+                <div class="position-relative top-50 start-50 translate-middle col-12" style="margin-top: 220px;">
 
                     <!-- Overview Tags -->
                     <div class="row mt-5">
@@ -76,14 +76,10 @@
 
                     <div class="row col-12 ps-5">
                         <!-- Movie tags -->
-                        <div class="">
-
-                        @foreach($movie_cate as $movie_cate)
-
-                            <span class="border me-2 text-light px-3 py-2 fs-5 rounded-2">{{$movie_cate -> category_name}}</span>
-                        
-                        @endforeach
-
+                        <div class="mb-4">
+                            @foreach($movie_cate as $cate)
+                                <span class="border me-2 text-light px-3 py-2 fs-5 rounded-2">{{ $cate->name }}</span>
+                            @endforeach
                         </div>
 
                         <div class="d-flex justify-content-between">
