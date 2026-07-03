@@ -49,15 +49,6 @@
                         <div class="text-center me-3">
                             <span class="text-light p-2">{{$movie -> length}} Min</span>
                         </div>
-                        <div class="text-center me-3">
-                            <span class="text-light p-2">
-                                @if($movie -> language == 0)
-                                    English - VietSub
-                                @elseif($movie -> language == 1)
-                                    Vietnamese
-                                @endif
-                            </span>
-                        </div>
                     </div>
                 </div>
 
@@ -88,16 +79,7 @@
                         </div>
                     </div>
 
-                    <!-- Option -->
-                    <div class="mt-4">
-                        <span class="border rounded-pill text-light text-center px-3 py-2 fs-5" onclick="toDetailedPage()" style="cursor: pointer;">
-                            <i class="fa-solid fa-circle-info me-1"></i>  More 
-                        </span>
-                        <span class="border rounded-pill text-light text-center mx-3 px-3 py-2 fs-5" onclick="toBookTickerPage()" style="cursor: pointer;">
-                            <i class="fa-solid fa-ticket" style="color: #ffffff;"></i>  Book Tickets 
-                        </span>
-                    </div>
-
+                    
                 </div>
 
             </section>
@@ -107,15 +89,6 @@
         <!-- More Detail Of The Movie -->
 
         <section id="movie__full--detail" class="row full-height px-5">
-
-            <!-- Back Button -->
-            <div class="" style="margin-top: 5vmax;">
-                <span class="border rounded-pill text-center px-3 py-2 fs-5" style="cursor: pointer;">
-                    <a href="{{ route('home') }}" class="text-white text-decoration-none">
-                        <i class="fa-solid fa-backward"></i> Back
-                    </a>
-                </span>
-            </div>
 
             <!-- Information about the movie -->
             <section class="d-flex" style="margin-top: 10px;">
@@ -128,17 +101,6 @@
                     <p class="text-light mb-3">
                         {{ $movie -> synopsis }}
                     </p>
-
-                    <span class="border me-2 text-light px-3 py-2 fs-5 rounded-2" style="margin-top: 20px;">
-                        
-                        <span class="pe-2 fw-bold">IMDb </span>
-
-                    <span class="border-start py-2 ps-2 text-light"> {{$movie -> rating}} / 5 </span>
-                    </span>
-
-                    <span class="border rounded-pill text-light text-center mx-2 px-3 py-2 fs-5" onclick="toBookTickerPage()" style="cursor: pointer;margin-top: 20px;">
-                            <i class="fa-solid fa-ticket" style="color: #ffffff;"></i>  Book Tickets 
-                    </span>
 
                     <!-- Actor and Director -->
                     <section>
@@ -192,12 +154,7 @@
 
         <section id="book__ticket" class="row full-height-ticket px-5 " >
 
-                <section class="mt-5 py-5" >
-                                    <span class="border rounded-pill text-center px-3 py-2 fs-5" style="cursor: pointer;">
-                    <a href="{{ route('home') }}" class="text-white text-decoration-none">
-                        <i class="fa-solid fa-backward"></i> Back
-                    </a>
-                </span> 
+                <section class="mt-5 py-5" > 
                     <div class="col-10 d-flex flex-wrap mx-auto hide-scrollbar mt-3" style="height: 40vmax; overflow-x: hidden; overflow-y: scroll;">
                         @foreach($schedules as $schedule)
                             <div class="schedule-card mt-5 text-light col-5 me-5 mx-5 py-3 px-5" style="border-radius: 1vmax;" >
