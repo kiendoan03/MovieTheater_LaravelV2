@@ -12,18 +12,12 @@ header {
 
 /* ===== VIDEO OVERLAY ===== */
 #movie__overview video {
-    filter: brightness(50%);
+    /* filter: brightness(50%); */
 }
 
-/* overlay đen mượt */
+/* overlay đen mượt đã lược bỏ */
 #movie__overview::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(to top, #000 10%, transparent 60%);
+    display: none;
 }
 
 /* ===== TAG ===== */
