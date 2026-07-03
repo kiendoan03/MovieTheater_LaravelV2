@@ -449,45 +449,12 @@
                     <div class="col-md-6">
                         <label class="sw-label">Quốc gia</label>
 
-                        <select name="movie_country"
-                            id="movie_country"
+                        <input type="text"
+                            name="movie_country"
+                            class="sw-input"
+                            placeholder="Ví dụ: Việt Nam, Hoa Kỳ, Hàn Quốc..."
+                            value="{{ old('movie_country') }}"
                             required>
-                            <option value="">Chọn quốc gia</option>
-
-                            @php
-                            $countries = [
-                            'Việt Nam',
-                            'Hoa Kỳ',
-                            'Hàn Quốc',
-                            'Nhật Bản',
-                            'Trung Quốc',
-                            'Thái Lan',
-                            'Ấn Độ',
-                            'Anh',
-                            'Pháp',
-                            'Đức',
-                            'Canada',
-                            'Úc',
-                            'Nga',
-                            'Ý',
-                            'Tây Ban Nha',
-                            'Indonesia',
-                            'Malaysia',
-                            'Singapore',
-                            'Philippines',
-                            'Brazil',
-                            ];
-                            @endphp
-
-                            @foreach($countries as $country)
-                            <option value="{{ $country }}"
-                                {{ old('movie_country') == $country ? 'selected' : '' }}>
-                                {{ $country }}
-                            </option>
-                            @endforeach
-
-                        </select>
-
                         @error('movie_country')
                         <span class="sw-error">{{ $message }}</span>
                         @enderror

@@ -316,8 +316,6 @@
                     </form>
                 </div>
 
-                <a href="#" class="nav-icon"><i class="fa-regular fa-bell"></i></a>
-
                 {{-- User menu --}}
                 @php
                     $authUser = null;
