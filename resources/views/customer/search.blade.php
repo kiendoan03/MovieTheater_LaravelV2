@@ -472,7 +472,7 @@
 
             <div class="movie-box">
 
-                <a href="">
+                <a href="{{ route('movie.detail', $movie->id) }}">
                     <img
                         src="{{ asset('storage/img/movie_thumbnail/' . $movie->thumbnail) }}"
                         class="movie-img"

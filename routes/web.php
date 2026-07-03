@@ -200,7 +200,7 @@ Route::prefix('/')->group(function () {
     Route::get('/', [MovieController::class, 'show'])->name('home');
     Route::get('/load-more-upcoming', [MovieController::class, 'loadMoreUpcoming']);
     Route::get('/search', [MovieController::class, 'search'])->name('movies.search');
-    Route::get('/{movie}/detail', [App\Http\Controllers\MovieController::class, 'detail'])->name('detail');
+    Route::get('/{movie}/detail', [MovieController::class, 'detail'])->name('movie.detail');
     Route::get('/{movie_actor}/actor', [ActorController::class, 'show'])->name('actor');
     Route::get('/{movie_director}/director', [DirectorController::class, 'show'])->name('director');
 });
