@@ -73,10 +73,12 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+public function destroy(Category $category)
     {
-       CategoryMovieController::where('category_id', $category->id)->delete();
+        if ($category->movies()->exists()) {
+            return redirect()->route('admin.categories.index')->with('error', 'Không thể xóa danh mục này vì đang có phim sử dụng!');
+        }
         $category->delete();
-        return redirect()->route('admin.categories.index')->with('success', 'Delete category successfully!');
+        return redirect()->route('admin.categories.index')->with('success', 'Xóa danh mục thành công!');
     }
 }
