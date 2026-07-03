@@ -423,7 +423,7 @@
             console.log('📍 DEBUG: currentStaffId =', currentStaffId);
             console.log('📍 DEBUG: scheduleId =', scheduleId);
             
-            fetch(`/api/ticket-booking/schedule-seats/${scheduleId}`, {
+            fetch(`/ticket-booking/schedule-seats/${scheduleId}`, {
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
@@ -724,7 +724,8 @@
         }
 
         function updateSeatStatus(seatId, status) {
-            fetch('/api/ticket-booking/update-seat-status', {
+            console.log(`🔄 Updating seat ${seatId} status to ${status}...`);
+            fetch('/ticket-booking/update-seat-status', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -883,7 +884,7 @@
         function createTicketCash(seatIds) {
             console.log('💵 Creating cash ticket with seats:', seatIds);
             
-            fetch('/api/ticket-booking/create-ticket-cash', {
+            fetch('/ticket-booking/create-ticket-cash', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -920,7 +921,7 @@
         function initPaymentPayOs(seatIds) {
             console.log('🔗 Initiating PayOs payment with seats:', seatIds);
             
-            fetch('/api/ticket-booking/init-payment-payos', {
+            fetch('/ticket-booking/init-payment-payos', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -997,7 +998,7 @@
 
         function pollPaymentStatus(ticketCode) {
             const pollInterval = setInterval(() => {
-                fetch(`/api/ticket-booking/check-payment-status/${ticketCode}`, {
+                fetch(`/ticket-booking/check-payment-status/${ticketCode}`, {
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
                     }
@@ -1031,7 +1032,7 @@
         }
 
         function getTicketInfo(ticketCode) {
-            fetch(`/api/ticket-booking/ticket/${ticketCode}`, {
+            fetch(`/ticket-booking/ticket/${ticketCode}`, {
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
                 }

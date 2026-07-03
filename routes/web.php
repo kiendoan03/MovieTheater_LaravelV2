@@ -206,7 +206,6 @@ Route::prefix('/')->group(function () {
 });
 
 Route::prefix('api/ticket-booking')->group(function () {
-    // ✅ Đúng tên: schedule-seats (không phải seats)
     Route::get('/schedule-seats/{scheduleId}', [TicketBookingCustomerController::class, 'getScheduleSeats']);
     Route::post('/update-seat-status', [TicketBookingCustomerController::class, 'updateSeatStatus']);
     Route::post('/create-ticket-cash', [TicketBookingCustomerController::class, 'createTicketCash']);
@@ -214,6 +213,16 @@ Route::prefix('api/ticket-booking')->group(function () {
     Route::get('/check-payment-status/{ticketCode}', [TicketBookingCustomerController::class, 'checkPaymentStatus']);
     Route::get('/ticket/{ticketCode}', [TicketBookingCustomerController::class, 'getTicket']);
 });
+
+Route::prefix('ticket-booking')->group(function () {
+            Route::get('/schedule-seats/{scheduleId}', [TicketBookingController::class, 'getScheduleSeats']);
+            Route::post('/update-seat-status', [TicketBookingController::class, 'updateSeatStatus']);
+            Route::post('/calculate-total', [TicketBookingController::class, 'calculateTotal']);
+            Route::post('/create-ticket-cash', [TicketBookingController::class, 'createTicketCash']);
+            Route::post('/init-payment-payos', [TicketBookingController::class, 'initPaymentPayOs']);
+            Route::get('/ticket/{ticketCode}', [TicketBookingController::class, 'getTicket']);
+            Route::get('/check-payment-status/{ticketCode}', [TicketBookingController::class, 'checkPaymentStatus']);
+        });
 
 // ==========================================
 // PayOs Webhook (Public - không cần auth, đã exclude CSRF)
