@@ -131,7 +131,7 @@
                     <div class="movie-card">
                         <div class="poster-wrapper">
                             @if($movie->poster)
-                                <img src="{{ asset('storage/img/movies/' . $movie->poster) }}" alt="{{ $movie->movie_name }}">
+                                <img src="{{ asset('storage/img/movie_poster/' . $movie->poster) }}" alt="{{ $movie->movie_name }}"> 
                             @else
                                 <div class="d-flex align-items-center justify-content-center h-100 bg-secondary bg-opacity-10">
                                     <span class="text-muted small font-mono">NO POSTER</span>
