@@ -231,7 +231,7 @@
             <div class="row g-4">
                 
 {{-- 01 THÔNG TIN SUẤT CHIẾU (POSTER PHIM) --}}
-                <div class="col-lg-4">
+                <div class="col-lg-3">
                     <div class="cw-card h-100 d-flex flex-column">
                         <div class="cw-section-label">01 — Phim đang chọn</div>
                         
@@ -258,7 +258,7 @@
                 </div>
 
                 {{-- 02 SƠ ĐỒ GHẾ --}}
-                <div class="col-lg-4">
+                <div class="col-lg-6">
                     <div class="cw-card h-100">
                         <div class="cw-section-label">02 — Sơ đồ vị trí ghế</div>
 
@@ -281,7 +281,7 @@
                 </div>
 
                 {{-- 03 CHỌN GHẾ & THANH TOÁN --}}
-                <div class="col-lg-4">
+                <div class="col-lg-3">
                     <div class="cw-card h-100 d-flex flex-column">
                         <div class="cw-section-label">03 — Chọn ghế & Thanh toán</div>
                         

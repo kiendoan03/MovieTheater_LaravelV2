@@ -354,12 +354,12 @@
                         {{-- Avatar upload --}}
                         <div class="avatar-section">
                             <div class="avatar-preview" id="avatarPreview">
-                                @if ($cust?->avatar)
+                                {{-- @if ($cust?->avatar)
                                     <img src="{{ asset('storage/img/avatars/' . $cust->avatar) }}" alt=""
                                         id="avatarImg">
-                                @else
+                                @else --}}
                                     <img src="{{ asset('images/default-avatar.png') }}" alt="" id="avatarImg">
-                                @endif
+                                {{-- @endif --}}
                             </div>
                             <div class="avatar-hint">
                                 <strong>Ảnh đại diện</strong><br>
@@ -369,7 +369,7 @@
                         </div>
 
                         {{-- Hidden file input triggered by drop zone --}}
-                        <div class="form-group form-full" style="margin-bottom:0;">
+                        {{-- <div class="form-group form-full" style="margin-bottom:0;">
                             <label class="form-label" for="avatar">Ảnh đại diện</label>
                             <label for="avatarFile" class="avatar-drop-zone" id="avatarDropZone">
                                 <i class="fa-solid fa-cloud-arrow-up"
@@ -383,7 +383,7 @@
                                 <span class="field-error"><i class="fa-solid fa-circle-exclamation"></i>
                                     {{ $message }}</span>
                             @enderror
-                        </div>
+                        </div> --}}
 
                         <div class="form-grid">
                             {{-- Name --}}

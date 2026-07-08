@@ -454,46 +454,12 @@
                     <div class="col-md-6">
                         <label class="sw-label">Quốc gia</label>
 
-                        @php
-                        $countries = [
-                        'Việt Nam',
-                        'Hoa Kỳ',
-                        'Hàn Quốc',
-                        'Nhật Bản',
-                        'Trung Quốc',
-                        'Thái Lan',
-                        'Ấn Độ',
-                        'Anh',
-                        'Pháp',
-                        'Đức',
-                        'Canada',
-                        'Úc',
-                        'Nga',
-                        'Ý',
-                        'Tây Ban Nha',
-                        'Indonesia',
-                        'Malaysia',
-                        'Singapore',
-                        'Philippines',
-                        'Brazil',
-                        ];
-                        @endphp
-
-                        <select name="movie_country"
-                            id="movie_country"
+                        <input type="text"
+                            name="movie_country"
+                            class="sw-input"
+                            placeholder="Ví dụ: Việt Nam, Hoa Kỳ, Hàn Quốc..."
+                            value="{{ old('movie_country', $movie->country) }}"
                             required>
-
-                            <option value="">Chọn quốc gia</option>
-
-                            @foreach($countries as $country)
-                            <option value="{{ $country }}"
-                                {{ old('movie_country', $movie->country) == $country ? 'selected' : '' }}>
-                                {{ $country }}
-                            </option>
-                            @endforeach
-
-                        </select>
-
                         @error('movie_country')
                         <span class="sw-error">{{ $message }}</span>
                         @enderror
@@ -657,16 +623,6 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="sw-label">Logo</label>
-
-                        <input type="file"
-                            name="movie_logo"
-                            class="sw-input"
-                            accept="image/*"
-                            onchange="previewImage(event, 'logoPreview')">
-                    </div>
-
-                    <div class="col-md-6">
                         <label class="sw-label">Thumbnail</label>
 
                         <input type="file"
@@ -697,7 +653,7 @@
                 <div class="row mt-4 g-4">
 
                     {{-- POSTER --}}
-                    <div class="col-md-3">
+                    <div class="col-md-6">
 
                         <div class="movie-preview">
 
@@ -723,32 +679,6 @@
 
                     </div>
 
-                    {{-- LOGO --}}
-                    <div class="col-md-3">
-
-                        <div class="movie-preview">
-
-                            <img
-                                id="logoPreview"
-                                src="{{ $movie->logo
-                    ? asset('storage/img/movie_logo/' . $movie->logo)
-                    : 'https://placehold.co/300x450?text=Logo' }}">
-
-                            <div class="movie-preview-info">
-
-                                <div class="movie-preview-title">
-                                    Logo
-                                </div>
-
-                                <div class="movie-preview-meta">
-                                    Logo hiện tại
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
 
                     {{-- THUMBNAIL --}}
                     <div class="col-md-6">

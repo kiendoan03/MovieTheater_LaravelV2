@@ -206,7 +206,7 @@
                             <div class="mx-3">
                                 <div class="card border-0 rounded-0 ">
                                     <div class="d-flex bg-opacity-25 justify-content-center align-items-end">
-                                        <a href="">
+                                        <a href="{{ route('movie.detail', $movie->id) }}">
                                             <img 
                                                 src="{{ asset('storage/img/movie_thumbnail/' . $movie->thumbnail) }}" 
                                                 alt=""
@@ -251,7 +251,7 @@
 
                         </div>
 
-                        <a href="{{route('detail',$movies[$index])}}">
+                        <a href="{{ route('movie.detail', $movie->id) }}">
 
                             <img
                                 src="{{ asset('storage/img/movie_poster/' . $movie->poster) }}"
@@ -275,7 +275,7 @@
             <div class="row justify-content-center mt-5">
                 <div class="col-lg-7 col-md-8">
                     <div class="text-center">
-                        <h1 class="text-light " style="font-size: 2.5vmax; font-family: 'Poppins', sans-serif;">Upcomming Movie</h1>
+                        <h1 class="text-light " style="font-size: 2.5vmax; font-family: 'Poppins', sans-serif;">Upcoming Movie</h1>
                     </div>
                 </div>
             </div>
@@ -286,11 +286,13 @@
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="card upcoming-card">
                             <div class="thumb-wrapper">
+                                <a href="{{ route('movie.detail', $movie->id) }}">
                                 <img 
                                     src="{{ Str::startsWith($movie->thumbnail, 'http') 
                                         ? $movie->thumbnail 
                                         : asset('storage/img/movie_thumbnail/' . $movie->thumbnail) 
                                     }}">
+                                </a>
                             </div>
                         </div>
                     </div>
