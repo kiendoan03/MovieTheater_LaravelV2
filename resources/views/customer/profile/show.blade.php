@@ -167,11 +167,11 @@
     <div class="profile-hero">
         <div class="p-avatar">
             <div class="p-avatar-ring"></div>
-            @if($cust?->avatar)
+            {{-- @if($cust?->avatar)
                 <img src="{{ asset('storage/img/avatars/' . $cust->avatar) }}" alt="">
-            @else
+            @else --}}
                 <img src="{{ asset('images/default-avatar.png') }}" alt="">
-            @endif
+            {{-- @endif --}}
         </div>
 
         <div class="p-info">

@@ -328,9 +328,11 @@
                 @if ($authUser && $authUser->role === \App\Enums\UserRole::Customer)
                     <div class="user-menu-wrap" style="position:relative;">
                         @php
-                            $navAvatar = $authUser->customer?->avatar
-                                ? asset('storage/img/avatars/' . $authUser->customer->avatar)
-                                : asset('images/default-avatar.png');
+                            $navAvatar = 
+                            // $authUser->customer?->avatar
+                                // ? asset('storage/img/avatars/' . $authUser->customer->avatar)
+                                // : 
+                                asset('images/default-avatar.png');
                         @endphp
                         <button class="nav-icon user-menu-toggle" type="button" title="{{ $authUser->email }}"
                             style="position:relative; padding:0; width:36px; height:36px; border-radius:50%; overflow:hidden; background:transparent; border:2px solid rgba(255,31,69,.4);">
@@ -356,8 +358,9 @@
                                 </div>
                             </div>
                             <div class="ud-divider"></div>
+
                             <a href="{{ route('customer.profile.show') }}" class="ud-item">
-                                <i class="fa-solid fa-id-card"></i> Hồ sơ của tôi
+                                <i class="fa-solid fa-id-card"></i> Thông tin cá nhân
                             </a>
                             <a href="{{ route('customer.profile.edit') }}" class="ud-item">
                                 <i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa hồ sơ
@@ -385,6 +388,7 @@
 
 </html>
 <script>
+    // ── Search toggle ──
     const toggleBtn = document.querySelector('.search-toggle');
     const searchPanel = document.querySelector('.search-panel');
     const searchInput = document.getElementById('movieSearch');
@@ -404,6 +408,28 @@
             searchInput.blur();
         }
     });
+
+    // ── User dropdown toggle ──
+    const userMenuToggle = document.querySelector('.user-menu-toggle');
+    const userDropdown = document.getElementById('userDropdown');
+
+    if (userMenuToggle && userDropdown) {
+        userMenuToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            userDropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.user-menu-wrap')) {
+                userDropdown.classList.remove('show');
+            }
+        });
+
+        // Đóng khi nhấn Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') userDropdown.classList.remove('show');
+        });
+    }
 </script>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
